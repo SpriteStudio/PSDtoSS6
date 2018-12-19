@@ -1,0 +1,48 @@
+{
+    "texture_width"  : 512 ,
+    "texture_height" : 512 ,
+    "texture_padding_shape" : 2 ,
+    "pack_padding" : 0 ,
+    "add_priority" : 0 , 
+    "is_ssaeoutput" : false ,
+    "is_sspjoutput" : false ,
+	"is_overwrite"  : false ,
+	"is_addnull"    : false ,
+	"is_layerPivotUse" :  false ,
+	"is_rootLayerUse" :  false ,
+	"is_oldPivotUse" :  false ,
+	"sortmode" : "rectmax/hmax/wmax" , 
+	"padding_border" :  4 ,
+	"canvasSize" : 0 ,
+	"inner_padding" : 0,
+    "outputpath" : "",
+    "outputname" : "",
+}
+
+/*
+以下は各パラメータの説明です.
+-----------------------
+
+
+    "texture_width"  : 整数値　生成するテクスチャの横幅 ,
+    "texture_height" : 整数値　生成するテクスチャの縦幅 ,
+    "texture_padding_shape" : 整数値　各配置される画像片間のパディング ,
+    "pack_padding" : 整数値　 ,
+    "add_priority" : 整数値　ssae生成時に加算される優先度値 , 
+    "is_ssaeoutput" : ブーリアン　ssaeファイルを生成するか？ ,
+    "is_sspjoutput" : ブーリアン　sspjファイルを生成するか？,
+	"is_overwrite"  : ブーリアン　上書きするか ,
+	"is_addnull"    : ブーリアン　レイアウト配置時にスプライトの親にNULLパーツを置くか ,
+	"is_layerPivotUse" :  ブーリアン　pivotを作成するか ,
+	"is_rootLayerUse" :  　ブーリアン　rootレイアーを使用するか ,
+	"is_oldPivotUse" :  ブーリアン　古いピボットを使うか,
+	"sortmode" : 文字列　rectmax/hmax/wmax　からソートモードを選択, 
+	"padding_border" : 外側のパディング ,
+	"canvasSize" : 整数値 ,
+	"inner_padding" : 整数値,
+    "outputpath" :  文字列値　出力パス,
+    "outputname" :　文字列値　出力ファイル名",
+
+
+
+*/

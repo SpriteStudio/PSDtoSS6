@@ -1,0 +1,12 @@
+image:
+  - Visual Studio 2017
+
+configuration:
+  - Release
+
+build_script:
+  - cmd: scripts/build_win.bat
+
+artifacts:
+  - path: ./out/
+    name: PSDtoSS6

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
 
 if((NOT CMAKE_PROJECT_NAME))
-    message(FATAL_ERROR "CMAKE_PROJECT_NAME must be specified!")
+    set(CMAKE_PROJECT_NAME PSDtoSS6GUI)
 endif()
 
 project(${CMAKE_PROJECT_NAME})
@@ -13,6 +13,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+if(DEFINED ENV{QT_PATH})
+    list(APPEND CMAKE_PREFIX_PATH $ENV{QT_PATH})
+elseif((APPLE AND (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")))
+    if(EXISTS /usr/local/opt/qt)
+        list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt")
+    endif()
+endif()
 find_package(Qt5Widgets CONFIG REQUIRED)
 
 set(src 

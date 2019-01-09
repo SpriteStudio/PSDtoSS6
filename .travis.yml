@@ -1,0 +1,32 @@
+language: cpp
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10
+before_cache:
+  - brew cleanup
+cache: 
+  directories:
+    - $HOME/Library/Caches/Homebrew/
+before_install:
+install:
+before_script:
+script:
+  - sh scripts/build_mac.sh
+after_script:
+after_success:
+after_failure:
+before_deploy:
+  - zip -r PSDtoSS6_mac.zip out/
+deploy:
+  provider: releases
+  api_key:
+    secure: 
+  file: PSDtoSS6_mac.zip
+  skip_cleanup: true
+  on:
+    tags: true
+addons:
+  homebrew:
+    packages:
+      - qt

@@ -14,7 +14,7 @@ artifacts:
 deploy:
   provider: GitHub
   auth_token:
-    secure: 
+    secure: SgBhPSveSRK+d8WTCvl/MvIwm8IA6ZlCk5BJtFpnio+H5/Fj+ocZz3GbkRc+W2Cv
   artifact: PSDtoSS6_win.zip
   draft: false
   prerelease: false

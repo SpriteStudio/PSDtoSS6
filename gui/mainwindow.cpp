@@ -114,9 +114,9 @@ void MainWindow::loadConfig(const QString & fileName)
     ui->lineEdit_pri            ->setText(QString::number(cp.addpri));
     ui->checkBox_addnull        ->setChecked(cp.is_addnull);
     ui->checkBox_overwrite      ->setChecked(cp.is_overwrite);
-    ui->checkBox_pivot          ->setChecked(cp.is_oldPivotUse);
+    ui->checkBox_pivot          ->setChecked(cp.is_layerPivotUse);
     ui->checkBox_root           ->setChecked(cp.is_rootLayerUse);
-    ui->checkBox_pivot_add      ->setChecked(cp.is_layerPivotUse);
+    ui->checkBox_pivot_add      ->setChecked(cp.is_oldPivotUse);
     ui->lineEdit_padding_border ->setText(QString::number(cp.padding_border));
     ui->comboBox_canvasSize     ->setCurrentText(map_canvasSize[cp.canvasSize]);
     ui->lineEdit_padding_inner  ->setText(QString::number(cp.inner_padding));

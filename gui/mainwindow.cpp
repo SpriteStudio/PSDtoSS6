@@ -2,11 +2,11 @@
 #include "ui_mainwindow.h"
 #include "../cui/source/parameters.h"
 
-QString execPathStr = "";    //Às‚µ‚Ä‚¢‚éƒRƒ“ƒo[ƒ^GUI‚ÌƒpƒX
-QString Outputpath = "";     //o—ÍƒtƒHƒ‹ƒ_
-QString cnvOutputStr = "";   //ƒRƒ“ƒo[ƒgŒ‹‰Ê
-bool convert_exec = false;  //ƒRƒ“ƒo[ƒg’†‚©
-bool convert_error = false;  //ƒRƒ“ƒo[ƒgƒGƒ‰[‚ª”­¶‚µ‚½‚©
+QString execPathStr = "";    //å®Ÿè¡Œã—ã¦ã„ã‚‹ã‚³ãƒ³ãƒãƒ¼ã‚¿GUIã®ãƒ‘ã‚¹
+QString Outputpath = "";     //å‡ºåŠ›ãƒ•ã‚©ãƒ«ãƒ€
+QString cnvOutputStr = "";   //ã‚³ãƒ³ãƒãƒ¼ãƒˆçµæœ
+bool convert_exec = false;  //ã‚³ãƒ³ãƒãƒ¼ãƒˆä¸­ã‹
+bool convert_error = false;  //ã‚³ãƒ³ãƒãƒ¼ãƒˆã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸã‹
 int convet_index = 0;
 std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
@@ -30,28 +30,28 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    //ƒtƒH[ƒ€‚Ì•”•i‚ÉƒAƒNƒZƒX‚·‚éê‡‚Íui‚Ìƒƒ“ƒo‚ğŒo—R‚·‚é
+    //ãƒ•ã‚©ãƒ¼ãƒ ã®éƒ¨å“ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹å ´åˆã¯uiã®ãƒ¡ãƒ³ãƒã‚’çµŒç”±ã™ã‚‹
     ui->setupUi(this);
 
-    //ƒhƒ‰ƒbƒO•ƒhƒƒbƒv‚ğ—LŒø‚É‚·‚é
+    //ãƒ‰ãƒ©ãƒƒã‚°ï¼†ãƒ‰ãƒ­ãƒƒãƒ—ã‚’æœ‰åŠ¹ã«ã™ã‚‹
     setAcceptDrops(true);
 
     cnvProcess = new QProcess(this);
-    // ƒvƒƒZƒX‚ªI—¹‚µ‚½‚É finished ƒVƒOƒiƒ‹”­M
+    // ãƒ—ãƒ­ã‚»ã‚¹ãŒçµ‚äº†ã—ãŸæ™‚ã« finished ã‚·ã‚°ãƒŠãƒ«ç™ºä¿¡
     connect(cnvProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus )));
-    // ƒvƒƒZƒX‚©‚çƒGƒ‰[o—Í‚ª‚ ‚Á‚Ä“Ç‚İ‚İ‰Â”\‚É‚È‚Á‚½‚ç readyReadStandardError ƒVƒOƒiƒ‹”­M
+    // ãƒ—ãƒ­ã‚»ã‚¹ã‹ã‚‰ã‚¨ãƒ©ãƒ¼å‡ºåŠ›ãŒã‚ã£ã¦èª­ã¿è¾¼ã¿å¯èƒ½ã«ãªã£ãŸã‚‰ readyReadStandardError ã‚·ã‚°ãƒŠãƒ«ç™ºä¿¡
     connect(cnvProcess, SIGNAL(readyReadStandardError()), this, SLOT(processErrOutput()));
 
     imgProcess = new QProcess(this);
 
-    //ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹‚ğ‚Â‚¯‚é
+    //ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ã‚’ã¤ã‘ã‚‹
     setWindowTitle("PSDtoSS6 GUI Ver2.0.0");
 
-    //‰Šú‰»
+    //åˆæœŸåŒ–
     convert_exec = false;
     cnvOutputStr.clear();
 
-    //ƒEƒBƒ“ƒhƒEƒTƒCƒYŒÅ’è
+    //ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºå›ºå®š
     setFixedSize( QSize(688,661) );
 
     ui->comboBox->addItem(map_sortmode["none"] = "Name");
@@ -79,17 +79,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     pushButton_enableset();
 
-    //ƒXƒ^ƒCƒ‹ƒV[ƒg‚ğ“Ç‚İ‚Ş
+    //ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆã‚’èª­ã¿è¾¼ã‚€
     QFile file(":/style.css");
     file.open(QFile::ReadOnly);
     QString styleSheet = QString::fromLatin1(file.readAll());
     qApp->setStyleSheet(styleSheet);
 
-    //Documents‚ÌƒpƒX‚ğæ“¾
+    //Documentsã®ãƒ‘ã‚¹ã‚’å–å¾—
     data_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     data_path += "/SpriteStudio/PSDtoSS6";
     QDir dir;
-    //İ’èƒtƒ@ƒCƒ‹•Û‘¶—pƒfƒBƒŒƒNƒgƒŠ‚ğì¬
+    //è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½œæˆ
     dir.mkpath(data_path);
 }
 
@@ -152,7 +152,7 @@ void MainWindow::saveConfig(const QString & fileName)
 
 void MainWindow::setText_to_List(QStringList list)
 {
-    //Àsƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğ•Û‘¶
+    //å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’ä¿å­˜
     execPathStr = list[0];
 
     if ( list.length() > 1 )
@@ -177,7 +177,7 @@ void MainWindow::on_pushButton_exit_clicked()
 {
     saveConfig(data_path + "/config.json");
     delete_convert_info();
-    //ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌI—¹
+    //ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†
     exit(0);
 }
 
@@ -196,8 +196,8 @@ void MainWindow::dropEvent(QDropEvent *e)
         QList<QUrl> urlList = e->mimeData()->urls();
         for(int i = 0; i < urlList.size(); i++)
         {
-            //ƒhƒ‰ƒbƒO‚µ‚½ƒtƒ@ƒCƒ‹‚ğƒŠƒXƒg‚É’Ç‰Á
-            //.pngˆÈŠO‚Í’e‚­
+            //ãƒ‰ãƒ©ãƒƒã‚°ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
+            //.pngä»¥å¤–ã¯å¼¾ã
             QString dragFilePath;
             dragFilePath = urlList[i].toLocalFile();
             if (
@@ -205,7 +205,7 @@ void MainWindow::dropEvent(QDropEvent *e)
               || ( dragFilePath.endsWith(".psd"))
                )
             {
-                //“¯‚¶–¼‘O‚ªƒŠƒXƒg‚É‚ ‚éê‡‚Í’e‚­
+                //åŒã˜åå‰ãŒãƒªã‚¹ãƒˆã«ã‚ã‚‹å ´åˆã¯å¼¾ã
                 bool addname = true;
                 int j = 0;
                 for ( j = 0; j < ui->listWidget->count(); j++ )
@@ -230,54 +230,54 @@ void MainWindow::dropEvent(QDropEvent *e)
 
 void MainWindow::on_pushButton_listclear_clicked()
 {
-    //ƒŠƒXƒgƒNƒŠƒA
+    //ãƒªã‚¹ãƒˆã‚¯ãƒªã‚¢
     ui->listWidget->clear();
     pushButton_enableset();
 }
 
 void MainWindow::on_pushButton_convert_clicked()
 {
-    //ƒRƒ“ƒo[ƒg
+    //ã‚³ãƒ³ãƒãƒ¼ãƒˆ
     if ( ui->listWidget->count() == 0 )
     {
         QMessageBox msgBox(this);
-        msgBox.setText(tr("txt ƒtƒ@ƒCƒ‹‚ğ“o˜^‚µ‚Ä‚­‚¾‚³‚¢"));
+        msgBox.setText(tr("txt ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç™»éŒ²ã—ã¦ãã ã•ã„"));
         msgBox.exec();
         return;
     }
     if ( ui->textBrowser_output->toPlainText() == "" )
     {
         QMessageBox msgBox(this);
-        msgBox.setText(tr("o—ÍƒtƒHƒ‹ƒ_‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢"));
+        msgBox.setText(tr("å‡ºåŠ›ãƒ•ã‚©ãƒ«ãƒ€ã‚’é¸æŠã—ã¦ãã ã•ã„"));
         msgBox.exec();
         return;
     }
 
     if (( ui->listWidget->count() > 0 ) && (convert_exec == false))
     {
-        templistsave();            //ƒRƒ“ƒo[ƒgƒŠƒXƒg‚ğ•Û‘¶
-        save_convert_info();//ƒRƒ“ƒo[ƒgî•ñƒtƒ@ƒCƒ‹‚ğ•Û‘¶
-        buttonEnable( false );   //ƒ{ƒ^ƒ“–³Œø
+        templistsave();            //ã‚³ãƒ³ãƒãƒ¼ãƒˆãƒªã‚¹ãƒˆã‚’ä¿å­˜
+        save_convert_info();//ã‚³ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜
+        buttonEnable( false );   //ãƒœã‚¿ãƒ³ç„¡åŠ¹
         convert_error = false;
-        convert_exec = false;  //ƒRƒ“ƒo[ƒg’†‚©
+        convert_exec = false;  //ã‚³ãƒ³ãƒãƒ¼ãƒˆä¸­ã‹
         convet_index = 0;
-        ui->textBrowser_err->setText(tr(""));           //ƒGƒ‰[
+        ui->textBrowser_err->setText(tr(""));           //ã‚¨ãƒ©ãƒ¼
         cnvOutputStr = "";
 
-        convert_exec = true;  //ƒRƒ“ƒo[ƒg’†‚©
+        convert_exec = true;  //ã‚³ãƒ³ãƒãƒ¼ãƒˆä¸­ã‹
         int i;
         for ( i = 0; i < ui->listWidget->count(); i++ )
         {
-            //isó‹µ•\¦
+            //é€²è¡ŒçŠ¶æ³è¡¨ç¤º
             QString st = QString("Exec %1/%2").arg(i+1).arg(ui->listWidget->count());
-            ui->textBrowser_status->setText(st);     //ƒXƒe[ƒ^ƒX
+            ui->textBrowser_status->setText(st);     //ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
 
-            //ƒRƒ“ƒo[ƒgˆø”ì¬
+            //ã‚³ãƒ³ãƒãƒ¼ãƒˆå¼•æ•°ä½œæˆ
             QString fileName = ui->listWidget->item(i)->text();
-            //ƒRƒ“ƒo[ƒ^‚Ì‹N“®
+            //ã‚³ãƒ³ãƒãƒ¼ã‚¿ã®èµ·å‹•
             if (fileName.isEmpty())
             {
-                //ƒtƒ@ƒCƒ‹–¼‚È‚µ
+                //ãƒ•ã‚¡ã‚¤ãƒ«åãªã—
             }
             else
             {
@@ -306,7 +306,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 qDebug() << (QFile::exists(execstr) ? "File exists: " : "File may not exist:") << execstr;
                 if ( QFile::exists(execstr) == false )
                 {
-                    //ƒtƒ@ƒCƒ‹‚Ì—L–³‚ğ’²‚×‚é
+                    //ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ‰ç„¡ã‚’èª¿ã¹ã‚‹
                     convert_error = true;
                     cnvOutputStr = cnvOutputStr + "Convertor file exists false\n";
                     ui->textBrowser_err->setText(cnvOutputStr);
@@ -315,7 +315,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 execstr= "\"" + execstr + "\"";
 
                 str = execstr + " \"" + fileName + "\"";
-                cnvProcess->start(str); //ƒpƒX‚Æˆø”
+                cnvProcess->start(str); //ãƒ‘ã‚¹ã¨å¼•æ•°
                 
                 while ( 1 )
                 {
@@ -341,27 +341,27 @@ void MainWindow::on_pushButton_convert_clicked()
         }
         else
         {
-            ui->textBrowser_status->setText(tr("Error"));   //ƒXƒe[ƒ^ƒX
+            ui->textBrowser_status->setText(tr("Error"));   //ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
         }
-        buttonEnable( true );   //ƒ{ƒ^ƒ“—LŒø
-        convert_exec = false;  //ƒRƒ“ƒo[ƒg’†‚©
+        buttonEnable( true );   //ãƒœã‚¿ãƒ³æœ‰åŠ¹
+        convert_exec = false;  //ã‚³ãƒ³ãƒãƒ¼ãƒˆä¸­ã‹
     }
 }
 
 void MainWindow::processErrOutput()
 {
 
-    // o—Í‚ğ‘S‚Äæ“¾
+    // å‡ºåŠ›ã‚’å…¨ã¦å–å¾—
     QByteArray output = cnvProcess->readAllStandardError();
-    //ƒ[ƒjƒ“ƒO‚Ì•\¦‚Ís‚í‚È‚¢
+    //ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚°ã®è¡¨ç¤ºã¯è¡Œã‚ãªã„
     QString str = QString::fromLocal8Bit( output );
 //    int i = str.indexOf("warning");
-//    if ( i == -1 )  //ƒ[ƒjƒ“ƒOˆÈŠO‚ğ•\¦
+//    if ( i == -1 )  //ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚°ä»¥å¤–ã‚’è¡¨ç¤º
     {
         cnvOutputStr = cnvOutputStr + str;
         ui->textBrowser_err->setText(cnvOutputStr);
     }
-    //ƒJ[ƒ\ƒ‹‚ğÅIs‚ÖˆÚ“®
+    //ã‚«ãƒ¼ã‚½ãƒ«ã‚’æœ€çµ‚è¡Œã¸ç§»å‹•
     QScrollBar *sb = ui->textBrowser_err->verticalScrollBar();
     sb->setValue(sb->maximum());
 
@@ -374,7 +374,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
-        //ƒJ[ƒ\ƒ‹‚ğÅIs‚ÖˆÚ“®
+        //ã‚«ãƒ¼ã‚½ãƒ«ã‚’æœ€çµ‚è¡Œã¸ç§»å‹•
         QScrollBar *sb = ui->textBrowser_err->verticalScrollBar();
         sb->setValue(sb->maximum());
     }
@@ -384,20 +384,20 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
-        //ƒJ[ƒ\ƒ‹‚ğÅIs‚ÖˆÚ“®
+        //ã‚«ãƒ¼ã‚½ãƒ«ã‚’æœ€çµ‚è¡Œã¸ç§»å‹•
         QScrollBar *sb = ui->textBrowser_err->verticalScrollBar();
         sb->setValue(sb->maximum());
     }
     else
     {
         convert_error = false;
-        // ³íI—¹‚Ìˆ—
+        // æ­£å¸¸çµ‚äº†æ™‚ã®å‡¦ç†
 //        ui->textBrowser_status->setText(tr("Convert Success!"));
 //    QMessageBox::information(this, tr("Ss6Converter"), tr("Convert success"));
     }
 }
 
-//o—ÍƒtƒHƒ‹ƒ_‘I‘ğƒ{ƒ^ƒ“
+//å‡ºåŠ›ãƒ•ã‚©ãƒ«ãƒ€é¸æŠãƒœã‚¿ãƒ³
 void MainWindow::on_pushButton_output_clicked()
 {
     QString str;
@@ -412,7 +412,7 @@ void MainWindow::on_pushButton_output_clicked()
 
 }
 
-//ƒŠƒXƒg‚Ì“Ç‚İ‚İ
+//ãƒªã‚¹ãƒˆã®èª­ã¿è¾¼ã¿
 void MainWindow::on_pushButton_listload_clicked()
 {
     QFileDialog::Options options;
@@ -422,20 +422,20 @@ void MainWindow::on_pushButton_listload_clicked()
 
     if ( fileName != "" )
     {
-        //ƒŠƒXƒgƒNƒŠƒA
+        //ãƒªã‚¹ãƒˆã‚¯ãƒªã‚¢
         ui->listWidget->clear();
 
-        //“Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹‚ğƒŠƒXƒg‚Éİ’è
+        //èª­ã¿è¾¼ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒªã‚¹ãƒˆã«è¨­å®š
         QFile file(fileName);
 
-        if (!file.open(QIODevice::ReadOnly))//“Ç‚Ì‚İ‚ÅƒI[ƒvƒ“‚Å‚«‚½‚©ƒ`ƒFƒbƒN
+        if (!file.open(QIODevice::ReadOnly))//èª­è¾¼ã®ã¿ã§ã‚ªãƒ¼ãƒ—ãƒ³ã§ããŸã‹ãƒã‚§ãƒƒã‚¯
         {
             return;
         }
 
         QTextStream in(&file);
         while ( !in.atEnd() ) {
-            QString str = in.readLine();//1s“Ç
+            QString str = in.readLine();//1è¡Œèª­è¾¼
             ui->listWidget->addItem(str);
         }
     }
@@ -443,7 +443,7 @@ void MainWindow::on_pushButton_listload_clicked()
 
 }
 
-//ƒŠƒXƒg‚Ì•Û‘¶
+//ãƒªã‚¹ãƒˆã®ä¿å­˜
 void MainWindow::on_pushButton_listsave_clicked()
 {
     QFileDialog::Options options;
@@ -453,10 +453,10 @@ void MainWindow::on_pushButton_listsave_clicked()
 
     if ( fileName != "" )
     {
-        //“Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹‚ğƒŠƒXƒg‚Éİ’è
+        //èª­ã¿è¾¼ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒªã‚¹ãƒˆã«è¨­å®š
         QFile file(fileName);
 
-        if (!file.open(QIODevice::WriteOnly))//“Ç‚Ì‚İ‚ÅƒI[ƒvƒ“‚Å‚«‚½‚©ƒ`ƒFƒbƒN
+        if (!file.open(QIODevice::WriteOnly))//èª­è¾¼ã®ã¿ã§ã‚ªãƒ¼ãƒ—ãƒ³ã§ããŸã‹ãƒã‚§ãƒƒã‚¯
         {
             return;
         }
@@ -466,7 +466,7 @@ void MainWindow::on_pushButton_listsave_clicked()
         for ( i = 0; i < ui->listWidget->count(); i++ )
         {
             QString str = ui->listWidget->item(i)->text();
-            out << str << endl; //‘‚İ
+            out << str << endl; //æ›¸è¾¼ã¿
         }
     }
 }
@@ -483,7 +483,7 @@ void MainWindow::buttonEnable( bool flg )
     ui->pushButton_settingsave->setEnabled(flg);
     ui->pushButton_open_help->setEnabled(flg);
 }
-//ƒtƒ@ƒCƒ‹’Ç‰Á
+//ãƒ•ã‚¡ã‚¤ãƒ«è¿½åŠ 
 void MainWindow::on_pushButton_fileadd_clicked()
 {
     QFileDialog::Options options;
@@ -493,7 +493,7 @@ void MainWindow::on_pushButton_fileadd_clicked()
 
     if ( addfileName != "" )
     {
-        //“¯‚¶–¼‘O‚ªƒŠƒXƒg‚É‚ ‚éê‡‚Í’e‚­
+        //åŒã˜åå‰ãŒãƒªã‚¹ãƒˆã«ã‚ã‚‹å ´åˆã¯å¼¾ã
         bool addname = true;
         int j = 0;
         for ( j = 0; j < ui->listWidget->count(); j++ )
@@ -528,13 +528,13 @@ void MainWindow::pushButton_enableset()
     ui->pushButton_convert->setEnabled(flg);
 }
 
-//ˆê“I‚ÈƒRƒ“ƒo[ƒgƒŠƒXƒgì¬
+//ä¸€æ™‚çš„ãªã‚³ãƒ³ãƒãƒ¼ãƒˆãƒªã‚¹ãƒˆä½œæˆ
 void MainWindow::templistsave(void)
 {
     QString fileName = data_path + "/templist";
     QFile file(fileName);
 
-    if (!file.open(QIODevice::WriteOnly))//‘‚İ‚Ì‚İ‚ÅƒI[ƒvƒ“‚Å‚«‚½‚©ƒ`ƒFƒbƒN
+    if (!file.open(QIODevice::WriteOnly))//æ›¸è¾¼ã¿ã®ã¿ã§ã‚ªãƒ¼ãƒ—ãƒ³ã§ããŸã‹ãƒã‚§ãƒƒã‚¯
     {
         return;
     }
@@ -547,27 +547,27 @@ void MainWindow::templistsave(void)
         out << fileName << endl;
     }
 }
-//ˆê“I‚ÈƒŠƒXƒg‚Ì“Ç‚İ‚İ
+//ä¸€æ™‚çš„ãªãƒªã‚¹ãƒˆã®èª­ã¿è¾¼ã¿
 void MainWindow::templistload()
 {
     QString fileName = data_path + "/templist";
 
     if ( fileName != "" )
     {
-        //ƒŠƒXƒgƒNƒŠƒA
+        //ãƒªã‚¹ãƒˆã‚¯ãƒªã‚¢
         ui->listWidget->clear();
 
-        //“Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹‚ğƒŠƒXƒg‚Éİ’è
+        //èª­ã¿è¾¼ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒªã‚¹ãƒˆã«è¨­å®š
         QFile file(fileName);
 
-        if (!file.open(QIODevice::ReadOnly))//“Ç‚Ì‚İ‚ÅƒI[ƒvƒ“‚Å‚«‚½‚©ƒ`ƒFƒbƒN
+        if (!file.open(QIODevice::ReadOnly))//èª­è¾¼ã®ã¿ã§ã‚ªãƒ¼ãƒ—ãƒ³ã§ããŸã‹ãƒã‚§ãƒƒã‚¯
         {
             return;
         }
 
         QTextStream in(&file);
         while ( !in.atEnd() ) {
-            QString str = in.readLine();//1s“Ç
+            QString str = in.readLine();//1è¡Œèª­è¾¼
             ui->listWidget->addItem(str);
         }
     }
@@ -575,13 +575,13 @@ void MainWindow::templistload()
 
 }
 
-//ƒRƒ“ƒo[ƒgî•ñƒtƒ@ƒCƒ‹‚ğì¬
+//ã‚³ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ
 void MainWindow::save_convert_info()
 {
     QString fileName(data_path + "/convert_info.json");
     saveConfig(fileName);
 }
-//ƒRƒ“ƒo[ƒgî•ñƒtƒ@ƒCƒ‹‚ğíœ
+//ã‚³ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤
 void MainWindow::delete_convert_info()
 {
     QFile file(data_path + "/convert_info.json");
@@ -591,19 +591,19 @@ void MainWindow::delete_convert_info()
     }
 }
 
-//İ’è‚Ì•Û‘¶ƒ{ƒ^ƒ“
+//è¨­å®šã®ä¿å­˜ãƒœã‚¿ãƒ³
 void MainWindow::on_pushButton_settingsave_clicked()
 {
     saveConfig(data_path + "/config.json");
 
     QMessageBox msgBox(this);
-    msgBox.setText(tr("Œ»İ‚Ìİ’è‚ğ•Û‘¶‚µ‚Ü‚µ‚½"));
+    msgBox.setText(tr("ç¾åœ¨ã®è¨­å®šã‚’ä¿å­˜ã—ã¾ã—ãŸ"));
     msgBox.exec();
 }
 
 void MainWindow::on_pushButton_open_help_clicked()
 {
-    //ƒwƒ‹ƒv‚ğƒuƒ‰ƒEƒU‚ÅŠJ‚­
+    //ãƒ˜ãƒ«ãƒ—ã‚’ãƒ–ãƒ©ã‚¦ã‚¶ã§é–‹ã
     QUrl url = QUrl( "http://www.webtech.co.jp/help/ja/spritestudio/guide/tool/psdtoss6/" );
     QDesktopServices::openUrl( url );
 }

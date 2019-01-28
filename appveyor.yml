@@ -2,7 +2,7 @@ image:
   - Visual Studio 2017
 environment:
   my_secret:
-    secure: okvgSY6Y+h6RzyZp8GCoyg==
+    secure: WiPT73ne8lYRatZhXD807w==
 install:
   - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
   - cmd: appveyor-tools\secure-file -decrypt deploy_key_appveyor.enc -secret %my_secret%

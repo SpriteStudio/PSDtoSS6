@@ -16,4 +16,4 @@ artifacts:
   - path: ./out/
     name: PSDtoSS6_win
 deploy_script:
-  - cmd: script/deploy.bat
+  - cmd: scripts\deploy.bat

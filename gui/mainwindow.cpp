@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     imgProcess = new QProcess(this);
 
     //ウィンドウのタイトルをつける
-    setWindowTitle("PSDtoSS6 GUI Ver2.0.0");
+    setWindowTitle("PSDtoSS6 GUI Ver2.0.1");
 
     //初期化
     convert_exec = false;

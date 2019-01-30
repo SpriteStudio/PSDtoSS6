@@ -1,19 +1,22 @@
 image:
   - Visual Studio 2017
-environment:
-  my_secret:
-    secure: WiPT73ne8lYRatZhXD807w==
-install:
-  - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
-  - cmd: appveyor-tools\secure-file -decrypt deploy_key_appveyor.enc -secret %my_secret%
-  - cmd: cp deploy_key_appveyor %USERPROFILE%\.ssh\id_rsa
-  - cmd: chmod 600 %USERPROFILE%\.ssh\id_rsa
+
 configuration:
   - Release
+
 build_script:
   - cmd: scripts/build_win.bat
+
 artifacts:
   - path: ./out/
     name: PSDtoSS6_win
-deploy_script:
-  - cmd: scripts\deploy.bat
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: SgBhPSveSRK+d8WTCvl/MvIwm8IA6ZlCk5BJtFpnio+H5/Fj+ocZz3GbkRc+W2Cv
+  artifact: PSDtoSS6_win.zip
+  draft: false
+  prerelease: false
+  on:
+    APPVEYOR_REPO_TAG: true        # deploy on tag push only

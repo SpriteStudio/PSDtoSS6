@@ -1,0 +1,32 @@
+language: cpp
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10
+before_cache:
+  - brew cleanup
+cache: 
+  directories:
+    - $HOME/Library/Caches/Homebrew/
+before_install:
+install:
+before_script:
+script:
+  - sh scripts/build_mac.sh
+after_script:
+after_success:
+after_failure:
+before_deploy:
+  - zip -r PSDtoSS6_mac.zip out/
+deploy:
+  provider: releases
+  api_key:
+    secure: "ERpdvfJg9TGqRb8aijHnp28VWqMtkeUXVsWX3EIQcElFFQY5Pcxk+GTCjdBjvonotixVXll1bclvzkhdLUrZLplD9Ll25ucScwz/FK0aWTTtK1P0XGDzqt7uU/e+OBKRTrdxcLZE/Ni2eHSbyJU15hS+werItuA/cr1gooS/uebmbwfdReMfmkNGTrC2rC84S2LcE0Hs3D6ORI2fjkJixgkEFTrwltkmkoNy8CMO0Kva9DL/rkRhbP5ITfJxtxP4xa8SFfvJoh5vIRl4LklaYAM4eQMVJ3J3ksLBFsV6kntprg//3uiCrWDqtDC8UDRtfvSveGEvHCYNinENl6Eh5rRKq3B/JpXC9IYb6N45voS5f8OtS+K3g8qNDOA5gM88CsGawwvw+HfWQYBHTLb6wsBNd4HPeKnNrLh32//ccUCZyYJ6N65+We6YJ3/uHNEXcrrdg+pgAiwnOmerqLP9OYc+D9OXbPlCvNireCtLgMN4rf0Q4uxq9Xlhy59rCIOl57V4lkn/AHzeEa4nreYM25D+OUr+S8TtujvAimH6ygF2jXtacjPTb6FtCfQ4NZOIQakrOoYYY2dpdNAaWyLQ3ZP3dnIVyVAy0yY9a6colVzFCHcBDXUenbsc5NP5GA99GVKItXhkTLO54q5pw6ZrzKJt5oIu5iyiAzNLZ0r9cG0="
+  file: PSDtoSS6_mac.zip
+  skip_cleanup: true
+  on:
+    tags: true
+addons:
+  homebrew:
+    packages:
+      - qt

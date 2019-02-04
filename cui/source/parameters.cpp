@@ -6,7 +6,7 @@
 #include <string>
 #include <iterator>
 
-#include <babel.h>
+#include "../babel/babel.h"
 #include "../picojson/picojson.h"
 
 int convert_parameters::SortModeStringToInt(std::string str)

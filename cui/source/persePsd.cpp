@@ -194,6 +194,8 @@ bool  persePsdMain(std::string inputname,
 		{
 			for (int x = layer->left; x < layer->right ; x++)
 			{
+				if (y >= layer->height) continue;
+
 				uint32_t	pix = layer->pixels[y * layer->width + x];
 				if (pix != 0)
 				{

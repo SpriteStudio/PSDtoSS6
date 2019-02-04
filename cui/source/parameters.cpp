@@ -6,7 +6,6 @@
 #include <string>
 #include <iterator>
 
-#include "../babel/babel.h"
 #include "../picojson/picojson.h"
 
 int convert_parameters::SortModeStringToInt(std::string str)
@@ -90,18 +89,8 @@ bool convert_parameters::parseConfigJson(std::string fname)
 	canvasSize			= obj["canvasSize"].get<double>();
 	inner_padding		= obj["inner_padding"].get<double>();
 
-	babel::bbl_string utf8_filepath = obj["outputpath"].get<std::string>();
-	outputpath = utf8_filepath;
-
-//jsonはutf8で保存されているためsjisへ変換
-#ifdef _WIN32
-	outputpath = babel::utf8_to_sjis(utf8_filepath);
-#endif
-
+	outputpath = obj["outputpath"].get<std::string>();
 	std::string temp = obj["outputname"].get<std::string>();
-#ifdef _WIN32
-	temp = babel::utf8_to_sjis(temp);
-#endif
 
 
 	if (temp != "")

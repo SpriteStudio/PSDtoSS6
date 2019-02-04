@@ -1249,7 +1249,7 @@ bool	ConvertToSS::convert(std::string arg)
 		//jsonはutf8で保存されているためsjisへ変換
 #ifdef _WIN32
 		params.outputpath = babel::utf8_to_sjis(params.outputpath);
-		params.outputname = babel::utf8_to_sjis(params.outputpath);
+		params.outputname = babel::utf8_to_sjis(params.outputname);
 #endif
 	}
 

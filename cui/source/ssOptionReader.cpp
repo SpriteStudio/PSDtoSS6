@@ -12,6 +12,16 @@ SSOptionReader::SSOptionReader()
 
 bool	SSOptionReader::load()
 {
+
+	std::string home = get_documents_path();
+	if (home == "") return false;
+	home += TOOL_DOCUMENT_FOLDER;
+
+	ssopname = home + "SsOption_v6.ssop";
+	ssopname_beta = home + "SsOption_v6_beta.ssop";
+
+
+/*
 #ifndef _WIN32
 	char* p_c = getenv("HOME");
 	if (p_c == nullptr)
@@ -38,6 +48,7 @@ bool	SSOptionReader::load()
 		ssopname_beta = home + "\\SpriteStudio\\SsOption_v6_beta.ssop";
 	}
 #endif
+*/
 
 	//ssopをxmlドキュメントとして取得
 	if (tinyxml2::XML_NO_ERROR != loadssop_xml.LoadFile(ssopname.c_str()))

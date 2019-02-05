@@ -6,6 +6,7 @@
 #include "../babel/babel.h"
 
 
+
 using namespace SsConverter;
 
 
@@ -56,34 +57,13 @@ bool	ConvertToSS::getInfomationFilePath()
 {
 	//std::string convert_info;
 
-#ifndef _WIN32
-	char* p_c = getenv("HOME");
-	if (p_c == nullptr)
-	{
-		return false;
-	}
-	else
-	{
-		convert_info_path = p_c;
-		convert_info_path += "/Documents/SpriteStudio/PSDtoSS6/convert_info";
-	}
-#else
-	char p_c[256];
-	//Documentsへのパスを取得
-	get_documents_path(p_c);
-	if (p_c == NULL)
-	{
-		return false;
-	}
-	else
-	{
-		convert_info_path = p_c;
-		//コンバート情報ファイルのパス
-		convert_info_path += "\\SpriteStudio\\PSDtoSS6\\convert_info";
-	}
-#endif
+	convert_info_path = get_documents_path();
+	if (convert_info_path == "") return false;
+	convert_info_path += TOOL_DOCUMENT_FOLDER;
+	convert_info_path += "convert_info";
 
 	return true;
+
 }
 
 

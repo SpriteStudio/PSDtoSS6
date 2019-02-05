@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "../cui/source/parameters.h"
 
+#include <QTextCodec>
+
 QString execPathStr = "";    //実行しているコンバータGUIのパス
 QString Outputpath = "";     //出力フォルダ
 QString cnvOutputStr = "";   //コンバート結果
@@ -146,7 +148,13 @@ void MainWindow::saveConfig(const QString & fileName)
     cp.outputpath           = ui->textBrowser_output->toPlainText().toStdString();
     cp.outputname           = "";
 
-    cp.saveConfigJson(fileName.toStdString());
+#if _WIN32
+	QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
+	cp.saveConfigJson(sjis->fromUnicode(fileName).toStdString());
+#else
+	cp.saveConfigJson(fileName.toStdString());
+#endif
+
 }
 
 

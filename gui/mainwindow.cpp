@@ -14,6 +14,16 @@ std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
+
+#define TITLE_VERSION "PSDtoSS6 GUI Ver2.0.1"
+
+
+
+//#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
+#define TOOLFOLDER "/PSDtoSS6"
+
+
+
 template<typename T1, typename T2>
 T1 MainWindow::getKey(const std::map<T1, T2> & map, const T2 & value) const
 {
@@ -47,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     imgProcess = new QProcess(this);
 
     //ウィンドウのタイトルをつける
-    setWindowTitle("PSDtoSS6 GUI Ver2.0.1");
+    setWindowTitle(TITLE_VERSION);
 
     //初期化
     convert_exec = false;
@@ -89,7 +99,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Documentsのパスを取得
     data_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    data_path += "/SpriteStudio/PSDtoSS6";
+//    data_path += "/SpriteStudio/PSDtoSS6";
+	data_path += TOOLFOLDER;
+	qDebug() << "data_path " << data_path;
+
     QDir dir;
     //設定ファイル保存用ディレクトリを作成
     dir.mkpath(data_path);

@@ -3,6 +3,8 @@
 #include "convertToSS.h"
 #include "persePsd.h"
 #include "xml_template.h"
+#include "../babel/babel.h"
+
 
 using namespace SsConverter;
 
@@ -1243,6 +1245,13 @@ bool	ConvertToSS::convert(std::string arg)
 	{
 		if (!params.parseConfig(convert_info_path)) return false;
 	}
+	else {
+		//jsonはutf8で保存されているためsjisへ変換
+#ifdef _WIN32
+		params.outputpath = babel::utf8_to_sjis(params.outputpath);
+		params.outputname = babel::utf8_to_sjis(params.outputname);
+#endif
+	}
 
 	//イメージファイルのロード
 	if (!loadImageFile())return false;
@@ -1268,8 +1277,8 @@ bool	ConvertToSS::convert(std::string arg)
 
 	SSOptionReader ssoption;
 
-	if ( !ssoption.load() ) return false;
-
+//	if ( !ssoption.load() ) return false;
+	ssoption.load();
 	makeSsceFile(ssoption);
 	makeSsaeFile(ssoption);
 	makeSspjFile(ssoption);

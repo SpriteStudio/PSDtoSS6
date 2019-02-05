@@ -14,6 +14,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
+	std::locale::global(std::locale("japanese"));
 	setlocale(LC_CTYPE, "jpn");
 	babel::init_babel();
 

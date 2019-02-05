@@ -17,8 +17,6 @@ std::map<int, QString> map_canvasSize;
 
 #define TITLE_VERSION "PSDtoSS6 GUI Ver2.0.2"
 
-
-
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
 

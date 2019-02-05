@@ -15,7 +15,7 @@ std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
 
-#define TITLE_VERSION "PSDtoSS6 GUI Ver2.0.1"
+#define TITLE_VERSION "PSDtoSS6 GUI Ver2.0.2"
 
 
 

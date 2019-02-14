@@ -50,7 +50,10 @@ std::string convert_parameters::SortModeIntToString(int i)
 
 bool convert_parameters::parseConfigJson(std::string fname)
 {
+#if _WIN32
 	std::locale::global(std::locale("japanese"));
+#endif
+
 	std::ifstream ifs(fname, std::ios::in);
 	if (ifs.fail()) {
 		std::cerr << "failed to read test.json" << std::endl;
@@ -110,7 +113,9 @@ bool convert_parameters::parseConfigJson(std::string fname)
 
 bool convert_parameters::saveConfigJson(std::string fname)
 {
+#if _WIN32
 	std::locale::global(std::locale("japanese"));
+#endif
 	std::ofstream ofs(fname);
 	if (ofs.fail()) {
 		std::cerr << "failed to read test.json" << std::endl;
@@ -151,7 +156,9 @@ bool convert_parameters::saveConfigJson(std::string fname)
 //old version config file
 bool convert_parameters::parseConfig(std::string fname)
 {
+#if _WIN32
 	std::locale::global(std::locale("japanese"));
+#endif
 	std::ifstream ifs;
 
 	ifs.open(fname);

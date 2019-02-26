@@ -783,7 +783,6 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 	XMLElement*  cells = root->FirstChildElement("cells");
 
 //	bool err = false;
-	if (!is_ssceload) return;
 
 	int num = packer.GetPrimitiveNum();
 	for (int read_count = 0; read_count < readpngfile_max; read_count++)

@@ -298,8 +298,8 @@ bool    ConvertToSS::texturePacking_PivotUse()
 			//pivotを取得
 			XMLElement* cell_name = ssce_cell->FirstChildElement("name");
 			XMLElement* cell_pivot = ssce_cell->FirstChildElement("pivot");
-
-			pivot[idx].name = cell_name->GetText();
+			const char * test = cell_name->GetText();
+			pivot[idx].name = test;
 			std::string pivot_text = cell_pivot->GetText();
 			int st = pivot_text.find(" ");	//区切り文字の位置を取得
 			std::string pivot_x_text = pivot_text.substr(0, st);
@@ -783,6 +783,7 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 	XMLElement*  cells = root->FirstChildElement("cells");
 
 //	bool err = false;
+	if (!is_ssceload) return;
 
 	int num = packer.GetPrimitiveNum();
 	for (int read_count = 0; read_count < readpngfile_max; read_count++)
@@ -1216,7 +1217,14 @@ bool	ConvertToSS::convert(std::string arg)
 	ssce_cell_list.clear();
 	celldata_num = 0;
 	readpngfile_max = 0;
-	memset(pivot, 0, sizeof(pivot));
+
+	for (int i = 0; i < PARTS_MAX; i++)
+	{
+		pivot[i].name = "";
+		pivot[i].use = false;
+		pivot[i].x = 0;
+		pivot[i].y = 0;
+	}
 	
 	if (!parseInputOutputFiles(arg))return false;
 	if (!getInfomationFilePath()) return false;

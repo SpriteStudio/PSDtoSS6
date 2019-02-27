@@ -14,13 +14,13 @@ public:
 	int pack_padding;
 	int addpri;
 
-	bool is_ssaeoutput;
-	bool is_sspjoutput;
-	bool is_addnull;
-	bool is_overwrite;
-	bool is_layerPivotUse;
-	bool is_rootLayerUse;
-	bool is_oldPivotUse;
+	bool is_ssaeoutput;		//ssae出力
+	bool is_sspjoutput;		//sspj出力
+	bool is_addnull;		//親NULLパーツ追加
+	bool is_overwrite;		//ssae sspj上書き
+	bool is_layerPivotUse;	//原点レイヤー適用
+	bool is_rootLayerUse;	//rootレイヤー適用
+	bool is_oldPivotUse;	//SSCE読み込み
 	int sortmode;
 	int padding_border;
 	int canvasSize;

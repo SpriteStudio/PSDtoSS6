@@ -816,8 +816,7 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 							break;
 						}
 					}
-				}
-				if ( params.is_layerPivotUse == true)
+				}else if ( params.is_layerPivotUse == true)	//ssceを読まないときにはピボットを書き込む
 				{
 					//原点レイヤーを適用する場合は検索して適用する
 					for (size_t j = 0; j < num; j++)
@@ -825,7 +824,9 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 						SSSpriteSheetPrim pw = packer.GetPrimitiveInfo(j);
 						if (pw.layertype == LAYERTYPE_PIVOT)
 						{
-							if (p.name == pw.name.substr(1, pw.name.length() - 1))
+
+							std::string primitiveLayerName = pw.name.substr(1, pw.name.length() - 1);
+							if (p.name == primitiveLayerName)
 							{
 								//同じ名前のレイヤーが存在した
 								if (pw.nodata == true)

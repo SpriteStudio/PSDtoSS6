@@ -1242,14 +1242,13 @@ bool	ConvertToSS::convert(std::string arg)
 	//プライオリティの加算
 	addPriority();
 
-	loadssae();
-
 	//出力ファイル名を作製
 	pngname = params.outputpath + params.outputname + ".png";
 	sspjname = params.outputpath + params.outputname + ".sspj";
 	sscename = params.outputpath + params.outputname + ".ssce";
 	ssaename = params.outputpath + params.outputname + ".ssae";
 
+	loadssae();
 
 	//パッキングの実行
 	if (!texturePacking()) return false;

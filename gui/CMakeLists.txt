@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+﻿cmake_minimum_required(VERSION 3.1.0)
 
 if((NOT CMAKE_PROJECT_NAME))
     set(CMAKE_PROJECT_NAME PSDtoSS6GUI)

@@ -198,7 +198,7 @@ void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocume
 
 	tinyxml2::XMLDocument loadsspj_xml;
 
-	if (tinyxml2::XML_NO_ERROR != loadsspj_xml.LoadFile(sspjname.c_str()))
+	if (tinyxml2::XML_SUCCESS != loadsspj_xml.LoadFile(sspjname.c_str()))
 	{
 	}
 	else
@@ -330,7 +330,7 @@ void AddPartAnime(tinyxml2::XMLElement* parent, SSSpriteSheetPrim* Sheetcell, in
 		addAnimeAttribute(attributes, "ROTZ", "0");
 		addAnimeAttribute(attributes, "HIDE", "0", false);
 	}
-	if (tinyxml2::XML_NO_ERROR != loadssop_xml->Error())
+	if (tinyxml2::XML_SUCCESS != loadssop_xml->Error())
 	{
 		//ssopが存在しない場合
 		//POSX,POSY,PRIO,ROTZ,HIDEのみ出力

@@ -241,7 +241,7 @@ void	ConvertToSS::addPriority()
 
 void ConvertToSS::loadssae()
 {
-	if (tinyxml2::XML_NO_ERROR != loadssae_xml.LoadFile(ssaename.c_str()))
+	if (tinyxml2::XML_SUCCESS != loadssae_xml.LoadFile(ssaename.c_str()))
 	{
 		//読み込み失敗
 		//新規作成
@@ -277,7 +277,7 @@ bool    ConvertToSS::texturePacking_PivotUse()
 	//ssceを読み込みpivotのリストを作製する。
 	//同じセル名が存在する場合は読み込んだpivotを反映させる
 	XMLDocument loadssce_xml;
-	if (tinyxml2::XML_NO_ERROR != loadssce_xml.LoadFile(sscename.c_str()))
+	if (tinyxml2::XML_SUCCESS != loadssce_xml.LoadFile(sscename.c_str()))
 	{
 		//ファイルが無いため新規作成とする
 		return true;

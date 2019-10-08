@@ -3,6 +3,7 @@
 // $ g++ main.cpp -lpng -lpsd -ljpeg
 
 #include "convertToSS.h"
+#include <stdlib.h>
 
 using namespace SsConverter;
 
@@ -10,6 +11,7 @@ using namespace SsConverter;
 int main(int argc, char **argv)
 {
 
+	rand(); 
 	if (argc <= 1) {
 		return -1;
 	}

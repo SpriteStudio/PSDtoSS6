@@ -6,7 +6,7 @@
 
 #ifdef USE_PNG
 #include <png.h>
-#include <pngstruct.h>
+//#include <pngstruct.h>
 #include <zlib.h>
 #endif
 

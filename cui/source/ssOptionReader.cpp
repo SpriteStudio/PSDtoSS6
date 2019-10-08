@@ -51,10 +51,10 @@ bool	SSOptionReader::load()
 */
 
 	//ssopをxmlドキュメントとして取得
-	if (tinyxml2::XML_NO_ERROR != loadssop_xml.LoadFile(ssopname.c_str()))
+	if (tinyxml2::XML_SUCCESS != loadssop_xml.LoadFile(ssopname.c_str()))
 	{
 		//SsOption_v6がない場合は、SsOption_v6_betaを読む
-		if (tinyxml2::XML_NO_ERROR != loadssop_xml.LoadFile(ssopname_beta.c_str()))
+		if (tinyxml2::XML_SUCCESS != loadssop_xml.LoadFile(ssopname_beta.c_str()))
 		{
 			return false;
 		}

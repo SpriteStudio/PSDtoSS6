@@ -11,14 +11,14 @@ using namespace SsConverter;
 int main(int argc, char **argv)
 {
 
-#if _DEBUG
-	//なぜかdebugのみ未参照となるので書いておく
-	rand(); 
+#if 1
+	//なぜか未参照となるので書いておく
+	rand();
 	void * ptr = malloc(4);
 	ptr = realloc(ptr, 8);
 	free(ptr);
-#else
 #endif
+
 	if (argc <= 1) {
 		return -1;
 	}
@@ -27,7 +27,6 @@ int main(int argc, char **argv)
 	setlocale(LC_CTYPE, "jpn");
 #endif
 
-	babel::init_babel();
 
 	ConvertToSS converter;
 	

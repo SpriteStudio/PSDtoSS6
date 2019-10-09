@@ -19,6 +19,8 @@ find_package(JPEG  REQUIRED)
 find_package(tinyxml2 CONFIG REQUIRED)
 find_path(SYSTEM_INCLUDE_DIR  picojson.h)
 
+find_package(ICU COMPONENTS UC IO REQUIRED)
+
 
 add_subdirectory(libpsd-0.9)
 #add_subdirectory(zlib-1.2.8)
@@ -38,9 +40,9 @@ add_library(ItsyPSD STATIC
 #    ./tinyxml2/tinyxml2.cpp 
 #    ./tinyxml2/tinyxml2.h)
 
-add_library(babel STATIC
-    ./babel/babel.cpp
-    ./babel/babel.h)
+#add_library(babel STATIC
+#    ./babel/babel.cpp
+#    ./babel/babel.h)
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
     ./source/common.h
@@ -64,6 +66,8 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
     ./source/ssOptionReader.cpp
     ./source/psdBitmapLayer.h
     ./source/typedef.h
+    ./source/stringconv.h
+    ./source/stringconv.cpp
 ) 
 
 
@@ -76,7 +80,7 @@ IF(WIN32)
 #	ADD_DEFINITIONS(-DUNICODE -D_UNICODE)
     ADD_DEFINITIONS(/D_WIN64)
 #	SET_TARGET_PROPERTIES (${CMAKE_PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/Zc:wchar_t")
-	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+	set(CMAKE_CXX_FLAGS_RELEASE "/MT ")
 	set(CMAKE_CXX_FLAGS_DEBUG "/MTd  /Zi /Od")
 	set(CMAKE_EXE_LINKER_FLAGS "/OPT:REF /OPT:ICF ")	
 
@@ -92,9 +96,11 @@ ELSEIF(APPLE)
 ELSEIF(CMAKE_COMPILER_IS_GNUCXX)
 ENDIF()
 
-include_directories( ${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR} ${tinyxml2_include_dir} ${jpeg_include_dir} babel libpsd-0.9/include ItsyPSD)
+include_directories( ${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR} ${tinyxml2_include_dir} ${jpeg_include_dir} babel libpsd-0.9/include ItsyPSD ${ICU_UC_INCLUDE_DIR})
 #include_directories( tinyxml2 ;lpng1615 ; ${ZLIB_INCLUDE_DIR} ; babel ;)
-target_link_libraries(${CMAKE_PROJECT_NAME}  ${PNG_LIBRARY} ${libpsd-0.9} libpsd ItsyPSD  babel tinyxml2::tinyxml2 ZLIB::ZLIB)
+
+#target_link_libraries(${CMAKE_PROJECT_NAME}  ${PNG_LIBRARY} ${libpsd-0.9} libpsd ItsyPSD  babel tinyxml2::tinyxml2 ZLIB::ZLIB)
+target_link_libraries(${CMAKE_PROJECT_NAME}  ${PNG_LIBRARY} ${libpsd-0.9} libpsd ItsyPSD tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})
 
 
 

@@ -3,7 +3,7 @@
 #include "convertToSS.h"
 #include "persePsd.h"
 #include "xml_template.h"
-#include "../babel/babel.h"
+#include "stringconv.h"
 
 
 
@@ -183,8 +183,8 @@ bool	ConvertToSS::checkInvalidLayerName()
 	for (int i = 0; i < readpngfile_max; i++)
 	{
 		//全角チェック
-		babel::bbl_string  name = pb.inputlayername[i].c_str();
-		name = babel::utf8_to_sjis(name);
+		std::string name = pb.inputlayername[i].c_str();
+		name = stringconv::utf8_to_sjis(name);
 		if (isZenkaku(name) == true)
 		{
 			std::cerr << "エラー：セル名に全角文字が使用されています。 ";
@@ -1228,8 +1228,8 @@ bool	ConvertToSS::convert(std::string arg)
 	else {
 		//jsonはutf8で保存されているためsjisへ変換
 #ifdef _WIN32
-		params.outputpath = babel::utf8_to_sjis(params.outputpath);
-		params.outputname = babel::utf8_to_sjis(params.outputname);
+		params.outputpath = stringconv::utf8_to_sjis(params.outputpath);
+		params.outputname = stringconv::utf8_to_sjis(params.outputname);
 #endif
 	}
 

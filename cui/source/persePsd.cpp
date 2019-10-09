@@ -7,6 +7,8 @@
 #include <string>
 #include "helper.h"
 
+#include "stringconv.h"
+
 
 #define DEBUG_VERBOSE 0
 #define DEBUG_PREVIEW 0
@@ -59,8 +61,8 @@ bool  persePsdMain(std::string inputname,
 	{
 
 		//sjisで格納されている
-		babel::bbl_string  name = (char*)layer->layer_name;
-		name = babel::sjis_to_utf8(name);
+		std::string name = (char*)layer->layer_name;
+		name = stringconv::sjis_to_utf8(name);
 		int layertype = LAYERTYPE_NORMAL;
 
 		// each layer
@@ -129,7 +131,7 @@ bool  persePsdMain(std::string inputname,
 
 						if (
 							(layer->visible == psd_false) //レイヤー非表示の時は登録しない
-							|| (name.find("@") != babel::bbl_string::npos)
+							|| (name.find("@") != std::string::npos)
 							)
 						{
 							//名前に@が含まれている場合はセルに含めない
@@ -171,7 +173,7 @@ bool  persePsdMain(std::string inputname,
 
 		if (
 			(layer->visible == psd_false) //レイヤー非表示の時は登録しない
-			|| (name.find("@") != babel::bbl_string::npos)
+			|| (name.find("@") != std::string::npos)
 			)
 		{
 			//名前に@が含まれている場合はセルに含めない

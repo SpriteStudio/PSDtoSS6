@@ -6,7 +6,7 @@
 #include "babel.h"
 #else
 #include "tinyxml2.h"
-#include "babel.h"
+//#include "babel.h"
 #include <locale.h>
 #endif
 

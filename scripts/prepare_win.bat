@@ -13,6 +13,7 @@ vcpkg install zlib
 vcpkg install libpng
 vcpkg install libjpeg-turbo
 vcpkg install icu
+vcpkg install OpenImageIO
 
 vcpkg integrate install
 

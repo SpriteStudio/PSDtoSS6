@@ -79,6 +79,8 @@ psd_status psd_get_layer_color_overlay(psd_context * context, psd_layer_effects_
 
 psd_status psd_get_layer_color_overlay2(psd_context * context, psd_layer_effects_color_overlay * color_overlay)
 {
+
+	return psd_status_done;
 	psd_int length, number_items;
 	psd_uint rootkey, type, key;
 	psd_uchar keychar[256];

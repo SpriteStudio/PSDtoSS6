@@ -159,6 +159,8 @@ psd_status psd_get_layer_effects(psd_context * context, psd_layer_record * layer
 // Object-based effects layer info (Photoshop 6.0)
 psd_status psd_get_layer_effects2(psd_context * context, psd_layer_record * layer)
 {
+	return psd_status_done;
+
 	psd_layer_effects * data;
 	psd_int length, number_items;
 	psd_uint rootkey, type, key;

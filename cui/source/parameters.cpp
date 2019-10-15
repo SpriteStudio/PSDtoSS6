@@ -6,8 +6,9 @@
 #include <string>
 #include <iterator>
 
-
 #include "../picojson/picojson.h"
+//#include "picojson/picojson.h""
+
 
 int convert_parameters::SortModeStringToInt(std::string str)
 {
@@ -51,6 +52,10 @@ std::string convert_parameters::SortModeIntToString(int i)
 
 bool convert_parameters::parseConfigJson(std::string fname)
 {
+#if _WIN32
+	std::locale::global(std::locale("japanese"));
+#endif
+
 	std::ifstream ifs(fname, std::ios::in);
 	if (ifs.fail()) {
 		std::cerr << "failed to read test.json" << std::endl;
@@ -90,13 +95,13 @@ bool convert_parameters::parseConfigJson(std::string fname)
 	canvasSize			= obj["canvasSize"].get<double>();
 	inner_padding		= obj["inner_padding"].get<double>();
 
-	outputpath			= obj["outputpath"].get<std::string>();
-
-
+	outputpath = obj["outputpath"].get<std::string>();
 	std::string temp = obj["outputname"].get<std::string>();
+
+
 	if (temp != "")
 	{
-		outputname = obj["outputname"].get<std::string>();
+		outputname = temp;
 	}
 
 	if ((tex_padding_shape + inner_padding) <= 1)
@@ -110,6 +115,9 @@ bool convert_parameters::parseConfigJson(std::string fname)
 
 bool convert_parameters::saveConfigJson(std::string fname)
 {
+#if _WIN32
+	std::locale::global(std::locale("japanese"));
+#endif
 	std::ofstream ofs(fname);
 	if (ofs.fail()) {
 		std::cerr << "failed to read test.json" << std::endl;
@@ -150,7 +158,9 @@ bool convert_parameters::saveConfigJson(std::string fname)
 //old version config file
 bool convert_parameters::parseConfig(std::string fname)
 {
-
+#if _WIN32
+	std::locale::global(std::locale("japanese"));
+#endif
 	std::ifstream ifs;
 
 	ifs.open(fname);

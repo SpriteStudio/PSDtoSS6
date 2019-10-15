@@ -66,3 +66,10 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 out
+cui/build/
+gui/build/
+
+cui/babel/x64/*
+cui/babel/tinyxml2.dir/Debug/*
+cui/babel/babel.dir/*
+vcpkg

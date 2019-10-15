@@ -7,8 +7,8 @@ if not defined DSTDIR set DSTDIR=%BASEDIR%..\out\
 echo SRCDIR : %SRCDIR%
 echo DSTDIR : %DSTDIR%
 
-set CMAKE_PREFIX_PATH=C:\Qt\5.9.7\msvc2017_64\lib\
-set QT_PATH=C:\Qt\5.9.7\msvc2017_64\bin\
+set CMAKE_PREFIX_PATH=C:\Qt\Qt5.9.7\5.9.7\msvc2017_64\lib\
+set QT_PATH=C:\Qt\Qt5.9.7\5.9.7\msvc2017_64\bin\
 echo CMAKE_PREFIX_PATH : %CMAKE_PREFIX_PATH%
 echo QT_PATH : %QT_PATH%
 
@@ -20,7 +20,7 @@ if exist build rd /s /q build
 mkdir build
 pushd build 
 
-cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_PROJECT_NAME="PSDtoSS6GUI" .. || exit /b 1
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE="../../vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PROJECT_NAME="PSDtoSS6GUI" .. || exit /b 1
 cmake --build . -- /t:clean;rebuild /p:configuration=release /clp:ErrorsOnly /m:4 || exit /b 1
 
 xcopy /y Release\*.exe %DSTDIR%

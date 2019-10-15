@@ -1,3 +1,8 @@
 ﻿#pragma once
 //Documentsへのパスを取得する
-void get_documents_path(char* p_path);
+#include <string>
+
+//void get_documents_path(char* p_path);
+std::string	get_documents_path();
+
+

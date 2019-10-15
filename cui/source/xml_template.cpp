@@ -42,7 +42,7 @@ void Ssxx_template::set_filename(std::string filename_)
 //ssopが存在すれば「新規作成時のプロジェクトのデフォルト設定」を反映する
 void Ssxx_template::make_template(XMLDocument* loadssop_xml)
 {
-	if (tinyxml2::XML_NO_ERROR != loadssop_xml->Error())
+	if (tinyxml2::XML_SUCCESS != loadssop_xml->Error())
 	{
 		make_template_form_default();
 	}
@@ -251,7 +251,7 @@ void Sspj_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 		fclose(fp);
 
 		XMLDocument xml;
-		if (tinyxml2::XML_NO_ERROR != xml.LoadFile(filename.c_str()))
+		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
 		{
 		}
 		else
@@ -341,7 +341,7 @@ void Ssce_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 		fclose(fp);
 
 		XMLDocument xml;
-		if (tinyxml2::XML_NO_ERROR != xml.LoadFile(filename.c_str()))
+		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
 		{
 		}
 		else
@@ -487,7 +487,7 @@ void Ssae_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 		fclose(fp);
 
 		XMLDocument xml;
-		if (tinyxml2::XML_NO_ERROR != xml.LoadFile(filename.c_str()))
+		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
 		{
 		}
 		else

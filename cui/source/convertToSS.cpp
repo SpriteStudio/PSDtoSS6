@@ -3,6 +3,9 @@
 #include "convertToSS.h"
 #include "persePsd.h"
 #include "xml_template.h"
+#include "stringconv.h"
+
+
 
 using namespace SsConverter;
 
@@ -54,34 +57,13 @@ bool	ConvertToSS::getInfomationFilePath()
 {
 	//std::string convert_info;
 
-#ifndef _WIN32
-	char* p_c = getenv("HOME");
-	if (p_c == nullptr)
-	{
-		return false;
-	}
-	else
-	{
-		convert_info_path = p_c;
-		convert_info_path += "/Documents/SpriteStudio/PSDtoSS6/convert_info";
-	}
-#else
-	char p_c[256];
-	//Documentsへのパスを取得
-	get_documents_path(p_c);
-	if (p_c == NULL)
-	{
-		return false;
-	}
-	else
-	{
-		convert_info_path = p_c;
-		//コンバート情報ファイルのパス
-		convert_info_path += "\\SpriteStudio\\PSDtoSS6\\convert_info";
-	}
-#endif
+	convert_info_path = get_documents_path();
+	if (convert_info_path == "") return false;
+	convert_info_path += TOOL_DOCUMENT_FOLDER;
+	convert_info_path += "convert_info";
 
 	return true;
+
 }
 
 
@@ -201,8 +183,8 @@ bool	ConvertToSS::checkInvalidLayerName()
 	for (int i = 0; i < readpngfile_max; i++)
 	{
 		//全角チェック
-		babel::bbl_string  name = pb.inputlayername[i].c_str();
-		name = babel::utf8_to_sjis(name);
+		std::string name = pb.inputlayername[i].c_str();
+		name = stringconv::utf8_to_sjis(name);
 		if (isZenkaku(name) == true)
 		{
 			std::cerr << "エラー：セル名に全角文字が使用されています。 ";
@@ -259,7 +241,7 @@ void	ConvertToSS::addPriority()
 
 void ConvertToSS::loadssae()
 {
-	if (tinyxml2::XML_NO_ERROR != loadssae_xml.LoadFile(ssaename.c_str()))
+	if (tinyxml2::XML_SUCCESS != loadssae_xml.LoadFile(ssaename.c_str()))
 	{
 		//読み込み失敗
 		//新規作成
@@ -295,7 +277,7 @@ bool    ConvertToSS::texturePacking_PivotUse()
 	//ssceを読み込みpivotのリストを作製する。
 	//同じセル名が存在する場合は読み込んだpivotを反映させる
 	XMLDocument loadssce_xml;
-	if (tinyxml2::XML_NO_ERROR != loadssce_xml.LoadFile(sscename.c_str()))
+	if (tinyxml2::XML_SUCCESS != loadssce_xml.LoadFile(sscename.c_str()))
 	{
 		//ファイルが無いため新規作成とする
 		return true;
@@ -1243,6 +1225,13 @@ bool	ConvertToSS::convert(std::string arg)
 	{
 		if (!params.parseConfig(convert_info_path)) return false;
 	}
+	else {
+		//jsonはutf8で保存されているためsjisへ変換
+#ifdef _WIN32
+		params.outputpath = stringconv::utf8_to_sjis(params.outputpath);
+		params.outputname = stringconv::utf8_to_sjis(params.outputname);
+#endif
+	}
 
 	//イメージファイルのロード
 	if (!loadImageFile())return false;
@@ -1253,14 +1242,13 @@ bool	ConvertToSS::convert(std::string arg)
 	//プライオリティの加算
 	addPriority();
 
-	loadssae();
-
 	//出力ファイル名を作製
 	pngname = params.outputpath + params.outputname + ".png";
 	sspjname = params.outputpath + params.outputname + ".sspj";
 	sscename = params.outputpath + params.outputname + ".ssce";
 	ssaename = params.outputpath + params.outputname + ".ssae";
 
+	loadssae();
 
 	//パッキングの実行
 	if (!texturePacking()) return false;
@@ -1268,8 +1256,8 @@ bool	ConvertToSS::convert(std::string arg)
 
 	SSOptionReader ssoption;
 
-	if ( !ssoption.load() ) return false;
-
+//	if ( !ssoption.load() ) return false;
+	ssoption.load();
 	makeSsceFile(ssoption);
 	makeSsaeFile(ssoption);
 	makeSspjFile(ssoption);

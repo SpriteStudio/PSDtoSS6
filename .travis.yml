@@ -12,6 +12,7 @@ before_install:
 install:
 before_script:
 script:
+  - sh scripts/prepare_mac.sh
   - sh scripts/build_mac.sh
 after_script:
 after_success:

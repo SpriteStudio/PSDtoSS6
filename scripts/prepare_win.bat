@@ -20,4 +20,4 @@ vcpkg install icu
 
 vcpkg integrate install
 
-
+popd

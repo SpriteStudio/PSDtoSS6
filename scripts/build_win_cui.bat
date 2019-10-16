@@ -8,7 +8,7 @@ echo DSTDIR : %DSTDIR%
 
 set CMAKE_TOOLCHAIN = "../../vcpkg/scripts/buildsystems/vcpkg.cmake"
 if not %1=="" (
-set CMAKE_TOOLCHAIN=%1
+set CMAKE_TOOLCHAIN=%1/vcpkg/scripts/buildsystems/vcpkg.cmake
 )
 
 

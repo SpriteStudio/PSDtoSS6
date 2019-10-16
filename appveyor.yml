@@ -5,6 +5,7 @@ configuration:
   - Release
 
 build_script:
+  - cmd: scripts/prepare_win.bat
   - cmd: scripts/build_win.bat
 
 artifacts:

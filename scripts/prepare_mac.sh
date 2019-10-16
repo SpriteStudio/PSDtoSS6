@@ -19,6 +19,9 @@ cd vcpkg
 ./vcpkg install libpng
 ./vcpkg install libjpeg-turbo
 ./vcpkg install icu
+./vcpkg integrate install
+
+
 popd > /dev/null # 
 
 

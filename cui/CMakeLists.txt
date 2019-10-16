@@ -17,7 +17,7 @@ find_package(tinyxml2 CONFIG REQUIRED)
 find_path(SYSTEM_INCLUDE_DIR  picojson.h)
 
 find_package(ICU COMPONENTS UC IO REQUIRED)
-find_package(OpenImageIO REQUIRED)
+#find_package(OpenImageIO REQUIRED)
 
 
 

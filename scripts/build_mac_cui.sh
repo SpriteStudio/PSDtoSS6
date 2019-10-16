@@ -13,7 +13,7 @@ pushd "${SRCDIR}"
 mkdir build
 pushd build
 
-cmake -DCMAKE_PROJECT_NAME=${PROJECT_NAME} .. || exit 1
+cmake -DCMAKE_TOOLCHAIN_FILE="~/vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_PROJECT_NAME=${PROJECT_NAME} .. || exit 1
 make clean
 make || exit 1
 

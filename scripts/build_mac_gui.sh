@@ -43,4 +43,6 @@ make || exit 1
 mkdir -p ${DSTDIR}
 cp -rf *.app ${DSTDIR}
 
+cp -rf ../translate_ja.qm ${DSTDIR}
+
 macdeployqt "${DSTDIR}/PSDtoSS6GUI.app" -always-overwrite || exit 1

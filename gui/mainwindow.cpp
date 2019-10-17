@@ -14,7 +14,6 @@ std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
-
 #define TITLE_VERSION "PSDtoSS6 GUI Ver2.0.4"
 
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
@@ -260,14 +259,14 @@ void MainWindow::on_pushButton_convert_clicked()
     if ( ui->listWidget->count() == 0 )
     {
         QMessageBox msgBox(this);
-        msgBox.setText(tr("txt ファイルを登録してください"));
+        msgBox.setText(tr("Register a txt file"));
         msgBox.exec();
         return;
     }
     if ( ui->textBrowser_output->toPlainText() == "" )
     {
         QMessageBox msgBox(this);
-        msgBox.setText(tr("出力フォルダを選択してください"));
+        msgBox.setText(tr("Select an output folder"));
         msgBox.exec();
         return;
     }
@@ -616,7 +615,7 @@ void MainWindow::on_pushButton_settingsave_clicked()
     saveConfig(data_path + "/config.json");
 
     QMessageBox msgBox(this);
-    msgBox.setText(tr("現在の設定を保存しました"));
+    msgBox.setText(tr("The current settings have been saved"));
     msgBox.exec();
 }
 

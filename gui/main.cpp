@@ -2,6 +2,9 @@
 #include <QApplication>
 #include <QtGui>
 #include <QTextCodec>
+#include <QTranslator>
+
+QTranslator translator;
 
 
 int main(int argc, char *argv[])
@@ -10,6 +13,9 @@ int main(int argc, char *argv[])
     MainWindow w;
 
 	QTextCodec::setCodecForLocale(QTextCodec::codecForLocale());
+	// 翻訳
+	translator.load("translate_ja");
+	a.installTranslator(&translator);
 
     w.setText_to_List(a.arguments());
     w.show();

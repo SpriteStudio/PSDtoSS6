@@ -1,7 +1,10 @@
-#!/bin/bash
+#!/bin/bash -ex
+
 pushd $(dirname $0)
 BASEDIR=$(pwd)
-export DSTDIR="${BASEDIR}/../out/"
+DSTDIR="${BASEDIR}/../out/"
+/bin/rm -rf ${DSTDIR}
+/bin/mkdir ${DSTDIR}
 
 ./build_mac_cui.sh || exit 1
 ./build_mac_gui.sh || exit 1

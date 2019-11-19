@@ -1,10 +1,20 @@
-#!/bin/bash -x
-pushd $(dirname $0)
-BASEDIR=$(pwd)
-SRCDIR="${BASEDIR}/../gui/"
-DSTDIR="${BASEDIR}/../out/"
-echo "SRCDIR : ${SRCDIR}"
-echo "DSTDIR : ${DSTDIR}"
+#!/bin/bash -ex
+
+SCRIPTDIR=`dirname $0`
+SCRIPTDIR=`cd $SCRIPTDIR && pwd -P`
+BASEDIR=${SCRIPTDIR}/..
+BASEDIR=`cd ${BASEDIR} && pwd -P`
+
+SRCDIR="${BASEDIR}/gui"
+DSTDIR="${BASEDIR}/out"
+BUILDDIR=${SRCDIR}/build
+BUILDDIR=`cd ${BUILDDIR} && pwd -P`
+
+if [ -z ${VCPKG_PREFIX+x} ]; then
+   if [ -d ${BASEDIR}/vcpkg ]; then
+      VCPKG_PREFIX=${BASEDIR}/vcpkg
+   fi
+fi
 
 if [ ! -z ${QT_PATH+x} ]; then
     # use environment variable
@@ -31,18 +41,25 @@ else
 fi
 PATH="${QT_PATH}/bin:${PATH}"
 
-pushd ${SRCDIR}
+pushd ${BASEDIR} > /dev/null
+echo "SRCDIR : ${SRCDIR}"
+echo "DSTDIR : ${DSTDIR}"
 
-mkdir build
-pushd build 
+pushd ${SRCDIR} > /dev/null
+
+/bin/rm -rf ${BUILDDIR}
+/bin/mkdir ${BUILDDIR}
+pushd ${BUILDDIR} > /dev/null
 
 cmake -DCMAKE_PROJECT_NAME="PSDtoSS6GUI" .. || exit 1
-make clean
-make || exit 1
+cmake --build . || exit 1
+popd > /dev/null # build
+popd > /dev/null # SRCDIR
 
-mkdir -p ${DSTDIR}
-cp -rf *.app ${DSTDIR}
-
-cp -rf ../translate_ja.qm ${DSTDIR}
+/bin/mkdir -p ${DSTDIR}
+/bin/cp -rf ${BUILDDIR}/*.app ${DSTDIR}
+/bin/cp -rf ${SRCDIR}/translate_ja.qm ${DSTDIR}
 
 macdeployqt "${DSTDIR}/PSDtoSS6GUI.app" -always-overwrite || exit 1
+
+popd > /dev/null # BASEDIR

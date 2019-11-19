@@ -7,8 +7,6 @@ BASEDIR=`cd ${BASEDIR} && pwd -P`
 
 SRCDIR="${BASEDIR}/gui"
 DSTDIR="${BASEDIR}/out"
-BUILDDIR=${SRCDIR}/build
-BUILDDIR=`cd ${BUILDDIR} && pwd -P`
 
 if [ -z ${VCPKG_PREFIX+x} ]; then
    if [ -d ${BASEDIR}/vcpkg ]; then
@@ -47,8 +45,11 @@ echo "DSTDIR : ${DSTDIR}"
 
 pushd ${SRCDIR} > /dev/null
 
-/bin/rm -rf ${BUILDDIR}
-/bin/mkdir ${BUILDDIR}
+/bin/rm -rf build
+/bin/mkdir build
+BUILDDIR=${SRCDIR}/build
+BUILDDIR=`cd ${BUILDDIR} && pwd -P`
+
 pushd ${BUILDDIR} > /dev/null
 
 cmake -DCMAKE_PROJECT_NAME="PSDtoSS6GUI" .. || exit 1

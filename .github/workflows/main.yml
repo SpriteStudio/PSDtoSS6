@@ -1,0 +1,25 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [macos-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: prepare build environment
+      run: ./scripts/prepare_mac.sh
+    - name: install qt
+      run: |
+        brew update
+        brew install qt
+    - name: release build
+      run: ./scripts/build_mac.sh
+    - name: Upload Tools
+      uses: actions/upload-artifact@v1
+      with:
+        name: macos
+        path: out

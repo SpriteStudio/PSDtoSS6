@@ -21,7 +21,7 @@ jobs:
     - name: Upload Tools
       uses: actions/upload-artifact@v1
       with:
-        name: PSDtoSS6-macos-${GITHUB_SHA:7}
+        name: PSDtoSS6-${{ matrix.platform }}-${{ github.sha }}
         path: out
   win_build:
     strategy:
@@ -51,5 +51,5 @@ jobs:
     - name: Upload Tools
       uses: actions/upload-artifact@v1
       with:
-        name: PSDtoSS6-windows-${GITHUB_SHA:7}
+        name: PSDtoSS6-${{ matrix.platform }}-${{ github.sha }}
         path: out

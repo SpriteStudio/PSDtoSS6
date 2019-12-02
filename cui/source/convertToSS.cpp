@@ -299,7 +299,10 @@ bool    ConvertToSS::texturePacking_PivotUse()
 			XMLElement* cell_name = ssce_cell->FirstChildElement("name");
 			XMLElement* cell_pivot = ssce_cell->FirstChildElement("pivot");
 
-			pivot[idx].name = cell_name->GetText();
+			const char* text = cell_name->GetText();
+//			pivot[idx].name = cell_name->GetText();
+			pivot[idx].name = std::string( text ) ;
+
 			std::string pivot_text = cell_pivot->GetText();
 			int st = pivot_text.find(" ");	//区切り文字の位置を取得
 			std::string pivot_x_text = pivot_text.substr(0, st);

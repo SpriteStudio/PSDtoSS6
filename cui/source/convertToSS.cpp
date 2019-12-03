@@ -79,7 +79,7 @@ PsdLoadErr		ConvertToSS::LoadPsdImageList()
 	FILE* fp = fopen(inputname.c_str(), "r");
 	if (fp == NULL) {
 		//std::cerr << "エラー：情報ファイルのオープンに失敗しました。：" << inputname << "\n";
-		ConsoleOutMessage(ERROR_0001, inputname);
+		ConsoleOutMessage(ERROR_0001, inputname.c_str());
 
 		return SsConverter::OPENFAILED;
 	}
@@ -100,7 +100,7 @@ PsdLoadErr		ConvertToSS::LoadPsdImageList()
 					if (count == 0)
 					{
 						//std::cerr << "エラー：情報ファイルの内容が正しくありません。：" << inputname << "\n";
-						ConsoleOutMessage(ERROR_0002, inputname);
+						ConsoleOutMessage(ERROR_0002, inputname.c_str());
 						err = true;
 						return SsConverter::TEXTINVALID;
 					}
@@ -171,7 +171,7 @@ bool	ConvertToSS::loadImageFile()
 		if (!persePsdMain(inputname, params.addpri, readpngfile_max, gLayoutCenter, &pb))
 		{
 //			std::cerr << "エラー：PSDファイルのオープンに失敗しました。：" << inputname << "\n";
-			ConsoleOutMessage(ERROR_0003, inputname);
+			ConsoleOutMessage(ERROR_0003, inputname.c_str() );
 			return false;
 		}
 	}else{
@@ -194,7 +194,7 @@ bool	ConvertToSS::checkInvalidLayerName()
 		{
 			//std::cerr << "エラー：セル名に全角文字が使用されています。 ";
 			//std::cerr << name << "\n";
-			ConsoleOutMessage(ERROR_0004, name);
+			ConsoleOutMessage(ERROR_0004, name.c_str());
 			return false;
 		}
 		for (int j = i + 1; j < readpngfile_max; j++)
@@ -205,7 +205,7 @@ bool	ConvertToSS::checkInvalidLayerName()
 				{
 					//std::cerr << "エラー：同名のセル名が使用されています。 ";
 					//std::cerr << pb.inputlayername[i] << "\n";
-					ConsoleOutMessage(ERROR_0005, pb.inputlayername[i]);
+					ConsoleOutMessage(ERROR_0005, pb.inputlayername[i].c_str() );
 					return false;
 				}
 			}

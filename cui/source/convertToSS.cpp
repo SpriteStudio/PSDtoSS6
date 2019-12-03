@@ -1249,12 +1249,22 @@ bool	ConvertToSS::convert(std::string arg)
 	readpngfile_max = 0;
 	memset(pivot, 0, sizeof(pivot));
 	
-	if (!parseInputOutputFiles(arg))return false;
+	if (!parseInputOutputFiles(arg))
+	{
+		ConsoleOutMessage(ERROT_0010);
+		return false;
+	}
+
 	if (!getInfomationFilePath()) return false;
 
 	if (!params.parseConfigJson(convert_info_path + ".json"))
 	{
-		if (!params.parseConfig(convert_info_path)) return false;
+		ConsoleOutMessage(ERROT_0010);
+
+		if (!params.parseConfig(convert_info_path)) {
+			ConsoleOutMessage(ERROT_0011);
+			return false;
+		}
 	}
 	else {
 		//jsonはutf8で保存されているためsjisへ変換
@@ -1263,6 +1273,14 @@ bool	ConvertToSS::convert(std::string arg)
 		params.outputname = stringconv::utf8_to_sjis(params.outputname);
 #endif
 	}
+
+	if ((params.tex_padding_shape + params.inner_padding) <= 1)
+	{
+		//		std::cerr << "警告：セル間余白+セル内余白の値が1以下に指定されています。" << std::endl;
+		//		std::cerr << "　　　色もれが発生する可能性があります。" << std::endl;
+		ConsoleOutMessage(WARNING_0001);
+	}
+
 
 	//イメージファイルのロード
 	if (!loadImageFile())return false;

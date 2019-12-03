@@ -53,6 +53,9 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
     ./source/typedef.h
     ./source/stringconv.h
     ./source/stringconv.cpp
+	./source/tbl_outmessage.h
+	./source/tbl_outmessage.cpp
+
 ) 
 
 

@@ -4,6 +4,7 @@
 #include "persePsd.h"
 #include "xml_template.h"
 #include "stringconv.h"
+#include "tbl_outmessage.h"
 
 
 
@@ -77,7 +78,9 @@ PsdLoadErr		ConvertToSS::LoadPsdImageList()
 	//テキストファイルからレイヤー順とファイル名を取得
 	FILE* fp = fopen(inputname.c_str(), "r");
 	if (fp == NULL) {
-		std::cerr << "エラー：情報ファイルのオープンに失敗しました。：" << inputname << "\n";
+		//std::cerr << "エラー：情報ファイルのオープンに失敗しました。：" << inputname << "\n";
+		ConsoleOutMessage(ERROR_0001, inputname);
+
 		return SsConverter::OPENFAILED;
 	}
 	// ファイルの終端まで文字を読み取る
@@ -96,7 +99,8 @@ PsdLoadErr		ConvertToSS::LoadPsdImageList()
 					//検索終わり
 					if (count == 0)
 					{
-						std::cerr << "エラー：情報ファイルの内容が正しくありません。：" << inputname << "\n";
+						//std::cerr << "エラー：情報ファイルの内容が正しくありません。：" << inputname << "\n";
+						ConsoleOutMessage(ERROR_0002, inputname);
 						err = true;
 						return SsConverter::TEXTINVALID;
 					}
@@ -166,7 +170,8 @@ bool	ConvertToSS::loadImageFile()
 	if (this->isPsdMode()){
 		if (!persePsdMain(inputname, params.addpri, readpngfile_max, gLayoutCenter, &pb))
 		{
-			std::cerr << "エラー：PSDファイルのオープンに失敗しました。：" << inputname << "\n";
+//			std::cerr << "エラー：PSDファイルのオープンに失敗しました。：" << inputname << "\n";
+			ConsoleOutMessage(ERROR_0003, inputname);
 			return false;
 		}
 	}else{
@@ -187,8 +192,9 @@ bool	ConvertToSS::checkInvalidLayerName()
 		name = stringconv::utf8_to_sjis(name);
 		if (isZenkaku(name) == true)
 		{
-			std::cerr << "エラー：セル名に全角文字が使用されています。 ";
-			std::cerr << name << "\n";
+			//std::cerr << "エラー：セル名に全角文字が使用されています。 ";
+			//std::cerr << name << "\n";
+			ConsoleOutMessage(ERROR_0004, name);
 			return false;
 		}
 		for (int j = i + 1; j < readpngfile_max; j++)
@@ -197,8 +203,9 @@ bool	ConvertToSS::checkInvalidLayerName()
 			{
 				if (pb.inputlayername[i] == pb.inputlayername[j])
 				{
-					std::cerr << "エラー：同名のセル名が使用されています。 ";
-					std::cerr << pb.inputlayername[i] << "\n";
+					//std::cerr << "エラー：同名のセル名が使用されています。 ";
+					//std::cerr << pb.inputlayername[i] << "\n";
+					ConsoleOutMessage(ERROR_0005, pb.inputlayername[i]);
 					return false;
 				}
 			}
@@ -498,14 +505,17 @@ bool	ConvertToSS::checkProtrudingTexture()
 			}
 			else
 			{
-				std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+				//std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+				ConsoleOutMessage(INFO_0001, sizetble[makesize_x] , sizetble[makesize_y]);
+
 				packer.SetSize(sizetble[makesize_x], sizetble[makesize_y]);
 				break;
 			}
 			if ((makesize_x < 0) || (makesize_y < 0))
 			{
 				//作成できるサイズを超えた
-				std::cerr << "エラー：セルマップに収まりません\n";
+				//std::cerr << "エラー：セルマップに収まりません\n";
+				ConsoleOutMessage(ERROR_0006);
 				err = true;
 				break;
 			}
@@ -518,7 +528,8 @@ bool	ConvertToSS::checkProtrudingTexture()
 			if (w_max > params.tex_w)
 			{
 				//エラー
-				std::cerr << "エラー：テクスチャの幅より大きいセルがあります。\n";
+				ConsoleOutMessage(ERROR_0007);
+				//std::cerr << "エラー：テクスチャの幅より大きいセルがあります。\n";
 				//return true;
 				err = true;
 			}
@@ -528,7 +539,8 @@ bool	ConvertToSS::checkProtrudingTexture()
 			if (h_max > params.tex_h)
 			{
 				//エラー
-				std::cerr << "エラー：テクスチャの高さより大きいセルがあります。\n";
+				//std::cerr << "エラー：テクスチャの高さより大きいセルがあります。\n";
+				ConsoleOutMessage(ERROR_0008);
 				//return true;
 				err = true;
 			}
@@ -548,14 +560,16 @@ bool	ConvertToSS::checkProtrudingTexture()
 					}
 					else
 					{
-						std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << params.tex_h << "にしてパッキングします。\n";
+						//std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << params.tex_h << "にしてパッキングします。\n";
+						ConsoleOutMessage(INFO_0001, sizetble[makesize_x], params.tex_h );
 						packer.SetSize(sizetble[makesize_x], params.tex_h);
 						break;
 					}
 					if (makesize_x < 0)
 					{
 						//作成できるサイズを超えた
-						std::cerr << "エラー：セルマップに収まりません。\n";
+						//std::cerr << "エラー：セルマップに収まりません。\n";
+						ConsoleOutMessage(ERROR_0006);
 						err = true;
 						break;
 					}
@@ -573,14 +587,16 @@ bool	ConvertToSS::checkProtrudingTexture()
 					}
 					else
 					{
-						std::cerr << "テクスチャサイズを" << params.tex_w << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+						//std::cerr << "テクスチャサイズを" << params.tex_w << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+						ConsoleOutMessage(INFO_0001, params.tex_w, sizetble[makesize_y]);
 						packer.SetSize(params.tex_w, sizetble[makesize_y]);
 						break;
 					}
 					if (makesize_y < 0)
 					{
 						//作成できるサイズを超えた
-						std::cerr << "エラー：セルマップに収まりません。\n";
+						//std::cerr << "エラー：セルマップに収まりません。\n";
+						ConsoleOutMessage(ERROR_0006);
 						err = true;
 						break;
 					}
@@ -596,10 +612,12 @@ bool	ConvertToSS::checkProtrudingTexture()
 			if (packer.MakeUp(false, true, 1, params.sortmode) == false)
 			{
 				//テクスチャが入りきっていない
-				std::cerr << "エラー：セルマップに収まりません。\n";
+				//std::cerr << "エラー：セルマップに収まりません。\n";
+				ConsoleOutMessage(ERROR_0006);
 				if ((params.tex_w > 0) && (params.tex_h > 0))
 				{
-					std::cerr << "パッキングに失敗しました。\n";
+					//std::cerr << "パッキングに失敗しました。\n";
+					ConsoleOutMessage(ERROT_0009);
 					err = true;
 					break;
 				}
@@ -607,7 +625,8 @@ bool	ConvertToSS::checkProtrudingTexture()
 				{
 					if (makesize_x == 0)
 					{
-						std::cerr << "パッキングに失敗しました。\n";
+						//std::cerr << "パッキングに失敗しました。\n";
+						ConsoleOutMessage(ERROT_0009);
 						err = true;
 						break;
 					}
@@ -616,14 +635,16 @@ bool	ConvertToSS::checkProtrudingTexture()
 						//サイズを変えて挑戦してみる。
 						makesize_x--;
 						packer.SetSize(sizetble[makesize_x], params.tex_h);
-						std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << params.tex_h << "にしてパッキングします。\n";
+						//std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << params.tex_h << "にしてパッキングします。\n";
+						ConsoleOutMessage(INFO_0001, sizetble[makesize_x] , params.tex_h );
 					}
 				}
 				if ((params.tex_w > 0) && (params.tex_h == 0))
 				{
 					if (makesize_y == 0)
 					{
-						std::cerr << "パッキングに失敗しました。\n";
+						//std::cerr << "パッキングに失敗しました。\n";
+						ConsoleOutMessage(ERROT_0009);
 						err = true;
 						break;
 					}
@@ -632,14 +653,16 @@ bool	ConvertToSS::checkProtrudingTexture()
 						//サイズを変えて挑戦してみる。
 						makesize_y--;
 						packer.SetSize(params.tex_w, sizetble[makesize_y]);
-						std::cerr << "テクスチャサイズを" << params.tex_w << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+						//std::cerr << "テクスチャサイズを" << params.tex_w << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+						ConsoleOutMessage(INFO_0001, params.tex_w , sizetble[makesize_y]);
 					}
 				}
 				if ((params.tex_w == 0) && (params.tex_h == 0))
 				{
 					if ((makesize_x == 0) && (makesize_y == 0))
 					{
-						std::cerr << "パッキングに失敗しました。\n";
+						//std::cerr << "パッキングに失敗しました。\n";
+						ConsoleOutMessage(ERROT_0009);
 						err = true;
 						break;
 					}
@@ -655,13 +678,15 @@ bool	ConvertToSS::checkProtrudingTexture()
 							makesize_y--;
 						}
 						packer.SetSize(sizetble[makesize_x], sizetble[makesize_y]);
-						std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+						//std::cerr << "テクスチャサイズを" << sizetble[makesize_x] << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
+						ConsoleOutMessage(INFO_0001, sizetble[makesize_x], sizetble[makesize_y] );
 					}
 				}
 			}
 			else
 			{
-				std::cerr << "パッキング成功！\n";
+				//std::cerr << "パッキング成功！\n";
+				ConsoleOutMessage(INFO_0002);
 				break;
 			}
 		}
@@ -1041,8 +1066,8 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 
 
 	xml.SaveFile(sscename.c_str());
-	std::cerr << "ssce convert success!!: " << sscename << std::endl;
-
+//	std::cerr << "ssce convert success!!: " << sscename << std::endl;
+	ConsoleOutMessage(INFO_0003);
 
 }
 
@@ -1194,7 +1219,9 @@ void	ConvertToSS::makeSsaeFile(SSOptionReader& option)
 
 		//新規作成
 		anime_xml.SaveFile(ssaename.c_str());
-		std::cerr << "ssae convert success!!: " << ssaename << std::endl;
+//		std::cerr << "ssae convert success!!: " << ssaename << std::endl;
+		ConsoleOutMessage(INFO_0004);
+
 	}
 
 }
@@ -1207,7 +1234,8 @@ void	ConvertToSS::makeSspjFile(SSOptionReader& option)
 	{
 		//新規作成
 		make_sspj(sspjname, params.outputname, &loadssop_xml);
-		std::cerr << "sspj convert success!!: " << sspjname << std::endl;
+//		std::cerr << "sspj convert success!!: " << sspjname << std::endl;
+		ConsoleOutMessage(INFO_0005);
 	}
 }
 

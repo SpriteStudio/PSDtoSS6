@@ -107,7 +107,8 @@ void ConsoleOutMessage(std::string MessageNumber, ...)
 	std::locale ctype_default(std::locale::classic(), default_loc, std::locale::ctype); //※
 	std::wcout.imbue(ctype_default);
 
-	std::cout << buf << std::endl;
+//	std::cout << buf << std::endl;
+	std::cerr << buf << std::endl;
 }
 
 

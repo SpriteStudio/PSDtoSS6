@@ -4,128 +4,100 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
+#include "../picojson/picojson.h"
+#include "stringconv.h"
 
-struct MESSAGE_TABLE {
-	int message_no;
-	char* local[2];
+
+
+struct LOCAL_MESSAGE {
+	std::string localmessage[LOCAL_TEAM];
 };
 
+std::map<std::string, LOCAL_MESSAGE> message_dic;
 
-static MESSAGE_TABLE tbl_message[] =
-{
-	{
-		INFO_0001, 
-		"テクスチャサイズを %d × %d にしてパッキングします。",
-		"Pack with a texture size of %d x %d."
-	},
-	{
-		INFO_0002, // 
-		"パッキングが成功しました。",
-		"Packing was successful."
-	},
-	{
-		INFO_0003, // 
-		"ssceファイルのコンバートが成功しました。",
-		"ssce convert success!!: %s"
-	},
-	{
-		INFO_0004, // 
-		"ssaeファイルのコンバートが成功しました。",
-		"ssae convert success!!: %s"
-	},
-	{
-		INFO_0005, // 
-		"sspjファイルのコンバートが成功しました。",
-		"sspj convert success!!: %s"
-	},
 
-	{
-		WARNING_0001, 
-		"警告：セル間余白+セル内余白の値が1以下に指定されています。色もれが発生する可能性があります。",
-		"Warning: The value of margin between cells + margin within the cell is specified as 1 or less. Color leakage may occur."
-	},
+//message.jsonをbase64でエンコードした文字列
+const char* base64_message = "Ww0KCXsNCgkJImxhYmVsIjoiSU5GT18wMDAxIiwgDQoJCSJqcCI6IuODhuOCr+OCueODgeODo+OCteOCpOOCuuOCkiAlZCDDlyAlZCDjgavjgZfjgabjg5Hjg4Pjgq3jg7PjgrDjgZfjgb7jgZnjgIIiLA0KCQkiZW4iOiJQYWNrIHdpdGggYSB0ZXh0dXJlIHNpemUgb2YgJWQgeCAlZC4iDQoJfSwNCgl7DQoJCSJsYWJlbCIgOiAiSU5GT18wMDAyIiwNCgkJImpwIjoi44OR44OD44Kt44Oz44Kw44GM5oiQ5Yqf44GX44G+44GX44Gf44CCIiwNCgkJImVuIjoiUGFja2luZyB3YXMgc3VjY2Vzc2Z1bC4iDQoJfSwNCgl7DQoJCSJsYWJlbCIgOiAiSU5GT18wMDAzIiAsDQoJCSJqcCIgOiAic3NjZeODleOCoeOCpOODq+OBruOCs+ODs+ODkOODvOODiOOBjOaIkOWKn+OBl+OBvuOBl+OBn+OAgiIsDQoJCSJlbiI6ICJzc2NlIGNvbnZlcnQgc3VjY2VzcyEhOiAlcyINCgl9LA0KCXsNCgkJImxhYmVsIjogIklORk9fMDAwNCIsDQoJCSJqcCIgOiAic3NhZeODleOCoeOCpOODq+OBruOCs+ODs+ODkOODvOODiOOBjOaIkOWKn+OBl+OBvuOBl+OBn+OAgiIsDQoJCSJlbiI6ICJzc2FlIGNvbnZlcnQgc3VjY2VzcyEhOiAlcyINCgl9LA0KCXsNCgkJImxhYmVsIjogIklORk9fMDAwNSIsIA0KCQkianAiIDogInNzcGrjg5XjgqHjgqTjg6vjga7jgrPjg7Pjg5Djg7zjg4jjgYzmiJDlip/jgZfjgb7jgZfjgZ/jgIIiLA0KCQkiZW4iOiAic3NwaiBjb252ZXJ0IHN1Y2Nlc3MhITogJXMiDQoJfSwNCg0KCXsNCgkJImxhYmVsIiA6ICJXQVJOSU5HXzAwMDEiLCANCgkJImpwIiA6ICLorablkYrvvJrjgrvjg6vplpPkvZnnmb0r44K744Or5YaF5L2Z55m944Gu5YCk44GMMeS7peS4i+OBq+aMh+WumuOBleOCjOOBpuOBhOOBvuOBmeOAguiJsuOCguOCjOOBjOeZuueUn+OBmeOCi+WPr+iDveaAp+OBjOOBguOCiuOBvuOBmeOAgiIsDQoJCSJlbiI6ICJXYXJuaW5nOiBUaGUgdmFsdWUgb2YgbWFyZ2luIGJldHdlZW4gY2VsbHMgKyBtYXJnaW4gd2l0aGluIHRoZSBjZWxsIGlzIHNwZWNpZmllZCBhcyAxIG9yIGxlc3MuIENvbG9yIGxlYWthZ2UgbWF5IG9jY3VyLiINCgl9LA0KDQoJew0KCQkibGFiZWwiIDogIkVSUk9SXzAwMDEiLA0KCQkianAiIDogIuOCqOODqeODvO+8muaDheWgseODleOCoeOCpOODq+OBruOCquODvOODl+ODs+OBq+WkseaVl+OBl+OBvuOBl+OBn+OAgu+8miVzIiwNCgkJImVuIjogIkVycm9yOiBGYWlsZWQgdG8gb3BlbiB0aGUgaW5mb3JtYXRpb24gZmlsZS4iDQoJfSwNCgl7DQoJCSJsYWJlbCIgOiAiRVJST1JfMDAwMiIsIA0KCQkianAiIDogIuOCqOODqeODvO+8muaDheWgseODleOCoeOCpOODq+OBruWGheWuueOBjOato+OBl+OBj+OBguOCiuOBvuOBm+OCk+OAgu+8miVzIiwNCgkJImVuIjogIkVycm9yOiBUaGUgY29udGVudHMgb2YgdGhlIGluZm9ybWF0aW9uIGZpbGUgYXJlIGluY29ycmVjdC4gOiAlcyINCgl9LA0KCXsNCgkJImxhYmVsIiA6ICJFUlJPUl8wMDAzIiwNCgkJImpwIiA6ICLjgqjjg6njg7zvvJpQU0Tjg5XjgqHjgqTjg6vjga7jgqrjg7zjg5fjg7PjgavlpLHmlZfjgZfjgb7jgZfjgZ/jgILvvJolcyIsDQoJCSJlbiI6ICJFcnJvcjogRmFpbGVkIHRvIG9wZW4gUFNEIGZpbGUuIDogJXMiDQoJfSwNCgl7DQoJCSJsYWJlbCIgOiAiRVJST1JfMDAwNCIsDQoJCSJqcCIgOiAi44Ko44Op44O877ya44K744Or5ZCN44Gr5YWo6KeS5paH5a2X44GM5L2/55So44GV44KM44Gm44GE44G+44GZ44CCOiAlcyAgIiwNCgkJImVuIjogIkVycm9yOiBEb3VibGUgLSBieXRlIGNoYXJhY3RlcnMgYXJlIHVzZWQgaW4gdGhlIGNlbGwgbmFtZS4gOiAlcyINCgl9LA0KCXsNCgkJImxhYmVsIiA6ICJFUlJPUl8wMDA1IiAsDQoJCSJqcCIgOiAi44Ko44Op44O877ya5ZCM5ZCN44Gu44K744Or5ZCN44GM5L2/55So44GV44KM44Gm44GE44G+44GZ44CCIDogJXMiLA0KCQkiZW4iOiAiRXJyb3I6IFRoZSBzYW1lIGNlbGwgbmFtZSBpcyB1c2VkLiINCgl9LA0KCXsNCgkJImxhYmVsIiA6ICJFUlJPUl8wMDA2IiwNCgkJImpwIiA6ICLjgqjjg6njg7zvvJrjgrvjg6vjg57jg4Pjg5fjgavlj47jgb7jgorjgb7jgZvjgpMiLA0KCQkiZW4iOiAiRXJyb3I6IGRvZXMgbm90IGZpdCBpbiBjZWxsIG1hcCINCgl9LA0KCXsNCgkJImxhYmVsIiA6ICJFUlJPUl8wMDA3IiwNCgkJImpwIiA6ICLjgqjjg6njg7zvvJrjg4bjgq/jgrnjg4Hjg6Pjga7luYXjgojjgorlpKfjgY3jgYTjgrvjg6vjgYzjgYLjgorjgb7jgZnjgIIiLA0KCQkiZW4iOiAiRXJyb3I6IFRoZXJlIGFyZSBjZWxscyBsYXJnZXIgdGhhbiB0aGUgd2lkdGggb2YgdGhlIHRleHR1cmUuIg0KCX0sDQoJew0KCQkibGFiZWwiIDogIkVSUk9SXzAwMDgiLCANCgkJImpwIiA6ICLjgqjjg6njg7zvvJrjg4bjgq/jgrnjg4Hjg6Pjga7pq5jjgZXjgojjgorlpKfjgY3jgYTjgrvjg6vjgYzjgYLjgorjgb7jgZnjgIIiLA0KCQkiZW4iOiAiRXJyb3I6IFRoZXJlIGFyZSBjZWxscyBsYXJnZXIgdGhhbiB0aGUgaGVpZ2h0IG9mIHRoZSB0ZXh0dXJlLiINCgl9LA0KCXsNCgkJImxhYmVsIiA6ICJFUlJPVF8wMDA5IiwNCgkJImpwIiA6ICLjg5Hjg4Pjgq3jg7PjgrDjgavlpLHmlZfjgZfjgb7jgZfjgZ/jgIIiLA0KCQkiZW4iOiAiUGFja2luZyBmYWlsZWQuIg0KCX0sDQoJew0KCQkibGFiZWwiIDogIkVSUk9UXzAwMTAiICwNCgkJImpwIiA6ICLoqK3lrprmg4XloLEoanNvbuODleOCoeOCpOODqynjga7oqq3jgb/ovrzjgb/jgavlpLHmlZfjgZfjgb7jgZfjgZ/jgIIiLA0KCQkiZW4iOiAiZmFpbGVkIHRvIHJlYWQgdGVzdC5qc29uIg0KCX0sDQoJew0KCQkibGFiZWwiIDogIkVSUk9UXzAwMTEiLA0KCQkianAiIDogIuOCs+ODs+ODkOODvOODiOaDheWgseOBruOCquODvOODl+ODs+OBq+WkseaVl+OBl+OBvuOBl+OBnyIsDQoJCSJlbiI6ICJGYWlsZWQgdG8gb3BlbiBjb252ZXJ0IGluZm9ybWF0aW9uIGZpbGUiDQoJfQ0KXQ0K";
+static const std::string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";//=
+typedef unsigned char uchar;
 
-	{
-		ERROR_0001,
-		"エラー：情報ファイルのオープンに失敗しました。：%s",
-		"Error: Failed to open the information file."
-	},
-	{
-		ERROR_0002, 
-		"エラー：情報ファイルの内容が正しくありません。：%s",
-		"Error: The contents of the information file are incorrect. : %s"
-	},
-	{
-		ERROR_0003,
-		"エラー：PSDファイルのオープンに失敗しました。：%s",
-		"Error: Failed to open PSD file. : %s"
-	},
-	{
-		ERROR_0004,
-		"エラー：セル名に全角文字が使用されています。: %s  ",
-		"Error: Double - byte characters are used in the cell name. : %s"
-	},
-	{
-		ERROR_0005,
-		"エラー：同名のセル名が使用されています。 : %s",
-		"Error: The same cell name is used."
-	},
-	{
-		ERROR_0006, // 
-		"エラー：セルマップに収まりません",
-		"Error: does not fit in cell map"
-	},
-	{
-		ERROR_0007, // 
-		"エラー：テクスチャの幅より大きいセルがあります。",
-		"Error: There are cells larger than the width of the texture."
-	},
-	{
-		ERROR_0008, 
-		"エラー：テクスチャの高さより大きいセルがあります。",
-		"Error: There are cells larger than the height of the texture."
-	},
-	{
-		ERROT_0009,
-		"パッキングに失敗しました。",
-		"Packing failed."
-	},
-	{
-		ERROT_0010 ,
-		"設定情報(jsonファイル)の読み込みに失敗しました。"
-		"failed to read test.json"
-	},
-	{
-		ERROT_0011, // 
-		"コンバート情報のオープンに失敗しました",
-		"Failed to open convert information file"
+static std::string base64_decode(const std::string &in) {
+
+	std::string out;
+
+	std::vector<int> T(256, -1);
+	for (int i = 0; i < 64; i++) T[b[i]] = i;
+
+	int val = 0, valb = -8;
+	for (uchar c : in) {
+		if (T[c] == -1) break;
+		val = (val << 6) + T[c];
+		valb += 6;
+		if (valb >= 0) {
+			out.push_back(char((val >> valb) & 0xFF));
+			valb -= 8;
+		}
 	}
-
-};
-
-
-static int getMessageIndexFromID(int id)
-{
-	for (int i = 0; i < sizeof(tbl_message) / sizeof(MESSAGE_TABLE); i++)
-	{
-		if (tbl_message[i].message_no == id) return i;
-	}
-	return 0;
+	return out;
 }
 
 
-void ConsoleOutMessage(int MessageNumber, ...)
-//std::string ConsoleOutMessage(int MessageNumber, ...)
+
+static std::string getMessageIndexFromID(std::string str , OUTMESSAGE_LOCAL loc)
+{
+	return message_dic[str].localmessage[(int)loc];
+
+}
+
+
+void MessageInit()
+{
+	std::string json = base64_decode(base64_message);
+	
+	picojson::value v;
+	const std::string err = picojson::parse(v, json);
+
+	if (err.empty() == false) {
+		std::cerr << err << std::endl;
+		return;
+	}
+
+	auto arr = v.get<picojson::array>();
+
+	for (auto i = 0; i < arr.size(); i++)
+	{
+		auto obj = arr[i].get < picojson::object>();
+		auto   l = obj["label"].get<std::string>();
+		auto   jp = obj["jp"].get<std::string>();
+		auto   en = obj["en"].get<std::string>();
+
+#ifdef _WIN32 //sjisへ
+		jp = stringconv::utf8_to_sjis(jp);
+#endif
+
+		LOCAL_MESSAGE message;
+		message.localmessage[LOCAL_JP] = jp;
+		message.localmessage[LOCAL_EN] = en;
+
+		message_dic[l] = message;
+	}
+
+}
+
+
+
+void ConsoleOutMessage(std::string MessageNumber, ...)
 {
 	va_list args;
 
-	int index = getMessageIndexFromID(MessageNumber);
-	const char* format = tbl_message[index].local[LOCAL_JP];
+
+	std::string format = getMessageIndexFromID(MessageNumber, LOCAL_JP);
+
 	char buf[1024];
 
 	va_start(args, MessageNumber);
-//	vsprintf_s(buf , 1024 , format, args);
-	vsnprintf(buf, 1023, format, args);
+	vsnprintf(buf, 1023, format.c_str(), args);
 	va_end(args);
 
 	//return std::string(buf);

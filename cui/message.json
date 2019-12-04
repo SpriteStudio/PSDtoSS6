@@ -1,0 +1,89 @@
+﻿[
+	{
+		"label":"INFO_0001", 
+		"jp":"テクスチャサイズを %d × %d にしてパッキングします。",
+		"en":"Pack with a texture size of %d x %d."
+	},
+	{
+		"label" : "INFO_0002",
+		"jp":"パッキングが成功しました。",
+		"en":"Packing was successful."
+	},
+	{
+		"label" : "INFO_0003" ,
+		"jp" : "ssceファイルのコンバートが成功しました。",
+		"en": "ssce convert success!!: %s"
+	},
+	{
+		"label": "INFO_0004",
+		"jp" : "ssaeファイルのコンバートが成功しました。",
+		"en": "ssae convert success!!: %s"
+	},
+	{
+		"label": "INFO_0005", 
+		"jp" : "sspjファイルのコンバートが成功しました。",
+		"en": "sspj convert success!!: %s"
+	},
+
+	{
+		"label" : "WARNING_0001", 
+		"jp" : "警告：セル間余白+セル内余白の値が1以下に指定されています。色もれが発生する可能性があります。",
+		"en": "Warning: The value of margin between cells + margin within the cell is specified as 1 or less. Color leakage may occur."
+	},
+
+	{
+		"label" : "ERROR_0001",
+		"jp" : "エラー：情報ファイルのオープンに失敗しました。：%s",
+		"en": "Error: Failed to open the information file."
+	},
+	{
+		"label" : "ERROR_0002", 
+		"jp" : "エラー：情報ファイルの内容が正しくありません。：%s",
+		"en": "Error: The contents of the information file are incorrect. : %s"
+	},
+	{
+		"label" : "ERROR_0003",
+		"jp" : "エラー：PSDファイルのオープンに失敗しました。：%s",
+		"en": "Error: Failed to open PSD file. : %s"
+	},
+	{
+		"label" : "ERROR_0004",
+		"jp" : "エラー：セル名に全角文字が使用されています。: %s  ",
+		"en": "Error: Double - byte characters are used in the cell name. : %s"
+	},
+	{
+		"label" : "ERROR_0005" ,
+		"jp" : "エラー：同名のセル名が使用されています。 : %s",
+		"en": "Error: The same cell name is used."
+	},
+	{
+		"label" : "ERROR_0006",
+		"jp" : "エラー：セルマップに収まりません",
+		"en": "Error: does not fit in cell map"
+	},
+	{
+		"label" : "ERROR_0007",
+		"jp" : "エラー：テクスチャの幅より大きいセルがあります。",
+		"en": "Error: There are cells larger than the width of the texture."
+	},
+	{
+		"label" : "ERROR_0008", 
+		"jp" : "エラー：テクスチャの高さより大きいセルがあります。",
+		"en": "Error: There are cells larger than the height of the texture."
+	},
+	{
+		"label" : "ERROT_0009",
+		"jp" : "パッキングに失敗しました。",
+		"en": "Packing failed."
+	},
+	{
+		"label" : "ERROT_0010" ,
+		"jp" : "設定情報(jsonファイル)の読み込みに失敗しました。",
+		"en": "failed to read test.json"
+	},
+	{
+		"label" : "ERROT_0011",
+		"jp" : "コンバート情報のオープンに失敗しました",
+		"en": "Failed to open convert information file"
+	}
+]

@@ -4,6 +4,7 @@
 
 #include "convertToSS.h"
 #include <stdlib.h>
+#include "tbl_outmessage.h"
 
 using namespace SsConverter;
 
@@ -27,7 +28,7 @@ int main(int argc, char **argv)
 	setlocale(LC_CTYPE, "jpn");
 #endif
 
-
+	MessageInit();
 	ConvertToSS converter;
 	
 	if (!converter.convert(argv[1]))

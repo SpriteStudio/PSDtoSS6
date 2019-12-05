@@ -10,6 +10,7 @@
 //#include "picojson/picojson.h""
 
 
+
 int convert_parameters::SortModeStringToInt(std::string str)
 {
 
@@ -58,7 +59,7 @@ bool convert_parameters::parseConfigJson(std::string fname)
 
 	std::ifstream ifs(fname, std::ios::in);
 	if (ifs.fail()) {
-		std::cerr << "failed to read test.json" << std::endl;
+//		std::cerr << "failed to read test.json" << std::endl;		
 		return false;
 	}
 	const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
@@ -106,8 +107,9 @@ bool convert_parameters::parseConfigJson(std::string fname)
 
 	if ((tex_padding_shape + inner_padding) <= 1)
 	{
-		std::cerr << "警告：セル間余白+セル内余白の値が1以下に指定されています。" << std::endl;
-		std::cerr << "　　　色もれが発生する可能性があります。" << std::endl;
+//		std::cerr << "警告：セル間余白+セル内余白の値が1以下に指定されています。" << std::endl;
+//		std::cerr << "　　　色もれが発生する可能性があります。" << std::endl;
+//		ConsoleOutMessage(WARNING_0001);
 	}
 	return true;
 }
@@ -120,7 +122,8 @@ bool convert_parameters::saveConfigJson(std::string fname)
 #endif
 	std::ofstream ofs(fname);
 	if (ofs.fail()) {
-		std::cerr << "failed to read test.json" << std::endl;
+		//std::cerr << "failed to read test.json" << std::endl;
+		//ConsoleOutMessage(ERROT_0010);
 		return false;
 	}
 
@@ -296,14 +299,16 @@ bool convert_parameters::parseConfig(std::string fname)
 	}
 	else
 	{
-		std::cerr << "コンバート情報のオープンに失敗しました" << std::endl;
+		//std::cerr << "コンバート情報のオープンに失敗しました" << std::endl;
+//		ConsoleOutMessage(ERROT_0011);
 		return false;
 	}
 
 	if ((tex_padding_shape + inner_padding) <= 1)
 	{
-		std::cerr << "警告：セル間余白+セル内余白の値が1以下に指定されています。" << std::endl;
-		std::cerr << "　　　色もれが発生する可能性があります。" << std::endl;
+//		std::cerr << "警告：セル間余白+セル内余白の値が1以下に指定されています。" << std::endl;
+//		std::cerr << "　　　色もれが発生する可能性があります。" << std::endl;
+//		ConsoleOutMessage(WARNING_0001);
 	}
 
 	return true;

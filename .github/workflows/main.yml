@@ -48,6 +48,7 @@ jobs:
     - name: release build
       shell: cmd
       run: Scripts\build_win.bat
+      run: Scripts\build_installer_win.bat
     - name: Upload Tools
       uses: actions/upload-artifact@v1
       with:

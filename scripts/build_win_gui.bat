@@ -15,8 +15,9 @@ if "%VCPKG_PREFIX%" == "" (
 
 set DEFAULT_QT_PATH=C:\Qt\Qt5.9.7\5.9.7\msvc2017_64
 if "%QT_PATH%" == "" (
-    set QT_PATH=%DEFAULT_QT_PATH%\bin    
-) else if not "%Qt5_Dir%" == "" (
+    set QT_PATH=%DEFAULT_QT_PATH%
+)
+if not "%Qt5_Dir%" == "" (
     set QT_PATH=%Qt5_Dir%
 )
 

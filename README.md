@@ -3,3 +3,6 @@ PSDtoSS6とはPhotoshopのスクリプトとコンバータを使用して、PSD
 
 ・ドキュメント  
 https://github.com/SpriteStudio/PSDtoSS6/wiki
+
+
+![CI](https://github.com/SpriteStudio/PSDtoSS6/workflows/CI/badge.svg)

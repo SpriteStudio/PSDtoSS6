@@ -4,8 +4,8 @@ on: [push]
 
 jobs:
   win_build:
-    strategy:
     runs-on: ${{ matrix.platform }}
+    strategy:
       matrix:
         platform: [windows-latest]
     steps:

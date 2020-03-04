@@ -41,18 +41,16 @@ jobs:
         $env:Path = "C:\projects\deps\cmake\bin" + ";" + $env:Path
         cmake --version
         cmake -h
-  - name: Cache Qt
-	  id: cache-qt
-	  uses: actions/cache@v1
-	  with:
-	    path: ../Qt
-	    key: QtCache
-
-	- name: Install Qt
-	  uses: jurplel/install-qt-action@v2
-	  with:
-	    cached: ${{ steps.cache-qt.outputs.cache-hit }}
-
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+          path: ../Qt
+	  key: QtCache
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
     - name: "set QT_PREFIX"
       run: $env:QT_PREFIX = $env:Qt5_Dir
     - name: release build

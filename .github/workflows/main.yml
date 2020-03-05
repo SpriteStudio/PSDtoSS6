@@ -26,7 +26,7 @@ jobs:
   win_build:
     strategy:
       matrix:
-        platform: [windows-2016]
+        platform: [windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
@@ -41,16 +41,10 @@ jobs:
         $env:Path = "C:\projects\deps\cmake\bin" + ";" + $env:Path
         cmake --version
         cmake -h
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v1
-      with:
-          path: ../Qt
-          key: QtCache
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
     - name: "set QT_PREFIX"
       run: $env:QT_PREFIX = $env:Qt5_Dir
     - name: release build

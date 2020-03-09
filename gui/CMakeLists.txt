@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-IF(APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
-ENDIF()
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11")
+
 
 
 if((NOT CMAKE_PROJECT_NAME))

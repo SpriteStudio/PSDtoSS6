@@ -29,6 +29,7 @@ public:
 	std::string outputpath;
 	std::string outputname;
 	std::string inputpsdfile;
+	bool inputjson;
 
 
 public:	
@@ -51,7 +52,8 @@ public:
 		inner_padding(0),
 		outputpath(""),
 		outputname(""),
-		inputpsdfile("")
+		inputpsdfile(""),
+		inputjson(false)
 	{}
 
 	~convert_parameters() {}
@@ -64,7 +66,7 @@ public:
     std::string SortModeIntToString(int i);
 
 	bool parseConfigArg(int num, std::vector<std::string> arglist);
-
+	std::string makeArgFromParam();
 
 
 };

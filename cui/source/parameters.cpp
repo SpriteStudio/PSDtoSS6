@@ -58,6 +58,7 @@ option_struct option_char_tbl[] = {
 	{ "-O","--outputpath" },
 	{ "-ON","--outputname" },
 	{ "-I","--inputfile" },
+	{ "-J","--json"},
 	{0,0}
 };
 
@@ -139,6 +140,14 @@ bool stringToBool(std::string str)
 	return false;
 }
 
+std::string boolToString(bool b)
+{
+	if (b == true) return "true";
+
+	return "false";
+}
+
+
 // 最低限　-Iが無いと成立しない
 bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglist)
 {
@@ -166,6 +175,7 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 		parammap["-O"] = "";
 		parammap["-ON"] = "";
 		parammap["-I"] = "";
+		parammap["-J"] = "false";
 
 		//引数リストを含んでいる
 		if (isAllFindArgType(arglist))
@@ -207,6 +217,7 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 			this->padding_border = tryInt(parammap["-PB"]);
 			this->canvasSize = tryInt(parammap["-CS"]);
 			this->inner_padding = tryInt(parammap["-PI"]);
+			this->inputjson = stringToBool(parammap["-J"]);
 
 			this->outputpath = parammap["-O"];
 			if (this->outputpath.back() != '\\')
@@ -228,7 +239,38 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 	return false;
 }
 
+std::string convert_parameters::makeArgFromParam()
+{
+	std::string str;
 
+	str  = " -TW " + std::to_string(tex_w);
+	str += " -TH " + std::to_string(tex_h);
+	str += " -PS " + std::to_string(tex_padding_shape);
+	str += " -PP " + std::to_string(pack_padding);
+	str += " -AP " + std::to_string(addpri);
+
+	str += " -OA " + boolToString(is_ssaeoutput);
+	str += " -OP " + boolToString(is_sspjoutput);
+	str += " -OW " + boolToString(is_overwrite);
+
+	str += " -AN " + boolToString(is_addnull);
+
+	str += " -UP " + boolToString(is_layerPivotUse);
+	str += " -UR " + boolToString(is_rootLayerUse);
+
+	str += " -UO " + boolToString(is_oldPivotUse);
+	str += " -SO " + SortModeIntToString(sortmode);
+
+	str += " -PB " + std::to_string(padding_border);
+	str += " -CS " + std::to_string(canvasSize);
+
+	str += " -PI " + std::to_string(inner_padding);
+	str += " -O "  + outputpath;
+	//str += " -ON " + '"' + outputname + '"';
+
+
+	return str;
+}
 
 int convert_parameters::SortModeStringToInt(std::string str)
 {

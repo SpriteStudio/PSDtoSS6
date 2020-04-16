@@ -19,6 +19,7 @@ std::map<int, QString> map_canvasSize;
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
 
+convert_parameters cp;
 
 
 template<typename T1, typename T2>
@@ -137,7 +138,6 @@ void MainWindow::loadConfig(const QString & fileName)
 
 void MainWindow::saveConfig(const QString & fileName)
 {
-    convert_parameters cp;
 
     cp.tex_w                = getKey(map_texture_wh, ui->comboBox_w->currentText());
     cp.tex_h                = getKey(map_texture_wh, ui->comboBox_h->currentText());
@@ -321,6 +321,9 @@ void MainWindow::on_pushButton_convert_clicked()
 
                 qDebug() << "\n===========================================";
                 qDebug() << "Running " << execstr;
+
+				std::string arg_str = cp.makeArgFromParam();
+
                 qDebug() << (QFile::exists(execstr) ? "File exists: " : "File may not exist:") << execstr;
                 if ( QFile::exists(execstr) == false )
                 {
@@ -332,7 +335,9 @@ void MainWindow::on_pushButton_convert_clicked()
 
                 execstr= "\"" + execstr + "\"";
 
-                str = execstr + " \"" + fileName + "\"";
+                //str = execstr + " \"" + fileName + "\"";
+				str = execstr + " " + QString(arg_str.c_str()) + " -I " + " \"" + fileName + " \"";
+
                 cnvProcess->start(str); //パスと引数
                 
                 while ( 1 )

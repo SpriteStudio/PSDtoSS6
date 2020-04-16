@@ -1256,6 +1256,8 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 	//引数リストが付いて実行された
 	if (params.parseConfigArg(argn, arg))
 	{
+		std::cerr << "exec from  args \n arg num = " << argn << std::endl;
+
 		if (!parseInputOutputFiles( params.inputpsdfile ))
 		{
 			ConsoleOutMessage("ERROT_0010");
@@ -1263,6 +1265,7 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 		}
 
 	}else{
+		std::cerr << "exec load json \n" << std::endl;
 
 		if (!parseInputOutputFiles(arg[1]))
 		{

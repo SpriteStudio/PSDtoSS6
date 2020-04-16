@@ -28,6 +28,7 @@ public:
 
 	std::string outputpath;
 	std::string outputname;
+	std::string inputpsdfile;
 
 
 public:	
@@ -49,7 +50,8 @@ public:
 		canvasSize(0),
 		inner_padding(0),
 		outputpath(""),
-		outputname("")
+		outputname(""),
+		inputpsdfile("")
 	{}
 
 	~convert_parameters() {}
@@ -60,6 +62,10 @@ public:
 	bool saveConfigJson(std::string fname);
 	int SortModeStringToInt(std::string str);
     std::string SortModeIntToString(int i);
+
+	bool parseConfigArg(int num, std::vector<std::string> arglist);
+
+
 
 };
 

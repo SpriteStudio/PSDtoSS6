@@ -10,6 +10,225 @@
 //#include "picojson/picojson.h""
 
 
+/*
+	省略	フル
+	-TW		--texture_width 256		defalut = 0
+	-TH		--texture_height 256		default = 0
+	-PS		--pading_shape 2			default = 2
+	-PP		--pack_padding 1			defalut = 1
+	-AP		--add_priority 0			default = 1
+	-OA		--out_ssae true			default = false
+	-OP		--out_sspj true			default = false
+	-OW		--overwrite true			default = false
+	-AN		--add_null true			default = false
+	-UP		--use_layer_pivot true	default = false
+	-UR		--use_layer_root true	default = false
+	-UO		--use_oldpivot true		default = false
+	-SO		--sortmode "mode"	mode = rectmax / wmax / hmax / none
+	-PB		--padding_border 1		default = 4
+	-CS		--canvas_size 1024		default = 0
+	-PI		--padding_innner 1		default = 0
+	-O		--outputpath "file"	default = ""
+	-ON		--outputname "filename" default = ""
+*/
+
+struct option_struct{
+	char* OP1;
+	char* OP2;
+};
+
+option_struct option_char_tbl[] = {
+
+	{ "-TW","--texture_width"},
+	{ "-TH","--texture_height" },
+	{ "-PS","--pading_shape" },
+	{ "-PP","--pack_padding" },
+	{ "-AP","--add_priority" },
+	{ "-OA","--out_ssae" },
+	{ "-OP","--out_sspj" },
+	{ "-OW","--overwrite" },
+	{ "-AN","--add_null" },
+	{ "-UP","--use_layer_pivot" },
+	{ "-UR","--use_layer_root" },
+	{ "-UO","--use_oldpivot" },
+	{ "-SO","--sortmode" },
+	{ "-PB","--padding_border" },
+	{ "-CS","--canvas_size" },
+	{ "-PI","--padding_innner" },
+	{ "-O","--outputpath" },
+	{ "-ON","--outputname" },
+	{ "-I","--inputfile" },
+	{0,0}
+};
+
+
+bool isFindArgtype(std::string arg)
+{
+	size_t tablenum = sizeof(option_char_tbl) / sizeof(option_struct)-1;
+
+	for (size_t n = 0; n < tablenum; n++)
+	{
+		if (arg == option_char_tbl[n].OP1)
+		{
+			return true;
+		}
+		if (arg == option_char_tbl[n].OP2)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+std::string convertOptionCode(std::string arg)
+{
+	size_t tablenum = sizeof(option_char_tbl) / sizeof(option_struct) - 1;
+
+	for (size_t n = 0; n < tablenum; n++)
+	{
+		if (arg == option_char_tbl[n].OP1)
+		{
+			return option_char_tbl[n].OP1;
+		}
+		if (arg == option_char_tbl[n].OP2)
+		{
+			return option_char_tbl[n].OP1;
+		}
+	}
+
+
+	return "";
+}
+
+bool isAllFindArgType(std::vector<std::string> arglist)
+{
+
+	for (size_t i = 0; i < arglist.size(); i++)
+	{
+		if (isFindArgtype(arglist[i])) return true;
+	}
+
+
+	return false;
+}
+
+int tryInt(std::string str)
+{
+	try {
+		return atoi(str.c_str());
+	}
+	catch (...)
+	{
+
+	}
+	return 0;
+}
+
+
+bool stringToBool(std::string str)
+{
+	if (str == "TRUE" || str == "true")
+	{
+		return true;
+	}
+	if (str == "FALSE" || str == "false")
+	{
+		return false;
+	}
+
+	return false;
+}
+
+// 最低限　-Iが無いと成立しない
+bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglist)
+{
+
+	std::map < std::string, std::string> parammap;
+
+	if (num > 2)
+	{
+		parammap["-TW"] = "0";
+		parammap["-TH"] = "0";
+		parammap["-PS"] = "2";
+		parammap["-PP"] = "1";
+		parammap["-AP"] = "1";
+		parammap["-OA"] = "false";
+		parammap["-OP"] = "false";
+		parammap["-OW"] = "false";
+		parammap["-AN"] = "false";
+		parammap["-UP"] = "false";
+		parammap["-UR"] = "false";
+		parammap["-UO"] = "false";
+		parammap["-SO"] = "RECTMAX";
+		parammap["-PB"] = "4";
+		parammap["-CS"] = "0";
+		parammap["-PI"] = "0";
+		parammap["-O"] = "";
+		parammap["-ON"] = "";
+		parammap["-I"] = "";
+
+		//引数リストを含んでいる
+		if (isAllFindArgType(arglist))
+		{
+			int cnt = 1;
+
+			while (1)
+			{
+				if (cnt == arglist.size()) break;
+				if (isFindArgtype(arglist[cnt]))
+				{
+					std::string code = convertOptionCode(arglist[cnt]);
+
+					parammap[code] = arglist[cnt + 1];
+				}
+				else {
+					//
+					//知らないオプション
+
+				}
+				cnt+=2;
+			}
+
+
+			this->tex_w = tryInt(parammap["-TW"]);
+			this->tex_h = tryInt(parammap["-TH"]);
+			this->tex_padding_shape = tryInt(parammap["-PS"]);
+			this->pack_padding = tryInt(parammap["-PP"]);
+			this->addpri = tryInt(parammap["-AP"]);
+
+			this->is_ssaeoutput = stringToBool(parammap["-OA"]);
+			this->is_sspjoutput = stringToBool(parammap["-OP"]);
+			this->is_overwrite = stringToBool(parammap["-OW"]);
+			this->is_addnull = stringToBool(parammap["-AN"]);
+			this->is_layerPivotUse = stringToBool(parammap["-UP"]);
+			this->is_rootLayerUse = stringToBool(parammap["-UR"]);
+			this->is_oldPivotUse = stringToBool(parammap["-UO"]);
+			this->sortmode = SortModeStringToInt(parammap["-SO"]);
+			this->padding_border = tryInt(parammap["-PB"]);
+			this->canvasSize = tryInt(parammap["-CS"]);
+			this->inner_padding = tryInt(parammap["-PI"]);
+
+			this->outputpath = parammap["-O"];
+			if (this->outputpath.back() != '\\')
+			{
+				this->outputpath += "\\";
+			}
+
+			this->inputpsdfile = parammap["-I"];
+
+			if (parammap["-ON"] != "")
+			{
+				this->outputname = parammap["-ON"];
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
 
 int convert_parameters::SortModeStringToInt(std::string str)
 {

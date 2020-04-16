@@ -48,7 +48,10 @@ bool	ConvertToSS::parseInputOutputFiles(std::string arg)
 	}
 
 	inputpath = inputname.substr(0, end + 1);
-	params.outputpath = inputpath;
+	if (params.outputpath == "")
+	{
+		params.outputpath = inputpath;
+	}
 
 	return true;
 }
@@ -1240,7 +1243,8 @@ void	ConvertToSS::makeSspjFile(SSOptionReader& option)
 }
 
 
-bool	ConvertToSS::convert(std::string arg)
+bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
+//bool	ConvertToSS::convert(std::string arg)
 {
 	gLayoutCenter.x;
 	gLayoutCenter.y;
@@ -1248,30 +1252,42 @@ bool	ConvertToSS::convert(std::string arg)
 	celldata_num = 0;
 	readpngfile_max = 0;
 	memset(pivot, 0, sizeof(pivot));
-	
-	if (!parseInputOutputFiles(arg))
+
+	//引数リストが付いて実行された
+	if (params.parseConfigArg(argn, arg))
 	{
-		ConsoleOutMessage("ERROT_0010");
-		return false;
-	}
-
-	if (!getInfomationFilePath()) return false;
-
-	if (!params.parseConfigJson(convert_info_path + ".json"))
-	{
-		ConsoleOutMessage("ERROT_0010");
-
-		if (!params.parseConfig(convert_info_path)) {
-			ConsoleOutMessage("ERROT_0011");
+		if (!parseInputOutputFiles( params.inputpsdfile ))
+		{
+			ConsoleOutMessage("ERROT_0010");
 			return false;
 		}
-	}
-	else {
-		//jsonはutf8で保存されているためsjisへ変換
+
+	}else{
+
+		if (!parseInputOutputFiles(arg[1]))
+		{
+			ConsoleOutMessage("ERROT_0010");
+			return false;
+		}
+
+		if (!getInfomationFilePath()) return false;
+
+		if (!params.parseConfigJson(convert_info_path + ".json"))
+		{
+			ConsoleOutMessage("ERROT_0010");
+
+			if (!params.parseConfig(convert_info_path)) {
+				ConsoleOutMessage("ERROT_0011");
+				return false;
+			}
+		}
+		else {
+			//jsonはutf8で保存されているためsjisへ変換
 #ifdef _WIN32
-		params.outputpath = stringconv::utf8_to_sjis(params.outputpath);
-		params.outputname = stringconv::utf8_to_sjis(params.outputname);
+			params.outputpath = stringconv::utf8_to_sjis(params.outputpath);
+			params.outputname = stringconv::utf8_to_sjis(params.outputname);
 #endif
+		}
 	}
 
 	if ((params.tex_padding_shape + params.inner_padding) <= 1)

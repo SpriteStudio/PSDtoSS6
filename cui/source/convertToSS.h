@@ -92,7 +92,7 @@ namespace SsConverter
 		ConvertToSS() {}
 		virtual ~ConvertToSS() {}
 
-		bool	convert(std::string arg);
+		bool	convert(int argn , std::vector<std::string> arg);
 
 
 	};

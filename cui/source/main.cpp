@@ -31,7 +31,13 @@ int main(int argc, char **argv)
 	MessageInit();
 	ConvertToSS converter;
 	
-	if (!converter.convert(argv[1]))
+	std::vector<std::string> arglist;
+	for (int i = 0; i < argc; i++)
+	{
+		arglist.push_back(argv[i]);
+	}
+
+	if (!converter.convert(argc , arglist))
 	{
 		return 1;
 	}

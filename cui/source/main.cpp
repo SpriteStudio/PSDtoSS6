@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 	for (int i = 0; i < argc; i++)
 	{
 		arglist.push_back(argv[i]);
-		std::cerr << argv[i] << std::endl;
+//		std::cerr << argv[i] << std::endl;
 	}
 
 

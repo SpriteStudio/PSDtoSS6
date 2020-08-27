@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
-    - name: prepare build environment
+    - name: prepare build environment 
       run: ./scripts/prepare_mac.sh
     - name: install qt
       run: |

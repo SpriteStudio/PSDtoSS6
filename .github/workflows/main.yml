@@ -7,11 +7,6 @@ jobs:
     strategy:
       matrix:
         platform: [macos-latest]
-        - name: macos-latest
-          os: macos
-          triplet: x64-osx
-          packages: >
-            tinyxml2 zlib libpng libjpeg-turbo icu
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
@@ -26,7 +21,7 @@ jobs:
     # Now that vcpkg is installed, it is being used to run desired arguments.
     - run: |
         $VCPKG_ROOT/vcpkg @$vcpkgResponseFile
-        $VCPKG_ROOT/vcpkg install ${{ matrix.packages }}
+        $VCPKG_ROOT/vcpkg install tinyxml2 zlib libpng libjpeg-turbo icu
       shell: bash
     - name: install qt
       run: |

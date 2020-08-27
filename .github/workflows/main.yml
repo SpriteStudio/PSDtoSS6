@@ -7,11 +7,27 @@ jobs:
     strategy:
       matrix:
         platform: [macos-latest]
+        - name: macos-latest
+          os: macos
+          triplet: x64-osx
+          packages: >
+            tinyxml2 zlib libpng libjpeg-turbo icu
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
-    - name: prepare build environment 
-      run: ./scripts/prepare_mac.sh
+      with:
+        submodules: true
+    # Restore from cache the previously built ports. If cache-miss, download, build vcpkg.
+    - name: Restore from cache and install vcpkg
+      # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
+      uses: lukka/run-vcpkg@v3
+      with:
+        setupOnly: true
+    # Now that vcpkg is installed, it is being used to run desired arguments.
+    - run: |
+        $VCPKG_ROOT/vcpkg @$vcpkgResponseFile
+        $VCPKG_ROOT/vcpkg install ${{ matrix.packages }}
+      shell: bash
     - name: install qt
       run: |
         brew update
@@ -30,6 +46,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: true
     - name: prepare build environment
       shell: cmd
       run: scripts\prepare_win.bat

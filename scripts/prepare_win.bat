@@ -6,8 +6,8 @@ if not ""%1""=="""" (
 )
 
 pushd %DSTDIR%
-rd /s /q vcpkg
-git clone https://github.com/microsoft/vcpkg.git
+rem rd /s /q vcpkg
+rem git clone https://github.com/microsoft/vcpkg.git
 pushd vcpkg
 call bootstrap-vcpkg.bat
 

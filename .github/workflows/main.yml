@@ -25,7 +25,7 @@ jobs:
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
       env:
-        vcpkgResponseFile: response_file.txt
+        vcpkgResponseFile: '${{ github.workspace }}/response_file.txt'
     - name: install qt
       run: |
         brew install qt

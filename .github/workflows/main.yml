@@ -11,7 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: prepare build environment 
-      run: ./scripts/prepare_mac.sh
+      run: |
+        brew install pkg-config
+        ./scripts/prepare_mac.sh        
     - name: install qt
       run: |
         brew update

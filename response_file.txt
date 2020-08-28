@@ -1,0 +1,5 @@
+tinyxml2
+zlib
+libpng
+libjpeg-turbo
+icu

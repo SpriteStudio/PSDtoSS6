@@ -20,6 +20,7 @@ jobs:
         setupOnly: true
     # Now that vcpkg is installed, it is being used to run desired arguments.
     - run: |
+        brew install pkg-config
         $VCPKG_ROOT/vcpkg @$vcpkgResponseFile
         $VCPKG_ROOT/vcpkg install tinyxml2 zlib libpng libjpeg-turbo icu
       shell: bash

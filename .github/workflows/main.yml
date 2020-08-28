@@ -12,6 +12,10 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: true
+    - name: Run brew install pkg-config
+      run: |
+        brew update
+        brew install pkg-config        
     # Restore from cache the previously built ports. If cache-miss, download, build vcpkg.
     - name: Restore from cache and install vcpkg
       # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
@@ -20,13 +24,11 @@ jobs:
         setupOnly: true
     # Now that vcpkg is installed, it is being used to run desired arguments.
     - run: |
-        brew install pkg-config        
         $VCPKG_ROOT/vcpkg @$vcpkgResponseFile
         $VCPKG_ROOT/vcpkg install tinyxml2 zlib libpng libjpeg-turbo icu
       shell: bash
     - name: install qt
       run: |
-        brew update
         brew install qt
     - name: release build
       run: ./scripts/build_mac.sh

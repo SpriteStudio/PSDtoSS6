@@ -10,10 +10,20 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
-    - name: prepare build environment 
-      run: |
+      with:
+        submodules: true
+    # Restore from cache the previously built ports. If cache-miss, download, build vcpkg.
+    - name: Restore from cache and install vcpkg
+      # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
+      uses: lukka/run-vcpkg@v3
+      with:
+        setupOnly: true
+    # Now that vcpkg is installed, it is being used to run desired arguments.
+    - run: |
         brew install pkg-config
-        ./scripts/prepare_mac.sh        
+        $VCPKG_ROOT/vcpkg @$vcpkgResponseFile
+        $VCPKG_ROOT/vcpkg install tinyxml2 zlib libpng libjpeg-turbo icu
+      shell: bash
     - name: install qt
       run: |
         brew update
@@ -32,6 +42,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: true
     - name: prepare build environment
       shell: cmd
       run: scripts\prepare_win.bat

@@ -9,8 +9,8 @@ BUILDDIR=`cd ${BUILDDIR} && pwd -P`
 
 pushd ${BASEDIR}
 
-/bin/rm -rf vcpkg
-git clone https://github.com/Microsoft/vcpkg.git
+#/bin/rm -rf vcpkg
+#git clone https://github.com/Microsoft/vcpkg.git
 ./vcpkg/bootstrap-vcpkg.sh
 
 if [ -z ${VCPKG_DEFAULT_TRIPLET+x} ]; then

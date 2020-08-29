@@ -1,0 +1,8 @@
+tinyxml2
+zlib
+libpng
+libjpeg-turbo
+icu
+--triplet
+x64-windows-static
+

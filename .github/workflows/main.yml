@@ -25,7 +25,7 @@ jobs:
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
       env:
-        vcpkgResponseFile: '${{ github.workspace }}/response_file.txt'
+        vcpkgResponseFile: '${{ github.workspace }}/response_file_mac.txt'
     - name: install qt
       run: |
         brew install qt
@@ -55,7 +55,13 @@ jobs:
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
       env:
-        vcpkgResponseFile: '${{ github.workspace }}/response_file.txt'
+        vcpkgResponseFile: '${{ github.workspace }}/response_file_win.txt'
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: ${{ runner.os }}-QtCache
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:

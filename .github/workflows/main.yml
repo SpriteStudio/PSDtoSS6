@@ -45,6 +45,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
+    - name: Get latest CMake
+      uses: lukka/get-cmake@latest
     - name: Restore from cache and install vcpkg
       # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
       uses: lukka/run-vcpkg@v3
@@ -54,14 +56,6 @@ jobs:
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
       env:
         vcpkgResponseFile: '${{ github.workspace }}/response_file.txt'
-    - name: install cmake
-      run: |
-        curl -O https://cmake.org/files/v3.18/cmake-3.18.2-win64-x64.zip
-        7z x cmake-3.18.2-win64-x64.zip -oC:\projects\deps
-        move C:\projects\deps\cmake-* C:\projects\deps\cmake
-        $env:Path = "C:\projects\deps\cmake\bin" + ";" + $env:Path
-        cmake --version
-        cmake -h
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:

@@ -265,6 +265,7 @@ std::string convert_parameters::makeArgFromParam()
 	str += " -CS " + std::to_string(canvasSize);
 
 	str += " -PI " + std::to_string(inner_padding);
+
 	str += " -O "  + outputpath;
 	//str += " -ON " + '"' + outputname + '"';
 

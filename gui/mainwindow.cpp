@@ -333,10 +333,15 @@ void MainWindow::on_pushButton_convert_clicked()
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }
 
-                execstr= "\"" + execstr + "\"";
+        #ifdef Q_OS_WIN32
 
-                //str = execstr + " \"" + fileName + "\"";
+                execstr= "\"" + execstr + "\"";
 				str = execstr + " " + QString(arg_str.c_str()) + " -I " + " \"" + fileName + " \"";
+        #else
+                //execstr= "\"" + execstr + "\"";
+				str = execstr + " " + QString(arg_str.c_str()) + " -I " + fileName;
+
+        #endif
 
                 cnvProcess->start(str); //パスと引数
                 

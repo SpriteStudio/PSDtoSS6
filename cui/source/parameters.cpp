@@ -63,6 +63,23 @@ option_struct option_char_tbl[] = {
 };
 
 
+std::string replaceString(std::string &inStr, std::string key , std::string replaceStr) {
+
+    std::string ret = inStr;
+	if (key.empty()) {
+		return inStr;
+	}
+
+    size_t pos;
+
+	while( std::string::npos != (pos = ret.find(key) ) )
+    {
+        ret = ret.replace(pos, key.length() , replaceStr);
+    }
+
+	return ret;
+}
+
 bool isFindArgtype(std::string arg)
 {
 	size_t tablenum = sizeof(option_char_tbl) / sizeof(option_struct)-1;
@@ -219,11 +236,13 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 			this->inner_padding = tryInt(parammap["-PI"]);
 			this->inputjson = stringToBool(parammap["-J"]);
 
+
 			this->outputpath = parammap["-O"];
 			if (this->outputpath.back() != '\\')
 			{
 				this->outputpath += "\\";
 			}
+
 
 			this->inputpsdfile = parammap["-I"];
 
@@ -231,6 +250,15 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 			{
 				this->outputname = parammap["-ON"];
 			}
+
+#if _WIN32
+			outputpath = replaceString(outputpath, "/", "\\");
+			inputpsdfile = replaceString(inputpsdfile, "/", "\\");
+#else
+			outputpath = replaceString(outputpath, "\\", "/");
+			inputpsdfile = replaceString(inputpsdfile, "\\", "/");
+#endif
+
 
 			return true;
 		}
@@ -266,8 +294,15 @@ std::string convert_parameters::makeArgFromParam()
 
 	str += " -PI " + std::to_string(inner_padding);
 
+#if _WIN32
+	outputpath = replaceString(outputpath, "/", "\\");
+#else
+	outputpath = replaceString(outputpath, "\\", "/");
+#endif
+
 	str += " -O "  + outputpath;
 	//str += " -ON " + '"' + outputname + '"';
+
 
 
 	return str;

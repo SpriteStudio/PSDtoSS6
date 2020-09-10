@@ -2,7 +2,7 @@
 QWidget {
    background-color: rgb(50,50,50);
    border-color: rgb(27,27,27);
-   color: rgb(205,205,205);
+   color: rgb(123, 123, 123);
    font-size: 12px;
 }
 
@@ -14,6 +14,10 @@ QPushButton {
     border-color: rgb(205,205,205);
     border-style: solid;
     border-radius: 12px;
+}
+
+QListWidget {
+    color: rgb(0, 0, 0);    
 }
 
 /* デフォルトで表示されるボタンの設定 */

@@ -353,6 +353,11 @@ bool convert_parameters::parseConfigJson(std::string fname)
 #if _WIN32
 	std::locale::global(std::locale("japanese"));
 #endif
+#if _WIN32
+	fname = replaceString(fname, "/", "\\");
+#else
+	fname = replaceString(fname, "\\", "/");
+#endif
 
 	std::ifstream ifs(fname, std::ios::in);
 	if (ifs.fail()) {

@@ -115,7 +115,16 @@ MainWindow::~MainWindow()
 void MainWindow::loadConfig(const QString & fileName)
 {
     convert_parameters cp;
-    cp.parseConfigJson(fileName.toStdString());
+    QString outputText =  "";
+    outputText = "Load Config json file = " + fileName;
+
+    if ( !cp.parseConfigJson(fileName.toStdString()) )
+    {
+        QString str = QString::fromLocal8Bit( cp.err_string.c_str() );
+        ui->textBrowser_err->setText(outputText);            
+    }else{
+        ui->textBrowser_err->setText(outputText);            
+    }
 
     ui->comboBox_w              ->setCurrentText(map_texture_wh[cp.tex_w]);
     ui->comboBox_h              ->setCurrentText(map_texture_wh[cp.tex_h]);

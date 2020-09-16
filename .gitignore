@@ -76,3 +76,4 @@ installer/
 build-gui-*/
 gui/CMakeLists.txt.user
 
+.vscode/settings.json

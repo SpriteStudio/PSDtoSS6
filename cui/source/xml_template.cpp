@@ -1,4 +1,6 @@
 ﻿#include "xml_template.h"
+#include <string>
+
 using namespace tinyxml2;
 
 //XMLNodeを再帰的にコピー
@@ -44,10 +46,12 @@ void Ssxx_template::make_template(XMLDocument* loadssop_xml)
 {
 	if (tinyxml2::XML_SUCCESS != loadssop_xml->Error())
 	{
+        std::cerr << "make sspj from default." << std::endl;
 		make_template_form_default();
 	}
 	else
 	{
+        std::cerr << "make sspj from ssop." << std::endl;
 		make_template_from_ssop(loadssop_xml);
 	}
 }

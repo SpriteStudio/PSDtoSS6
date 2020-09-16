@@ -361,7 +361,8 @@ bool convert_parameters::parseConfigJson(std::string fname)
 
 	std::ifstream ifs(fname, std::ios::in);
 	if (ifs.fail()) {
-//		std::cerr << "failed to read test.json" << std::endl;		
+        err_string = "failed to read ";
+		std::cerr << err_string << fname << std::endl;		
 		return false;
 	}
 	const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
@@ -370,7 +371,8 @@ bool convert_parameters::parseConfigJson(std::string fname)
 	picojson::value v;
 	const std::string err = picojson::parse(v, json);
 	if (err.empty() == false) {
-		std::cerr << err << std::endl;
+        err_string = err;
+		std::cerr << err_string << fname << std::endl;		
 		return false;
 	}
 
@@ -424,7 +426,7 @@ bool convert_parameters::saveConfigJson(std::string fname)
 #endif
 	std::ofstream ofs(fname);
 	if (ofs.fail()) {
-		//std::cerr << "failed to read test.json" << std::endl;
+		std::cerr << "failed to write " << fname << std::endl;
 		//ConsoleOutMessage(ERROT_0010);
 		return false;
 	}

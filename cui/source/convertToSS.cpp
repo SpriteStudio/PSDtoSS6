@@ -1325,7 +1325,9 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 	SSOptionReader ssoption;
 
 //	if ( !ssoption.load() ) return false;
-	ssoption.load();
+	if ( !ssoption.load() ) return false;
+
+
 	makeSsceFile(ssoption);
 	makeSsaeFile(ssoption);
 	makeSspjFile(ssoption);

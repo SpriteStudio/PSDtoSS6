@@ -31,6 +31,7 @@ public:
 	std::string inputpsdfile;
 	bool inputjson;
 
+    std::string err_string;
 
 public:	
 	convert_parameters() : 

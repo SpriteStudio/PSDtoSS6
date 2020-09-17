@@ -82,8 +82,12 @@ ELSEIF(APPLE)
 ELSEIF(CMAKE_COMPILER_IS_GNUCXX)
 ENDIF()
 
-include_directories( ${openimageio_include}  ${ZLIB_INCLUDE_DIR} ${tinyxml2_include_dir} ${jpeg_include_dir}  libpsd-0.9/include  ${ICU_UC_INCLUDE_DIR})
+include_directories( ${openimageio_include} ${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR} ${tinyxml2_include_dir} ${jpeg_include_dir}  libpsd-0.9/include  ${ICU_UC_INCLUDE_DIR})
+
+
 target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE ${PNG_LIBRARY} ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})
+
+
 #target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE libpng_static ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})
 
 

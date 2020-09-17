@@ -76,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_w->addItem(map_texture_wh[1024] = "1024");
     ui->comboBox_w->addItem(map_texture_wh[2048] = "2048");
     ui->comboBox_w->addItem(map_texture_wh[4096] = "4096");
+    //ui->comboBox_w->addItem(map_texture_wh[8192] = "8192");
 
     ui->comboBox_h->addItem(map_texture_wh[0]);
     ui->comboBox_h->addItem(map_texture_wh[256]);
@@ -83,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_h->addItem(map_texture_wh[1024]);
     ui->comboBox_h->addItem(map_texture_wh[2048]);
     ui->comboBox_h->addItem(map_texture_wh[4096]);
+    //ui->comboBox_h->addItem(map_texture_wh[8192]);
 
     ui->comboBox_canvasSize->addItem(map_canvasSize[0] = "Default");
     ui->comboBox_canvasSize->addItem(map_canvasSize[1] = "PSD Size");

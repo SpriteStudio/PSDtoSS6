@@ -65,12 +65,14 @@ bool	SSOptionReader::load()
 		//SsOption_v6がない場合は、SsOption_v6_betaを読む
 		if (tinyxml2::XML_SUCCESS != loadssop_xml.LoadFile(ssopname_beta.c_str()))
 		{
-            std::cerr << "Load SSOP_BETA : " << ssopname_beta << std::endl;
-			return false;
+            std::cerr << "Project setting Load ssop_beta : " << ssopname_beta << std::endl;
+			return true;
 		}
 	}else{
-        std::cerr << "Load SSOP : " << ssopname << std::endl;
+        std::cerr << "Project setting Load ssop : " << ssopname << std::endl;
+    	return true;
     }
 
+        std::cerr << "Project setting Load Tool Default " << std::endl;
 	return true;
 }

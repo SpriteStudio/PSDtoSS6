@@ -8,6 +8,8 @@
 
 using namespace SsConverter;
 
+#define VERSION "PSDtoSS6 CUI Ver2.1.1"
+
 
 int main(int argc, char **argv)
 {
@@ -30,6 +32,7 @@ int main(int argc, char **argv)
 
 	MessageInit();
 	ConvertToSS converter;
+    std::cerr << VERSION << std::endl;
 	
 	std::vector<std::string> arglist;
 	for (int i = 0; i < argc; i++)

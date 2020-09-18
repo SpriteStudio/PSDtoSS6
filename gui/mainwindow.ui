@@ -134,6 +134,11 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(255, 255, 255);
+selection-color: rgb(202, 210, 255);
+alternate-background-color: rgb(198, 216, 255);</string>
+    </property>
     <property name="text">
      <string>2</string>
     </property>
@@ -195,9 +200,14 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>121</width>
-      <height>41</height>
+      <width>101</width>
+      <height>21</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>コンバートファイル</string>
@@ -318,6 +328,9 @@
       <width>101</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(255, 255, 255);</string>
     </property>
     <property name="editable">
      <bool>true</bool>

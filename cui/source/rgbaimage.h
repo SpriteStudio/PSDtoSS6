@@ -114,6 +114,8 @@ public:
 
 	  // create png info struct
 	  png_infop info_ptr = png_create_info_struct(png_ptr);
+      png_set_chunk_malloc_max(png_ptr,0); 
+
 	  if (!info_ptr)
 	  {
 		  fprintf(stderr, "error: png_create_info_struct returned 0.\n");
@@ -125,6 +127,8 @@ public:
 
 	  // create png info struct
 	  png_infop end_info = png_create_info_struct(png_ptr);
+      png_set_chunk_malloc_max(png_ptr,0); 
+
 	  if (!end_info)
 	  {
 		  fprintf(stderr, "error: png_create_info_struct returned 0.\n");

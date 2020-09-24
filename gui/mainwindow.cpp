@@ -131,7 +131,7 @@ void MainWindow::loadConfig(const QString & fileName)
 		outputText += "\nLoad Successful";
 	}
 #else
-	if (cp.parseConfigJson(fileName.toStdString()))
+	if (!cp.parseConfigJson(fileName.toStdString()))
 	{
 		outputText += "\nLoad error";
 	}

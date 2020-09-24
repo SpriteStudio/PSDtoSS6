@@ -361,10 +361,11 @@ bool convert_parameters::parseConfigJson(std::string fname)
 
 	std::ifstream ifs(fname, std::ios::in);
 	if (ifs.fail()) {
-        err_string = "failed to read ";
+        err_string = "failed to read :";
 		std::cerr << err_string << fname << std::endl;		
 		return false;
 	}
+    
 	const std::string json((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 	ifs.close();
 

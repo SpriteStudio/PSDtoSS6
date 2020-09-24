@@ -451,7 +451,7 @@ bool    ConvertToSS::texturePacking_PivotUse()
 bool	ConvertToSS::checkProtrudingTexture()
 {
 	//面積の調査
-	unsigned long sizetble[] = { 4096,2048,1024,512,256 };
+	unsigned long sizetble[] = { 8192, 4096,2048,1024,512,256 };
 	int makesize_x = 0;
 	int makesize_y = 0;
 

@@ -14,7 +14,7 @@ std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
-#define TITLE_VERSION "PSDtoSS6 GUI Ver2.1.1"
+#define TITLE_VERSION "PSDtoSS6 GUI Ver2.2.1"
 
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_w->addItem(map_texture_wh[1024] = "1024");
     ui->comboBox_w->addItem(map_texture_wh[2048] = "2048");
     ui->comboBox_w->addItem(map_texture_wh[4096] = "4096");
-    //ui->comboBox_w->addItem(map_texture_wh[8192] = "8192");
+    ui->comboBox_w->addItem(map_texture_wh[8192] = "8192");
 
     ui->comboBox_h->addItem(map_texture_wh[0]);
     ui->comboBox_h->addItem(map_texture_wh[256]);
@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_h->addItem(map_texture_wh[1024]);
     ui->comboBox_h->addItem(map_texture_wh[2048]);
     ui->comboBox_h->addItem(map_texture_wh[4096]);
-    //ui->comboBox_h->addItem(map_texture_wh[8192]);
+    ui->comboBox_h->addItem(map_texture_wh[8192]);
 
     ui->comboBox_canvasSize->addItem(map_canvasSize[0] = "Default");
     ui->comboBox_canvasSize->addItem(map_canvasSize[1] = "PSD Size");
@@ -120,13 +120,37 @@ void MainWindow::loadConfig(const QString & fileName)
     QString outputText =  "";
     outputText = "Load Config json file = " + fileName;
 
+#if _WIN32
+	QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
+	if (!cp.parseConfigJson(sjis->fromUnicode(fileName).toStdString()))
+	{
+		QString str = QString::fromLocal8Bit(cp.err_string.c_str());
+		outputText += "\nLoad error";
+	}
+	else {
+		outputText += "\nLoad Successful";
+	}
+#else
+	if (cp.parseConfigJson(fileName.toStdString()))
+	{
+		outputText += "\nLoad error";
+	}
+	else {
+		outputText += "\nLoad Successful";
+	}
+#endif
+
+/*
     if ( !cp.parseConfigJson(fileName.toStdString()) )
     {
         QString str = QString::fromLocal8Bit( cp.err_string.c_str() );
-        ui->textBrowser_err->setText(outputText);            
+		outputText+= "setting json Load error";
     }else{
-        ui->textBrowser_err->setText(outputText);            
+		outputText+= "setting json Load Successful";
     }
+*/
+
+	ui->textBrowser_err->setText(outputText);
 
     ui->comboBox_w              ->setCurrentText(map_texture_wh[cp.tex_w]);
     ui->comboBox_h              ->setCurrentText(map_texture_wh[cp.tex_h]);
@@ -169,13 +193,30 @@ void MainWindow::saveConfig(const QString & fileName)
     cp.outputpath           = ui->textBrowser_output->toPlainText().toStdString();
     cp.outputname           = "";
 
+    QString outputText =  "";
+
 #if _WIN32
 	QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
-	cp.saveConfigJson(sjis->fromUnicode(fileName).toStdString());
+    if ( cp.saveConfigJson(sjis->fromUnicode(fileName).toStdString()) )
+    {
+        outputText = "Config json file = " + fileName + "\n";
+        outputText += "Save Successful";
+    }else{
+        outputText = "Config json file = " + fileName + "\n";
+        outputText += "Save Failed";
+    }
 #else
-	cp.saveConfigJson(fileName.toStdString());
+    if ( cp.saveConfigJson(fileName.toStdString()) )
+    {
+        outputText = "Config json file = " + fileName + "\n";
+        outputText += "Save Successful";
+    }else{
+        outputText = "Config json file = " + fileName + "\n";
+        outputText += "Save Failed";
+    }
 #endif
 
+    ui->textBrowser_err->setText(outputText);            
 }
 
 

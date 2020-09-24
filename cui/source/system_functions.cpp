@@ -3,7 +3,7 @@
 #include <locale> 
 #include <codecvt> 
 #include <cstdio>
-
+#include "stringconv.h"
 
 
 #ifdef _WIN32
@@ -19,7 +19,7 @@ std::string	get_documents_path()
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cv;
 	std::string reconvert = cv.to_bytes(buffer);
 
-	return reconvert;
+	return stringconv::utf8_to_sjis(reconvert);
 }
 
 #else

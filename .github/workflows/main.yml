@@ -12,10 +12,14 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: Run brew install pkg-config
       run: |
         brew update
         brew install pkg-config        
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     # Restore from cache the previously built ports. If cache-miss, download, build vcpkg.
     - name: Restore from cache and install vcpkg
       # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
@@ -26,16 +30,23 @@ jobs:
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
       env:
         vcpkgResponseFile: '${{ github.workspace }}/response_file_mac.txt'
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: install qt
       run: |
         brew install qt
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: release build
       run: ./scripts/build_mac.sh
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: Upload Tools
       uses: actions/upload-artifact@v1
       with:
         name: PSDtoSS6-${{ matrix.platform }}-${{ github.sha }}
         path: out
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
   win_build:
     strategy:
       matrix:

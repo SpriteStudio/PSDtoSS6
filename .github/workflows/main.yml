@@ -64,11 +64,12 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: Restore from cache and install vcpkg
       # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
-      uses: lukka/run-vcpkg@v3
+      uses: lukka/run-vcpkg@v7.1
       with:
         vcpkgArguments: '@${{ env.vcpkgResponseFile }}'
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+        #appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+        appendedCacheKey: ${{ hashFiles( '**/vcpkg_manifest/vcpkg.json' ) }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         vcpkgResponseFile: '${{ github.workspace }}/response_file_win.txt'

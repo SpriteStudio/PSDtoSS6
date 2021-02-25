@@ -45,8 +45,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: Get latest CMake
       uses: lukka/get-cmake@latest
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: Restore from cache and install vcpkg
       # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
       uses: lukka/run-vcpkg@v3
@@ -55,6 +59,7 @@ jobs:
         vcpkgDirectory: '${{ github.workspace }}/vcpkg'
         appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
       env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         vcpkgResponseFile: '${{ github.workspace }}/response_file_win.txt'
     - name: Cache Qt
       id: cache-qt
@@ -66,6 +71,8 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with:
         mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: "set QT_PREFIX"
       run: $env:QT_PREFIX = $env:Qt5_Dir
       env: 
@@ -80,3 +87,5 @@ jobs:
       with:
         name: PSDtoSS6-${{ matrix.platform }}-${{ github.sha }}
         path: out
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'

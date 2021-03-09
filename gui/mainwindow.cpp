@@ -102,10 +102,19 @@ MainWindow::MainWindow(QWidget *parent) :
 //    data_path += "/SpriteStudio/PSDtoSS6";
 	data_path += TOOLFOLDER;
 	qDebug() << "data_path " << data_path;
-
+	
+	//出力フォルダのパスを確認
+	if(Outputpath == "")
+	{
+		Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+		Outputpath += "/SpriteStudio/PSDtoSS6";
+	}
+		
     QDir dir;
     //設定ファイル保存用ディレクトリを作成
     dir.mkpath(data_path);
+	//出力フォルダのディレクトリを作成
+	dir.mkpath(Outputpath);
 }
 
 MainWindow::~MainWindow()
@@ -479,7 +488,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 
 //出力フォルダ選択ボタン
 void MainWindow::on_pushButton_output_clicked()
-{
+{	
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("Output Directory"), Outputpath);
 
@@ -490,6 +499,11 @@ void MainWindow::on_pushButton_output_clicked()
         ui->textBrowser_output->setText(Outputpath);
     }
 
+	//出力ディレクトリが空白なら"Documents"を設定
+	if(Outputpath == "")
+	{
+		Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+	}
 }
 
 //リストの読み込み
@@ -568,8 +582,11 @@ void MainWindow::on_pushButton_fileadd_clicked()
 {
     QFileDialog::Options options;
     QString strSelectedFilter;
+	QString openFolderName;
     QString addfileName;
-    addfileName = QFileDialog::getOpenFileName(this, tr("select convert File"), ".", tr("data(*.ss6-psdtoss6-info *.psd)"), &strSelectedFilter, options);
+	//ユーザーのドキュメントフォルダを指定
+	openFolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    addfileName = QFileDialog::getOpenFileName(this, tr("select convert File"), openFolderName, tr("data(*.ss6-psdtoss6-info *.psd)"), &strSelectedFilter, options);
 
     if ( addfileName != "" )
     {

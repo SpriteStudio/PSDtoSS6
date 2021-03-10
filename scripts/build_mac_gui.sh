@@ -31,8 +31,6 @@ else
     if [ -n ${LATEST_VERSION} ]; then
         QT_PATH=${HOME}/Qt/${LATEST_VERSION}/clang_64
         echo ${QT_PATH}
-        CMAKE_PREFIX_PATH=${HOME}/Qt/${LATEST_VERSION}/clang_64
-        echo ${CMAKE_PREFIX_PATH}
     else
         # not install QT
         echo "not found Qt version from ${HOME}/Qt"

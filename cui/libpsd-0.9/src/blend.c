@@ -661,15 +661,11 @@ void psd_layer_blend(psd_context * context, psd_layer_record * layer, psd_rect *
 						case psd_blend_mode_luminosity:
 							dst_brightness = src_brightness;
 							break;
-					default:
-							break;
 					}
 					psd_inthsb_to_rgb(dst_hue, dst_saturation, dst_brightness, &src_red, &src_green, &src_blue);
 					dst_red = PSD_BLEND_CHANNEL(dst_red, src_red, mix_alpha);
 					dst_green = PSD_BLEND_CHANNEL(dst_green, src_green, mix_alpha);
 					dst_blue = PSD_BLEND_CHANNEL(dst_blue, src_blue, mix_alpha);
-					break;
-				default:
 					break;
 			}
 			
@@ -710,8 +706,6 @@ void psd_layer_blend_normal_restricted(psd_context * context, psd_layer_record *
 				case 2:
 					blue_restricted = psd_true;
 					break;
-				default:
-					break;
 			}
 		}
 	}
@@ -750,8 +744,6 @@ void psd_layer_blend_normal_restricted(psd_context * context, psd_layer_record *
 				max_src_blue = layer->layer_blending_ranges.channel_white_src[i] >> 8;
 				min_dst_blue = layer->layer_blending_ranges.channel_black_dst[i] >> 8;
 				max_dst_blue = layer->layer_blending_ranges.channel_white_dst[i] >> 8;
-				break;
-			default:
 				break;
 		}
 	}
@@ -933,8 +925,6 @@ void psd_layer_blend_restricted(psd_context * context, psd_layer_record * layer,
 				case 2:
 					blue_restricted = psd_true;
 					break;
-				default:
-					break;
 			}
 		}
 	}
@@ -973,8 +963,6 @@ void psd_layer_blend_restricted(psd_context * context, psd_layer_record * layer,
 				max_src_blue = layer->layer_blending_ranges.channel_white_src[i] >> 8;
 				min_dst_blue = layer->layer_blending_ranges.channel_black_dst[i] >> 8;
 				max_dst_blue = layer->layer_blending_ranges.channel_white_dst[i] >> 8;
-				break;
-			default:
 				break;
 		}
 	}
@@ -1233,15 +1221,11 @@ void psd_layer_blend_restricted(psd_context * context, psd_layer_record * layer,
 						case psd_blend_mode_luminosity:
 							dst_brightness = src_brightness;
 							break;
-						default:
-						break;
 					}
 					psd_inthsb_to_rgb(dst_hue, dst_saturation, dst_brightness, &src_red, &src_green, &src_blue);
 					dst_red = PSD_BLEND_CHANNEL(dst_red, src_red, mix_alpha);
 					dst_green = PSD_BLEND_CHANNEL(dst_green, src_green, mix_alpha);
 					dst_blue = PSD_BLEND_CHANNEL(dst_blue, src_blue, mix_alpha);
-					break;
-				default:
 					break;
 			}
 			

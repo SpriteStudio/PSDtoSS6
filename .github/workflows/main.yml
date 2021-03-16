@@ -36,6 +36,10 @@ jobs:
         brew install qt
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    - name: "set QT_PREFIX"
+      run: $env:QT_PREFIX = $env:Qt5_Dir
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: release build
       run: ./scripts/build_mac.sh
       env:

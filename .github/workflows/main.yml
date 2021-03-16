@@ -36,10 +36,6 @@ jobs:
         brew install qt
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - name: "cheak path"
-      run: ls −la 
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: release build
       run: ./scripts/build_mac.sh
       env:

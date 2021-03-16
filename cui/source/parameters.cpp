@@ -33,8 +33,8 @@
 */
 
 struct option_struct{
-	const char* OP1;
-	const char* OP2;
+	char* OP1;
+	char* OP2;
 };
 
 option_struct option_char_tbl[] = {

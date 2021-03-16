@@ -195,135 +195,135 @@ psd_status psd_get_layer_bevel_emboss2(psd_context * context, psd_layer_effects_
 				// gloss anti-aliased
 				if(strcmp(keychar, "antialiasGloss") == 0)
 				{
-					(void)psd_assert(type == 'bool');
+					psd_assert(type == 'bool');
 					bevel_emboss->gloss_anti_aliased = psd_stream_get_bool(context);
 				}
 				// coutour enable
 				else if(strcmp(keychar, "useShape") == 0)
 				{
-					(void)psd_assert(type == 'bool');
+					psd_assert(type == 'bool');
 					bevel_emboss->contour_enable = psd_stream_get_bool(context);
 				}
 				// texture enable
 				else if(strcmp(keychar, "useTexture") == 0)
 				{
-					(void)psd_assert(type == 'bool');
+					psd_assert(type == 'bool');
 					bevel_emboss->texture_enable = psd_stream_get_bool(context);
 				}
 				// texture depth
 				else if(strcmp(keychar, "textureDepth") == 0)
 				{
-					(void)psd_assert(type == 'UntF');
+					psd_assert(type == 'UntF');
 					// percent
 					key = psd_stream_get_int(context);
-					(void)psd_assert(key == '#Prc');
+					psd_assert(key == '#Prc');
 					// Actual value (double)
 					bevel_emboss->texture_depth = (psd_int)psd_stream_get_double(context);
 				}
 				else if(strcmp(keychar, "phase") == 0)
 				{
-					(void)psd_assert(type == 'Objc');
+					psd_assert(type == 'Objc');
 					psd_stream_get_object_point(&bevel_emboss->texture_horz_phase, 
 						&bevel_emboss->texture_vert_phase, context);
 				}
 				else
 				{
-					(void)psd_assert(0);
+					psd_assert(0);
 					psd_stream_get_object_null(type, context);
 				}
 				break;
 				
 			// effect enable
 			case 'enab':
-				(void)psd_assert(type == 'bool');
+				psd_assert(type == 'bool');
 				bevel_emboss->effect_enable = psd_stream_get_bool(context);
 				break;
 
 			// highlight blend mode
 			case 'hglM':
-				(void)psd_assert(type == 'enum');
+				psd_assert(type == 'enum');
 				// TypeID: 4 bytes (length), followed either by string or (if length is zero) 4-
 				// byte typeID
 				length = psd_stream_get_int(context);
-				(void)psd_assert(length == 0);
+				psd_assert(length == 0);
 				key = psd_stream_get_int(context);
 				// blend mode
-				(void)psd_assert(key == 'BlnM');
+				psd_assert(key == 'BlnM');
 				bevel_emboss->highlight_blend_mode = psd_stream_get_object_blend_mode(context);
 				break;
 
 			// highlight color
 			case 'hglC':
 				// Descriptor
-				(void)psd_assert(type == 'Objc');
+				psd_assert(type == 'Objc');
 				bevel_emboss->highlight_color = bevel_emboss->real_highlight_color = 
 					psd_stream_get_object_color(context);
 				break;
 
 			// highlight opacity
 			case 'hglO':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// percent
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Prc');
+				psd_assert(key == '#Prc');
 				// Actual value (double)
 				bevel_emboss->highlight_opacity = (psd_int)(psd_stream_get_double(context) * 2.55 + 0.5);
 				break;
 
 			// shadow blend mode
 			case 'sdwM':
-				(void)psd_assert(type == 'enum');
+				psd_assert(type == 'enum');
 				// TypeID: 4 bytes (length), followed either by string or (if length is zero) 4-
 				// byte typeID
 				length = psd_stream_get_int(context);
-				(void)psd_assert(length == 0);
+				psd_assert(length == 0);
 				key = psd_stream_get_int(context);
 				// blend mode
-				(void)psd_assert(key == 'BlnM');
+				psd_assert(key == 'BlnM');
 				bevel_emboss->shadow_blend_mode = psd_stream_get_object_blend_mode(context);
 				break;
 
 			// shadow color
 			case 'sdwC':
 				// Descriptor
-				(void)psd_assert(type == 'Objc');
+				psd_assert(type == 'Objc');
 				bevel_emboss->shadow_color = bevel_emboss->real_shadow_color = 
 					psd_stream_get_object_color(context);
 				break;
 
 			// shadow opacity
 			case 'sdwO':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// percent
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Prc');
+				psd_assert(key == '#Prc');
 				// Actual value (double)
 				bevel_emboss->shadow_opacity = (psd_int)(psd_stream_get_double(context) * 2.55 + 0.5);
 				break;
 
 			// technique
 			case 'bvlT':
-				(void)psd_assert(type == 'enum');
+				psd_assert(type == 'enum');
 				// TypeID: 4 bytes (length), followed either by string or (if length is zero) 4-
 				// byte typeID
 				length = psd_stream_get_int(context);
-				(void)psd_assert(length == 0);
+				psd_assert(length == 0);
 				key = psd_stream_get_int(context);
 				// bevel technique
-				(void)psd_assert(key == 'bvlT');
+				psd_assert(key == 'bvlT');
 				bevel_emboss->technique = psd_stream_get_object_technique(context);
 				break;
 				
 			// style
 			case 'bvlS':
-				(void)psd_assert(type == 'enum');
+				psd_assert(type == 'enum');
 				// TypeID: 4 bytes (length), followed either by string or (if length is zero) 4-
 				// byte typeID
 				length = psd_stream_get_int(context);
-				(void)psd_assert(length == 0);
+				psd_assert(length == 0);
 				key = psd_stream_get_int(context);
 				// bevel style
-				(void)psd_assert(key == 'BESl');
+				psd_assert(key == 'BESl');
 
 				length = psd_stream_get_int(context);
 				if(length == 0)
@@ -352,65 +352,65 @@ psd_status psd_get_layer_bevel_emboss2(psd_context * context, psd_layer_effects_
 						if(strcmp(keychar, "strokeEmboss") == 0)
 							bevel_emboss->style = psd_bevel_stroke_emboss;
 						else
-							(void)psd_assert(0);
+							psd_assert(0);
 						break;
 					default:
-						(void)psd_assert(0);
+						psd_assert(0);
 						break;
 				}
 				break;
 				
 			// use global light
 			case 'uglg':
-				(void)psd_assert(type == 'bool');
+				psd_assert(type == 'bool');
 				bevel_emboss->use_global_light = psd_stream_get_bool(context);
 				break;
 
 			// angle
 			case 'lagl':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// angle: base degrees
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Ang');
+				psd_assert(key == '#Ang');
 				bevel_emboss->angle = (psd_int)psd_stream_get_double(context);
 				break;
 
 			// altitude
 			case 'Lald':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// angle: base degrees
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Ang');
+				psd_assert(key == '#Ang');
 				bevel_emboss->altitude = (psd_int)psd_stream_get_double(context);
 				break;
 
 			// depth
 			case 'srgR':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Prc');
+				psd_assert(key == '#Prc');
 				bevel_emboss->depth = (psd_int)psd_stream_get_double(context);
 				break;
 
 			// size
 			case 'blur':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// pixels: tagged unit value
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Pxl');
+				psd_assert(key == '#Pxl');
 				bevel_emboss->size = (psd_int)psd_stream_get_double(context);
 				break;
 
 			// direction
 			case 'bvlD':
-				(void)psd_assert(type == 'enum');
+				psd_assert(type == 'enum');
 				// TypeID: 4 bytes (length), followed either by string or (if length is zero) 4-
 				// byte typeID
 				length = psd_stream_get_int(context);
-				(void)psd_assert(length == 0);
+				psd_assert(length == 0);
 				key = psd_stream_get_int(context);
 				// emboss stamp style
-				(void)psd_assert(key == 'BESs');
+				psd_assert(key == 'BESs');
 
 				length = psd_stream_get_int(context);
 				if(length == 0)
@@ -430,78 +430,78 @@ psd_status psd_get_layer_bevel_emboss2(psd_context * context, psd_layer_effects_
 						bevel_emboss->direction = psd_direction_down;
 						break;
 					default:
-						(void)psd_assert(0);
+						psd_assert(0);
 						break;
 				}
 				break;
 
 			// gloss contour
 			case 'TrnS':
-				(void)psd_assert(type == 'Objc');
+				psd_assert(type == 'Objc');
 				psd_stream_get_object_contour(bevel_emboss->gloss_contour_lookup_table, context);
 				break;
 
 			// soften
 			case 'Sftn':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// pixels: tagged unit value
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Pxl');
+				psd_assert(key == '#Pxl');
 				bevel_emboss->soften = (psd_int)psd_stream_get_double(context);
 				break;
 
 			// contour
 			case 'MpgS':
-				(void)psd_assert(type == 'Objc');
+				psd_assert(type == 'Objc');
 				psd_stream_get_object_contour(bevel_emboss->contour_lookup_table, context);
 				break;
 
 			// contour anti-aliased
 			case 'AntA':
-				(void)psd_assert(type == 'bool');
+				psd_assert(type == 'bool');
 				bevel_emboss->contour_anti_aliased = psd_stream_get_bool(context);
 				break;
 
 			// contour range
 			case 'Inpr':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// percent
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Prc');
+				psd_assert(key == '#Prc');
 				// Actual value (double)
 				bevel_emboss->contour_range = (psd_int)psd_stream_get_double(context);
 				break;
 
 			// invert
 			case 'InvT':
-				(void)psd_assert(type == 'bool');
+				psd_assert(type == 'bool');
 				bevel_emboss->texture_invert = psd_stream_get_bool(context);
 				break;
 
 			// link with layer
 			case 'Algn':
-				(void)psd_assert(type == 'bool');
+				psd_assert(type == 'bool');
 				bevel_emboss->texture_link = psd_stream_get_bool(context);
 				break;
 
 			// scale
 			case 'Scl ':
-				(void)psd_assert(type == 'UntF');
+				psd_assert(type == 'UntF');
 				// percent
 				key = psd_stream_get_int(context);
-				(void)psd_assert(key == '#Prc');
+				psd_assert(key == '#Prc');
 				// Actual value (double)
 				bevel_emboss->texture_scale = (psd_int)psd_stream_get_double(context);
 				break;
 
 			// texture pattern
 			case 'Ptrn':
-				(void)psd_assert(type == 'Objc');
+				psd_assert(type == 'Objc');
 				psd_stream_get_object_pattern_info(&bevel_emboss->texture_pattern_info, context);
 				break;
 
 			default:
-				(void)psd_assert(0);
+				psd_assert(0);
 				psd_stream_get_object_null(type, context);
 				break;
 		}
@@ -594,7 +594,7 @@ psd_status psd_layer_effects_blend_bevel_emboss(psd_context * context, psd_layer
 				case psd_bevel_stroke_emboss:
 					break;
 				default:
-					(void)psd_assert(0);
+					psd_assert(0);
 					break;
 			}
 		}

@@ -37,7 +37,7 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: "cheak path"
-      run: env
+      run: ls −la 
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: release build

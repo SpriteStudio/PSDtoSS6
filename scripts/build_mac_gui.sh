@@ -17,9 +17,9 @@ fi
 if [ ! -z ${QT_PATH+x} ]; then
     # use environment variable
     QT_PATH=${QT_PATH}
-elif [ -d /usr/local/opt/qt ]; then
+elif [ -d /usr/local/opt/qt@5 ]; then
     # use homebrew
-    QT_PATH="/usr/local/opt/qt"
+    QT_PATH="/usr/local/opt/qt@5"
 else 
     # search latest Qt
     if [ ! -d ${HOME}/Qt ]; then

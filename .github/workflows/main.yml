@@ -33,7 +33,7 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: install qt
       run: |
-        brew install qt
+        brew install qt5
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: release build

@@ -615,6 +615,19 @@ alternate-background-color: rgb(198, 216, 255);</string>
      <string>0</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_Preview">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>410</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>プレビュー</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

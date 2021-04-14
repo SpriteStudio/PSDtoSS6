@@ -35,6 +35,9 @@ set(src
     images/Application-000.icns
     ../cui/source/parameters.h
     ../cui/source/parameters.cpp
+    subwindow.ui
+    subwindow.h
+    subwindow.cpp
 )
 
 IF(WIN32)

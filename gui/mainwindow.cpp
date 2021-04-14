@@ -1,6 +1,7 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "../cui/source/parameters.h"
+#include "subwindow.h"
 
 #include <QTextCodec>
 
@@ -21,6 +22,7 @@ std::map<int, QString> map_canvasSize;
 
 convert_parameters cp;
 
+subwindow *sw;//プレビューウィンドウ
 
 template<typename T1, typename T2>
 T1 MainWindow::getKey(const std::map<T1, T2> & map, const T2 & value) const
@@ -99,28 +101,32 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Documentsのパスを取得
     data_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-//    data_path += "/SpriteStudio/PSDtoSS6";
-	data_path += TOOLFOLDER;
-	qDebug() << "data_path " << data_path;
-	
-	//出力フォルダのパスを確認
-	if(Outputpath == "")
-	{
-		Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-		Outputpath += "/SpriteStudio/PSDtoSS6";
-	}
-		
+    //    data_path += "/SpriteStudio/PSDtoSS6";
+    data_path += TOOLFOLDER;
+    qDebug() << "data_path " << data_path;
+
+    //出力フォルダのパスを確認
+    if(Outputpath == "")
+    {
+        Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        Outputpath += "/SpriteStudio/PSDtoSS6";
+    }
+
     QDir dir;
     //設定ファイル保存用ディレクトリを作成
     dir.mkpath(data_path);
-	//出力フォルダのディレクトリを作成
-	dir.mkpath(Outputpath);
+    //出力フォルダのディレクトリを作成
+    dir.mkpath(Outputpath);
+
+    //プレビューウィンドウの初期化
+    sw = new subwindow(this);
 }
 
 MainWindow::~MainWindow()
 {
     delete_convert_info();
     delete ui;
+    delete sw;
 }
 
 void MainWindow::loadConfig(const QString & fileName)
@@ -130,36 +136,36 @@ void MainWindow::loadConfig(const QString & fileName)
     outputText = "Load Config json file = " + fileName;
 
 #if _WIN32
-	QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
-	if (!cp.parseConfigJson(sjis->fromUnicode(fileName).toStdString()))
-	{
-		QString str = QString::fromLocal8Bit(cp.err_string.c_str());
-		outputText += "\nLoad error";
-	}
-	else {
-		outputText += "\nLoad Successful";
-	}
+    QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
+    if (!cp.parseConfigJson(sjis->fromUnicode(fileName).toStdString()))
+    {
+        QString str = QString::fromLocal8Bit(cp.err_string.c_str());
+        outputText += "\nLoad error";
+    }
+    else {
+        outputText += "\nLoad Successful";
+    }
 #else
-	if (!cp.parseConfigJson(fileName.toStdString()))
-	{
-		outputText += "\nLoad error";
-	}
-	else {
-		outputText += "\nLoad Successful";
-	}
+    if (!cp.parseConfigJson(fileName.toStdString()))
+    {
+        outputText += "\nLoad error";
+    }
+    else {
+        outputText += "\nLoad Successful";
+    }
 #endif
 
-/*
+    /*
     if ( !cp.parseConfigJson(fileName.toStdString()) )
     {
         QString str = QString::fromLocal8Bit( cp.err_string.c_str() );
-		outputText+= "setting json Load error";
+                outputText+= "setting json Load error";
     }else{
-		outputText+= "setting json Load Successful";
+                outputText+= "setting json Load Successful";
     }
 */
 
-	ui->textBrowser_err->setText(outputText);
+    ui->textBrowser_err->setText(outputText);
 
     ui->comboBox_w              ->setCurrentText(map_texture_wh[cp.tex_w]);
     ui->comboBox_h              ->setCurrentText(map_texture_wh[cp.tex_h]);
@@ -205,7 +211,7 @@ void MainWindow::saveConfig(const QString & fileName)
     QString outputText =  "";
 
 #if _WIN32
-	QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
+    QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
     if ( cp.saveConfigJson(sjis->fromUnicode(fileName).toStdString()) )
     {
         outputText = "Config json file = " + fileName + "\n";
@@ -225,7 +231,7 @@ void MainWindow::saveConfig(const QString & fileName)
     }
 #endif
 
-    ui->textBrowser_err->setText(outputText);            
+    ui->textBrowser_err->setText(outputText);
 }
 
 
@@ -280,9 +286,9 @@ void MainWindow::dropEvent(QDropEvent *e)
             QString dragFilePath;
             dragFilePath = urlList[i].toLocalFile();
             if (
-                 ( dragFilePath.endsWith(".ss6-psdtoss6-info"))
-              || ( dragFilePath.endsWith(".psd"))
-               )
+                    ( dragFilePath.endsWith(".ss6-psdtoss6-info"))
+                    || ( dragFilePath.endsWith(".psd"))
+                    )
             {
                 //同じ名前がリストにある場合は弾く
                 bool addname = true;
@@ -363,13 +369,13 @@ void MainWindow::on_pushButton_convert_clicked()
                 QString str;
                 QString execstr;
 
-        #ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN32
                 // Windows
                 QDir dir = QDir(execPathStr);
                 dir.cd("..");
                 QString str_current_path = dir.path();
                 execstr = str_current_path + "/PSDtoSS6.exe";
-        #else
+#else
                 // Mac
                 QDir dir = QDir(execPathStr);
                 dir.cd("..");
@@ -378,12 +384,12 @@ void MainWindow::on_pushButton_convert_clicked()
                 dir.cd("..");
                 QString str_current_path = dir.path();
                 execstr = str_current_path + "/PSDtoSS6";
-        #endif
+#endif
 
                 qDebug() << "\n===========================================";
                 qDebug() << "Running " << execstr;
 
-				std::string arg_str = cp.makeArgFromParam();
+                std::string arg_str = cp.makeArgFromParam();
 
                 qDebug() << (QFile::exists(execstr) ? "File exists: " : "File may not exist:") << execstr;
                 if ( QFile::exists(execstr) == false )
@@ -394,15 +400,15 @@ void MainWindow::on_pushButton_convert_clicked()
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }
 
-        #ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN32
 
                 execstr= "\"" + execstr + "\"";
-				str = execstr + " " + QString(arg_str.c_str()) + " -I " + " \"" + fileName + " \"";
-        #else
+                str = execstr + " " + QString(arg_str.c_str()) + " -I " + " \"" + fileName + " \"";
+#else
                 //execstr= "\"" + execstr + "\"";
-				str = execstr + " " + QString(arg_str.c_str()) + " -I " + fileName;
+                str = execstr + " " + QString(arg_str.c_str()) + " -I " + fileName;
 
-        #endif
+#endif
 
                 cnvProcess->start(str); //パスと引数
                 
@@ -412,7 +418,7 @@ void MainWindow::on_pushButton_convert_clicked()
                     QCoreApplication::processEvents();
                     if ( cnvProcess->state() != QProcess::Running )
                     {
-//                        ui->textBrowser_status->setText(tr("Convert end"));
+                        //                        ui->textBrowser_status->setText(tr("Convert end"));
                         break;
                     }
                 }
@@ -444,8 +450,8 @@ void MainWindow::processErrOutput()
     QByteArray output = cnvProcess->readAllStandardError();
     //ワーニングの表示は行わない
     QString str = QString::fromLocal8Bit( output );
-//    int i = str.indexOf("warning");
-//    if ( i == -1 )  //ワーニング以外を表示
+    //    int i = str.indexOf("warning");
+    //    if ( i == -1 )  //ワーニング以外を表示
     {
         cnvOutputStr = cnvOutputStr + str;
         ui->textBrowser_err->setText(cnvOutputStr);
@@ -459,7 +465,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 {
     if ( exitStatus == QProcess::CrashExit )
     {
-//        QMessageBox::warning( this, tr("Error"), tr("Crashed") );
+        //        QMessageBox::warning( this, tr("Error"), tr("Crashed") );
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
@@ -469,7 +475,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
     }
     else if ( exitCode != 0 )
     {
-//        QMessageBox::warning( this, tr("Error"), tr("Failed") );
+        //        QMessageBox::warning( this, tr("Error"), tr("Failed") );
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
@@ -481,8 +487,8 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
     {
         convert_error = false;
         // 正常終了時の処理
-//        ui->textBrowser_status->setText(tr("Convert Success!"));
-//    QMessageBox::information(this, tr("Ss6Converter"), tr("Convert success"));
+        //        ui->textBrowser_status->setText(tr("Convert Success!"));
+        //    QMessageBox::information(this, tr("Ss6Converter"), tr("Convert success"));
     }
 }
 
@@ -499,11 +505,11 @@ void MainWindow::on_pushButton_output_clicked()
         ui->textBrowser_output->setText(Outputpath);
     }
 
-	//出力ディレクトリが空白なら"Documents"を設定
-	if(Outputpath == "")
-	{
-		Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-	}
+    //出力ディレクトリが空白なら"Documents"を設定
+    if(Outputpath == "")
+    {
+        Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    }
 }
 
 //リストの読み込み
@@ -582,10 +588,10 @@ void MainWindow::on_pushButton_fileadd_clicked()
 {
     QFileDialog::Options options;
     QString strSelectedFilter;
-	QString openFolderName;
+    QString openFolderName;
     QString addfileName;
-	//ユーザーのドキュメントフォルダを指定
-	openFolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    //ユーザーのドキュメントフォルダを指定
+    openFolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     addfileName = QFileDialog::getOpenFileName(this, tr("select convert File"), openFolderName, tr("data(*.ss6-psdtoss6-info *.psd)"), &strSelectedFilter, options);
 
     if ( addfileName != "" )
@@ -703,4 +709,25 @@ void MainWindow::on_pushButton_open_help_clicked()
     //ヘルプをブラウザで開く
     QUrl url = QUrl( "http://www.webtech.co.jp/help/ja/spritestudio/guide/tool/psdtoss6/" );
     QDesktopServices::openUrl( url );
+}
+
+void MainWindow::on_pushButton_Preview_clicked()
+{
+    //テクスチャ幅, テクスチャ高さ, 優先度設定
+    int width = getKey(map_texture_wh, ui->comboBox_w->currentText());
+    int height = getKey(map_texture_wh, ui->comboBox_h->currentText());
+    int priority = ui->lineEdit_pri->text().toInt();
+    //セル配置順, セル間余白, セル内余白
+    int sort = ui->comboBox->currentIndex();
+    int pad_shape = ui->lineEdit_padding_shape->text().toInt();
+    int pad_inner = ui->lineEdit_padding_inner->text().toInt();
+    //セル配置間隔, セルマップ縁幅, 基準枠サイズ
+    int pad_cell = ui->lineEdit_cell_padding->text().toInt();
+    int pad_border= ui->lineEdit_padding_border->text().toInt();
+    int canvas = getKey(map_canvasSize, ui->comboBox_canvasSize->currentText());
+    //設定されたパラメータの効果を可視化
+    sw->Preview(
+                width,    height,     priority,
+                sort,     pad_shape,  pad_inner,
+                pad_cell, pad_border, canvas);
 }

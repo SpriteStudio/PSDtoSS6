@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>subwindow</class>
+ <widget class="QWidget" name="subwindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>740</width>
+    <height>230</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Parameter Preview</string>
+  </property>
+  <widget class="QGraphicsView" name="previewView">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>400</width>
+     <height>212</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="sizeAdjustPolicy">
+    <enum>QAbstractScrollArea::AdjustIgnored</enum>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>20</y>
+     <width>111</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>可視化する項目</string>
+   </property>
+   <widget class="QCheckBox" name="cb_tex_width">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>テクスチャ幅</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cb_pad_shape">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>セル間余白</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cb_pad_cell">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>セル配置間隔</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cb_tex_height">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>テクスチャ高さ</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cb_pad_inner">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>セル内余白</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cb_pad_border">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>セルマップ縁幅</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="buttonAll">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>30</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>全選択/全解除</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonEnd">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>150</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>終了</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonDetail">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>90</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>もっと詳しく</string>
+   </property>
+  </widget>
+  <zorder>groupBox</zorder>
+  <zorder>previewView</zorder>
+  <zorder>buttonAll</zorder>
+  <zorder>buttonEnd</zorder>
+  <zorder>buttonDetail</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

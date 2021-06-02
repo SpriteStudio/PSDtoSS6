@@ -26,6 +26,7 @@ public:
             int,int,int,
             int,int,int,
             int,int,int);
+    void translateUI();
 
 private:
     /// @note パラメータの影響範囲を視覚化する

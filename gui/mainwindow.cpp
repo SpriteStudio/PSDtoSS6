@@ -120,6 +120,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //プレビューウィンドウの初期化
     sw = new subwindow(this);
+
+    //言語設定
+    translateUI();
 }
 
 MainWindow::~MainWindow()
@@ -445,7 +448,6 @@ void MainWindow::on_pushButton_convert_clicked()
 
 void MainWindow::processErrOutput()
 {
-
     // 出力を全て取得
     QByteArray output = cnvProcess->readAllStandardError();
     //ワーニングの表示は行わない
@@ -494,7 +496,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 
 //出力フォルダ選択ボタン
 void MainWindow::on_pushButton_output_clicked()
-{	
+{ ui->retranslateUi(this);
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("Output Directory"), Outputpath);
 
@@ -725,9 +727,51 @@ void MainWindow::on_pushButton_Preview_clicked()
     int pad_cell = ui->lineEdit_cell_padding->text().toInt();
     int pad_border= ui->lineEdit_padding_border->text().toInt();
     int canvas = getKey(map_canvasSize, ui->comboBox_canvasSize->currentText());
+
     //設定されたパラメータの効果を可視化
     sw->Preview(
                 width,    height,     priority,
                 sort,     pad_shape,  pad_inner,
                 pad_cell, pad_border, canvas);
+}
+
+//表示する言語
+void MainWindow::translateUI()
+{
+    //概要
+    ui->label_4->setText(tr("Drop ss6-psdtoss6-info file and psd file from the script."));
+    //ボタン
+    ui->pushButton_fileadd->setText(tr("Add file"));
+    ui->pushButton_listsave->setText(tr("Save file list"));
+    ui->pushButton_listload->setText(tr("Load file list"));
+    ui->pushButton_listclear->setText(tr("Clear file list"));
+    ui->pushButton_output->setText(tr("Select output folder"));
+    ui->pushButton_convert->setText(tr("Convert"));
+    ui->pushButton_exit->setText(tr("Close"));
+    ui->pushButton_settingsave->setText(tr("Save settings"));
+    ui->pushButton_open_help->setText(tr("Help"));
+    ui->pushButton_Preview->setText(tr("Preview"));
+    //ログ名
+    ui->label_7->setText(tr("Files to convert"));
+    ui->label_9->setText(tr("Output folder"));
+    ui->label_5->setText(tr("Status"));
+    ui->label_6->setText(tr("Log"));
+    //ドロップボックス
+    ui->label->setText(tr("Texture width"));
+    ui->label_2->setText(tr("Texture height"));
+    ui->label_11->setText(tr("Priority value"));
+    ui->label_8->setText(tr("Cell layout order"));
+    ui->label_3->setText(tr("Cell padding"));
+    ui->label_14->setText(tr("Cell margin"));
+    ui->label_10->setText(tr("Cell distance"));
+    ui->label_12->setText(tr("Cellmap margin"));
+    ui->label_13->setText(tr("Canvas frame"));
+    //チェックボックス
+    ui->checkBox_ssae->setText(tr("Write ssae"));
+    ui->checkBox_sspj->setText(tr("Write sspj"));
+    ui->checkBox_overwrite->setText(tr("Overwrite sspj&ssae"));
+    ui->checkBox_addnull->setText(tr("Add NULL parent"));
+    ui->checkBox_pivot->setText(tr("Apply pivot layer"));
+    ui->checkBox_root->setText(tr("Apply root layer"));
+    ui->checkBox_pivot_add->setText(tr("Read ssce"));
 }

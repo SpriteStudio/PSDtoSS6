@@ -32,7 +32,7 @@ public:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
     void buttonEnable( bool flg );
-
+    void translateUI();
 private slots:
     void on_pushButton_exit_clicked();
 

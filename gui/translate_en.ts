@@ -191,7 +191,7 @@
     </message>
     <message>
         <location filename="mainwindow.cpp" line="772"/>
-        <source>Overwrite sspj,ssae</source>
+        <source>Overwrite sspj ssae</source>
         <translation></translation>
     </message>
     <message>

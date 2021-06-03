@@ -769,7 +769,7 @@ void MainWindow::translateUI()
     //チェックボックス
     ui->checkBox_ssae->setText(tr("Write ssae"));
     ui->checkBox_sspj->setText(tr("Write sspj"));
-    ui->checkBox_overwrite->setText(tr("Overwrite sspj&ssae"));
+    ui->checkBox_overwrite->setText(tr("Overwrite sspj ssae"));
     ui->checkBox_addnull->setText(tr("Add NULL parent"));
     ui->checkBox_pivot->setText(tr("Apply pivot layer"));
     ui->checkBox_root->setText(tr("Apply root layer"));

@@ -83,6 +83,9 @@ void subwindow::Preview(
 
     //チェックボックスの内容でプレビュー
     DisplayPreview();
+
+    //翻訳
+    translateUI();
 }
 
 void subwindow::DisplayPreview()
@@ -294,4 +297,21 @@ void subwindow::on_buttonDetail_clicked()
     //もっとパラメータについて教えて
     QUrl url = QUrl( "https://www.webtech.co.jp/help/ja/spritestudio/guide/tool/psdtoss6/#about_window" );
     QDesktopServices::openUrl( url );
+}
+
+void subwindow::translateUI()
+{
+    //ボタン
+    ui->buttonAll->setText(tr("Select/Deselect all"));
+    ui->buttonDetail->setText(tr("More detail"));
+    ui->buttonEnd->setText(tr("Close"));
+    //テキスト
+    ui->cb_abstract->setText(tr("Visible items"));
+    //チェックボックス
+    ui->cb_tex_width->setText(tr("Texture width"));
+    ui->cb_tex_height->setText(tr("Texture height"));
+    ui->cb_pad_shape->setText(tr("Cell padding"));
+    ui->cb_pad_inner->setText(tr("Cell margin"));
+    ui->cb_pad_cell->setText(tr("Cell distance"));
+    ui->cb_pad_border->setText(tr("Cellmap margin"));
 }

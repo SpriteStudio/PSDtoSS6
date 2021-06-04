@@ -38,97 +38,6 @@
     <enum>QAbstractScrollArea::AdjustIgnored</enum>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>430</x>
-     <y>20</y>
-     <width>111</width>
-     <height>191</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>可視化する項目</string>
-   </property>
-   <widget class="QCheckBox" name="cb_tex_width">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>テクスチャ幅</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="cb_pad_shape">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>セル間余白</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="cb_pad_cell">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>セル配置間隔</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="cb_tex_height">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>テクスチャ高さ</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="cb_pad_inner">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>セル内余白</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="cb_pad_border">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>170</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>セルマップ縁幅</string>
-    </property>
-   </widget>
-  </widget>
   <widget class="QPushButton" name="buttonAll">
    <property name="geometry">
     <rect>
@@ -168,11 +77,97 @@
     <string>もっと詳しく</string>
    </property>
   </widget>
-  <zorder>groupBox</zorder>
-  <zorder>previewView</zorder>
-  <zorder>buttonAll</zorder>
-  <zorder>buttonEnd</zorder>
-  <zorder>buttonDetail</zorder>
+  <widget class="QCheckBox" name="cb_tex_width">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>40</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>テクスチャ幅</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cb_tex_height">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>70</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>テクスチャ高さ</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cb_pad_border">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>190</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>セルマップ縁幅</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cb_pad_shape">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>100</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>セル間余白</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cb_pad_cell">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>160</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>セル配置間隔</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cb_pad_inner">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>130</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>セル内余白</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="cb_abstract">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>10</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>可視化する項目</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -371,6 +371,7 @@ void MainWindow::on_pushButton_convert_clicked()
             {
                 QString str;
                 QString execstr;
+                QString execstrSub;
 
 #ifdef Q_OS_WIN32
                 // Windows
@@ -378,6 +379,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 dir.cd("..");
                 QString str_current_path = dir.path();
                 execstr = str_current_path + "/PSDtoSS6.exe";
+                execstrSub = execstr;
 #else
                 // Mac
                 QDir dir = QDir(execPathStr);
@@ -387,6 +389,11 @@ void MainWindow::on_pushButton_convert_clicked()
                 dir.cd("..");
                 QString str_current_path = dir.path();
                 execstr = str_current_path + "/PSDtoSS6";
+                
+                dir = QDir(execPathStr);
+                dir.cd("..");
+                QString str_current_path = dir.path();
+                execstrSub = str_current_path + "/PSDtoSS6";
 #endif
 
                 qDebug() << "\n===========================================";
@@ -403,6 +410,17 @@ void MainWindow::on_pushButton_convert_clicked()
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }
 
+                qDebug() << (QFile::exists(execstrSub) ? "File exists: " : "File may not exist:") << execstrSub;
+                if ( QFile::exists(execstrSub) == false )
+                {
+                    //ファイルの有無を調べる
+                    convert_error = true;
+                    cnvOutputStr = cnvOutputStr + "Convertor file exists false\n";
+                    ui->textBrowser_err->setText(cnvOutputStr);
+                }else{
+                    execstr = execstrSub;   
+                }
+                
 #ifdef Q_OS_WIN32
 
                 execstr= "\"" + execstr + "\"";

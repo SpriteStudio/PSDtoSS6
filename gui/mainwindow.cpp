@@ -392,7 +392,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 
                 dir = QDir(execPathStr);
                 dir.cd("..");
-                QString str_current_path = dir.path();
+                str_current_path = dir.path();
                 execstrSub = str_current_path + "/PSDtoSS6";
 #endif
 

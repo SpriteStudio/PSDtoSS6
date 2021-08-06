@@ -60,6 +60,7 @@ popd > /dev/null # SRCDIR
 /bin/mkdir -p ${DSTDIR}
 /bin/cp -rf ${BUILDDIR}/*.app ${DSTDIR}
 /bin/cp -rf ${SRCDIR}/translate_ja.qm ${DSTDIR}
+/bin/cp -rf ${SRCDIR}/translate_en.qm ${DSTDIR}
 
 macdeployqt "${DSTDIR}/PSDtoSS6GUI.app" -always-overwrite || exit 1
 

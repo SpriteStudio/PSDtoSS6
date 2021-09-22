@@ -59,6 +59,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //ウィンドウのタイトルをつける
     setWindowTitle(TITLE_VERSION);
 
+    //ウィンドウスタイルの定義
+    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+
     //初期化
     convert_exec = false;
     cnvOutputStr.clear();

@@ -60,7 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(TITLE_VERSION);
 
     //ウィンドウスタイルの定義
-    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+                   | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
 
     //初期化
     convert_exec = false;

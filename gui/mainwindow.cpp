@@ -123,6 +123,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //言語設定
     translateUI();
+    ui->retranslateUi(this);
 }
 
 MainWindow::~MainWindow()
@@ -514,7 +515,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 
 //出力フォルダ選択ボタン
 void MainWindow::on_pushButton_output_clicked()
-{ ui->retranslateUi(this);
+{
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("Output Directory"), Outputpath);
 

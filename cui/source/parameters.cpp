@@ -297,11 +297,7 @@ std::string convert_parameters::makeArgFromParam()
 
 	// str += " -O "  + outputpath;
 	//str += " -ON " + '"' + outputname + '"';
-#if _WIN32
-	str = str + " -O "  + "/" + outputpath + "/";
-#else
 	str = str + " -O "  + "\"" + outputpath + "\"";
-#endif
 
 #if _WIN32
 	outputpath = replaceString(outputpath, "/", "\\");

@@ -429,7 +429,7 @@ void MainWindow::on_pushButton_convert_clicked()
 #ifdef Q_WS_WIN
 
                 execstr= "/" + execstr + "/";
-                str = execstr + " " + QString(arg_str.c_str()) + " -I " + "/" + fileName + "/";
+                str = execstr + " " + QString(arg_str.c_str()) + " -I " + "\"" + fileName + "\"";
 #else
                 //execstr= "\"" + execstr + "\"";
                 str = execstr + " " + QString(arg_str.c_str()) + " -I " + "\"" + fileName + "\"";

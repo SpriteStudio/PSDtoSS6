@@ -294,22 +294,20 @@ std::string convert_parameters::makeArgFromParam()
 
 	str += " -PI " + std::to_string(inner_padding);
 
+
+	// str += " -O "  + outputpath;
+	//str += " -ON " + '"' + outputname + '"';
+#if _WIN32
+	str = str + " -O "  + "/" + outputpath + "/";
+#else
+	str = str + " -O "  + "\"" + outputpath + "\"";
+#endif
+
 #if _WIN32
 	outputpath = replaceString(outputpath, "/", "\\");
 #else
 	outputpath = replaceString(outputpath, "\\", "/");
 #endif
-
-#if _WIN32
-	str = str + " -O "  + "¥"" + outputpath + "¥"";
-#else
-	str = str + " -O "  + "\"" + outputpath + "\"";
-#endif
-
-	// str += " -O "  + outputpath;
-	//str += " -ON " + '"' + outputname + '"';
-
-
 
 	return str;
 }

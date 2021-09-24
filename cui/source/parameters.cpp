@@ -300,7 +300,13 @@ std::string convert_parameters::makeArgFromParam()
 	outputpath = replaceString(outputpath, "\\", "/");
 #endif
 
-	str += " -O "  + outputpath;
+#if _WIN32
+	str = str + " -O "  + "¥"" + outputpath + "¥"";
+#else
+	str = str + " -O "  + "\"" + outputpath + "\"";
+#endif
+
+	// str += " -O "  + outputpath;
 	//str += " -ON " + '"' + outputname + '"';
 
 

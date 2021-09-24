@@ -394,7 +394,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 dir.cd("..");
                 QString str_current_path = dir.path();
                 execstr = str_current_path + "/PSDtoSS6";
-                
+
                 dir = QDir(execPathStr);
                 dir.cd("..");
                 str_current_path = dir.path();
@@ -423,21 +423,21 @@ void MainWindow::on_pushButton_convert_clicked()
                     cnvOutputStr = cnvOutputStr + "Convertor file exists false\n";
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }else{
-                    execstr = execstrSub;   
+                    execstr = execstrSub;
                 }
-                
-#ifdef Q_OS_WIN32
 
-                execstr= "\"" + execstr + "\"";
-                str = execstr + " " + QString(arg_str.c_str()) + " -I " + " \"" + fileName + " \"";
+#ifdef Q_WS_WIN
+
+                execstr= "¥"" + execstr + "¥"";
+                str = execstr + " " + QString(arg_str.c_str()) + " -I " + "¥"" + fileName + "¥"";
 #else
                 //execstr= "\"" + execstr + "\"";
-                str = execstr + " " + QString(arg_str.c_str()) + " -I " + fileName;
+                str = execstr + " " + QString(arg_str.c_str()) + " -I " + "\"" + fileName + "\"";
 
 #endif
 
                 cnvProcess->start(str); //パスと引数
-                
+
                 while ( 1 )
                 {
                     QThread::sleep(1);  // Wait

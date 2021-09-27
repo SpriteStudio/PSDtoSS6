@@ -19,8 +19,10 @@ subwindow::subwindow(QWidget *parent) :
     //フォームの部品にアクセスする場合はuiのメンバを経由する
     ui->setupUi(this);
 
-    //先に表示されてしまうので設定
-    setWindowFlags(Qt::Window);
+    //先に表示されてしまうのでWindowフラグを設定
+    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+                   | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+
     //ウィンドウタイトル設定
     setWindowTitle(TITLE_PREVIEW);
     //ウィンドウサイズ固定

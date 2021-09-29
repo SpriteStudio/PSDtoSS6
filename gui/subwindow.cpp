@@ -20,8 +20,9 @@ subwindow::subwindow(QWidget *parent) :
     ui->setupUi(this);
 
     //先に表示されてしまうのでWindowフラグを設定
-    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
-                   | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    // setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+    //                | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::Tool | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::CustomizeWindowHint);
 
     //ウィンドウタイトル設定
     setWindowTitle(TITLE_PREVIEW);

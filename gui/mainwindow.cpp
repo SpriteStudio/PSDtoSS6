@@ -411,7 +411,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 {
                     //ファイルの有無を調べる
                     convert_error = true;
-                    cnvOutputStr = cnvOutputStr + "Convertor file exists false\n";
+                    cnvOutputStr = cnvOutputStr + "converter file exists false\n";
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }
 
@@ -420,7 +420,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 {
                     //ファイルの有無を調べる
                     convert_error = true;
-                    cnvOutputStr = cnvOutputStr + "Convertor file exists false\n";
+                    cnvOutputStr = cnvOutputStr + "converter file exists false\n";
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }else{
                     execstr = execstrSub;
@@ -523,18 +523,20 @@ void MainWindow::on_pushButton_output_clicked()
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("Output Directory"), Outputpath);
 
-    if ( str != "" )
-    {
+    if ( str != "" ){//選択されたフォルダ名
         Outputpath = str;
-        Outputpath += "/";
-        ui->textBrowser_output->setText(Outputpath);
     }
-
-    //出力ディレクトリが空白なら"Documents"を設定
-    if(Outputpath == "")
-    {
+    else{//未指定ならドキュメントの位置
         Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     }
+
+    #if _WIN32
+            Outputpath += "\\";
+    #else
+            Outputpath += "/";
+    #endif
+
+    ui->textBrowser_output->setText(Outputpath);
 }
 
 //リストの読み込み

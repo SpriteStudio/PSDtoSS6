@@ -411,7 +411,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 {
                     //ファイルの有無を調べる
                     convert_error = true;
-                    cnvOutputStr = cnvOutputStr + "Convertor file exists false\n";
+                    cnvOutputStr = cnvOutputStr + "converter file exists false\n";
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }
 
@@ -420,7 +420,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 {
                     //ファイルの有無を調べる
                     convert_error = true;
-                    cnvOutputStr = cnvOutputStr + "Convertor file exists false\n";
+                    cnvOutputStr = cnvOutputStr + "converter file exists false\n";
                     ui->textBrowser_err->setText(cnvOutputStr);
                 }else{
                     execstr = execstrSub;

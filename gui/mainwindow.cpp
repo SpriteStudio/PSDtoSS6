@@ -538,7 +538,7 @@ void MainWindow::on_pushButton_output_clicked()
         Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     }
 
-    #if _WIN32
+    #if Q_WS_WIN
             Outputpath += "\\";
     #else
             Outputpath += "/";

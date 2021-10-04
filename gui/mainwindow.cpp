@@ -523,6 +523,14 @@ void MainWindow::on_pushButton_output_clicked()
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("Output Directory"), Outputpath);
 
+    //選択されたフォルダがrootなら書き込めないので止める
+    if(QDir(str).isRoot())
+    {
+        QMessageBox::warning(this, tr("sorry!"), tr("not use root"));
+
+         str="";
+    }
+
     if ( str != "" ){//選択されたフォルダ名
         Outputpath = str;
     }

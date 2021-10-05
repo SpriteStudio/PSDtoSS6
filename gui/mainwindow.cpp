@@ -345,6 +345,20 @@ void MainWindow::on_pushButton_convert_clicked()
         msgBox.exec();
         return;
     }
+    else
+    {
+        //書き込めるフォルダか確かめる
+        QString folder = ui->textBrowser_output->toPlainText();
+        QFile testDir(folder + "_accessTest.txt");
+        if(false == testDir.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QMessageBox msgBox(this);
+            msgBox.setText(tr("an output folder is not writable"));
+            msgBox.exec();
+            return;
+        }
+        testDir.remove();
+    }
 
     if (( ui->listWidget->count() > 0 ) && (convert_exec == false))
     {
@@ -522,14 +536,6 @@ void MainWindow::on_pushButton_output_clicked()
 {
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("Output Directory"), Outputpath);
-
-    //選択されたフォルダがrootなら書き込めないので止める
-    if(QDir(str).isRoot())
-    {
-        QMessageBox::warning(this, tr("sorry!"), tr("not use root"));
-
-         str="";
-    }
 
     if ( str != "" ){//選択されたフォルダ名
         Outputpath = str;

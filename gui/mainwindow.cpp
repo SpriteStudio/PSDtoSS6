@@ -345,6 +345,20 @@ void MainWindow::on_pushButton_convert_clicked()
         msgBox.exec();
         return;
     }
+    else
+    {
+        //書き込めるフォルダか確かめる
+        QString folder = ui->textBrowser_output->toPlainText();
+        QFile testDir(folder + "_accessTest.txt");
+        if(false == testDir.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QMessageBox msgBox(this);
+            msgBox.setText(tr("an output folder is not writable"));
+            msgBox.exec();
+            return;
+        }
+        testDir.remove();
+    }
 
     if (( ui->listWidget->count() > 0 ) && (convert_exec == false))
     {
@@ -530,7 +544,7 @@ void MainWindow::on_pushButton_output_clicked()
         Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     }
 
-    #if _WIN32
+    #if Q_WS_WIN
             Outputpath += "\\";
     #else
             Outputpath += "/";

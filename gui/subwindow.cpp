@@ -89,6 +89,7 @@ void subwindow::Preview(
 
     //翻訳
     translateUI();
+    ui->retranslateUi(this);
 }
 
 void subwindow::DisplayPreview()

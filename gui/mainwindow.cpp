@@ -353,7 +353,7 @@ void MainWindow::on_pushButton_convert_clicked()
         if(false == testDir.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QMessageBox msgBox(this);
-            msgBox.setText(tr("an output folder is not writable"));
+            msgBox.setText(tr("An output folder is not writable folder"));
             msgBox.exec();
             return;
         }

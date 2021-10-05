@@ -14,6 +14,11 @@
         <translation></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="356"/>
+        <source>An output folder is not writable folder</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="mainwindow.cpp" line="438"/>
         <source>Convert Success!</source>
         <translation></translation>

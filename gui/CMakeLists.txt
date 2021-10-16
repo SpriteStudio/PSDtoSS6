@@ -32,12 +32,14 @@ set(src
     main.cpp
     resource.qrc
     resource.rc
-    images/Application-000.icns
+    images/Application-000.icns #入れないとアイコンが消える
     ../cui/source/parameters.h
     ../cui/source/parameters.cpp
     subwindow.ui
     subwindow.h
     subwindow.cpp
+    translations/translate_en.qm
+    translations/translate_ja.qm
 )
 
 IF(WIN32)

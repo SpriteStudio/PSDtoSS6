@@ -38,8 +38,6 @@ set(src
     subwindow.ui
     subwindow.h
     subwindow.cpp
-    translations/translate_en.qm
-    translations/translate_ja.qm
 )
 
 IF(WIN32)

@@ -38,6 +38,8 @@ set(src
     subwindow.ui
     subwindow.h
     subwindow.cpp
+    translations/translate_en.qm
+    translations/translate_ja.qm
 )
 
 IF(WIN32)
@@ -45,6 +47,8 @@ IF(WIN32)
 ELSEIF(APPLE)
 	set(MACOSX_BUNDLE_ICON_FILE Application-000.icns)
     set_source_files_properties(images/Application-000.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    set_source_files_properties(translations/translate_en.qm PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    set_source_files_properties(translations/translate_ja.qm PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     add_executable(${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${src})
 ENDIF()
 

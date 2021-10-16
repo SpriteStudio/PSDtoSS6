@@ -5,9 +5,7 @@
 #include <QTranslator>
 
 #include <QDebug>
-
-QTranslator translator;
-
+#include <QMessageBox>
 
 int main(int argc, char *argv[])
 {
@@ -15,34 +13,36 @@ int main(int argc, char *argv[])
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForLocale());
 
-    QString translate_filepath = QApplication::applicationDirPath();
-    //qDebug() << "DIR: " << QApplication::applicationDirPath();//MacOS
-    //qDebug() << "FILE: " << QApplication::applicationFilePath();//MacOS/PSDtoSSGUI
+    //指定の位置に.qmを移動後に.qrcというファイルに記述する必要があった
+    //これによりQtResourceSystemと紐づけられ下記から読み出せる
+    QString translate_filepath = ":/translations";
 
-    // 翻訳
+    QTranslator *translator = new QTranslator();
+    QMessageBox msg;
     if("ja_JP" == QLocale::system().name())
     {
-        if(true == translator.load("translate_ja.qm", translate_filepath))
+        if(translator->load("translate_ja",translate_filepath))
         {
-            qDebug() << "JAPANESE";
+            a.installTranslator(translator);
+            msg.setText("TRUE: " + translate_filepath);
+            msg.exec();
         }
     }
     else
     {
-        if(true == translator.load("translate_en.qm", translate_filepath))
+        if(translator->load("translate_en",translate_filepath))
         {
-            qDebug() << "ENGLISH";
+            a.installTranslator(translator);
+            msg.setText("TRUE: " + translate_filepath);
+            msg.exec();
         }
     }
 
-    if(true != translator.isEmpty())
+    if(translator->isEmpty())
     {
-        //Qt5.9.9にはlanguageやfilePathはない
-        qDebug() << "NOT EMPTY: isEmpty";
-    }
-    if(true == a.installTranslator(&translator))
-    {
-        qDebug() << "INSTALL: installTranslator";
+        msg.setText("FALSE: " + translate_filepath);
+        msg.exec();
+        return 1;
     }
 
     MainWindow w;

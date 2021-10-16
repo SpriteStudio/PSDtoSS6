@@ -3,5 +3,7 @@
         <file>style.css</file>
         <file>images/checkbox_checked.png</file>
         <file>images/checkbox_unchecked.png</file>
+        <file>translations/translate_ja.qm</file>
+        <file>translations/translate_en.qm</file>
     </qresource>
 </RCC>

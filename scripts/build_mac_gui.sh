@@ -5,7 +5,7 @@ SCRIPTDIR=`cd $SCRIPTDIR && pwd -P`
 BASEDIR=${SCRIPTDIR}/..
 BASEDIR=`cd ${BASEDIR} && pwd -P`
 
-QT_PATH="/Users/yoshida/Qt/5.15.2/clang_64"
+QT_PATH="/Users/yoshida/Qt/5.9.9/clang_64"
 
 SRCDIR="${BASEDIR}/gui"
 DSTDIR="${BASEDIR}/out"
@@ -61,8 +61,6 @@ popd > /dev/null # SRCDIR
 
 /bin/mkdir -p ${DSTDIR}
 /bin/cp -rf ${BUILDDIR}/*.app ${DSTDIR}
-/bin/cp -rf ${SRCDIR}/translate_ja.qm ${DSTDIR}/PSDtoSS6GUI.app/Contents/MacOS
-/bin/cp -rf ${SRCDIR}/translate_en.qm ${DSTDIR}/PSDtoSS6GUI.app/Contents/MacOS
 
 macdeployqt "${DSTDIR}/PSDtoSS6GUI.app" -always-overwrite || exit 1
 

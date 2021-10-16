@@ -3,9 +3,16 @@
 #include <QtGui>
 #include <QTextCodec>
 #include <QTranslator>
-
-#include <QDebug>
 #include <QMessageBox>
+
+void MsgBox(QString message)
+{
+#if 0
+    QMessageBox msg;
+    msg.setText(message);
+    msg.exec();
+#endif
+}
 
 int main(int argc, char *argv[])
 {
@@ -18,30 +25,22 @@ int main(int argc, char *argv[])
     QString translate_filepath = ":/translations";
 
     QTranslator *translator = new QTranslator();
-    QMessageBox msg;
-    if("ja_JP" == QLocale::system().name())
+    
+    //本来はQLocale::system().name()などを利用すべき
+    if(translator->load("translate_ja",translate_filepath))
     {
-        if(translator->load("translate_ja",translate_filepath))
-        {
-            a.installTranslator(translator);
-            msg.setText("TRUE: " + translate_filepath);
-            msg.exec();
-        }
+        a.installTranslator(translator);
+        MsgBox("TRUE: " + translate_filepath);
     }
-    else
+    else if(translator->load("translate_en",translate_filepath))
     {
-        if(translator->load("translate_en",translate_filepath))
-        {
-            a.installTranslator(translator);
-            msg.setText("TRUE: " + translate_filepath);
-            msg.exec();
-        }
-    }
+        a.installTranslator(translator);
+        MsgBox("TRUE: " + translate_filepath);
+    }   
 
     if(translator->isEmpty())
     {
-        msg.setText("FALSE: " + translate_filepath);
-        msg.exec();
+        MsgBox("FALSE: " + translate_filepath);
         return 1;
     }
 

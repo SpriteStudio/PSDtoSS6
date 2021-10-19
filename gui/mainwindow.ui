@@ -48,7 +48,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>コンバート開始</string>
+     <string>_convertButton</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_exit">
@@ -61,7 +61,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>終了</string>
+     <string>_closeButton</string>
     </property>
    </widget>
    <widget class="QListWidget" name="listWidget">
@@ -106,7 +106,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>テクスチャ幅</string>
+     <string>_texWidthLabel</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
@@ -119,7 +119,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>セル配置順</string>
+     <string>_cellLayoutOrderLabel</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_padding_shape">
@@ -150,7 +150,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;スクリプトから出力したss6-psdtoss6-infoファイル、PSDファイルをドロップして追加してください&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>_dropFileHelpText</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -163,7 +163,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>ログ</string>
+     <string>_logText</string>
     </property>
    </widget>
    <widget class="QTextBrowser" name="textBrowser_status">
@@ -189,7 +189,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>テクスチャ高さ</string>
+     <string>_texHeightLabel</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
@@ -207,7 +207,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </font>
     </property>
     <property name="text">
-     <string>コンバートファイル</string>
+     <string>_fileToConvert</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -220,7 +220,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>ステータス</string>
+     <string>_statusText</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_ssae">
@@ -233,7 +233,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>ssae出力</string>
+     <string>_writeSsaeLabel</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_listclear">
@@ -246,7 +246,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>リストクリア</string>
+     <string>_clearListButton</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -259,7 +259,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>セル間余白</string>
+     <string>_cellPaddingLabel</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_9">
@@ -267,15 +267,15 @@ alternate-background-color: rgb(198, 216, 255);</string>
      <rect>
       <x>10</x>
       <y>220</y>
-      <width>101</width>
-      <height>21</height>
+      <width>111</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
     </property>
     <property name="text">
-     <string>出力フォルダ</string>
+     <string>_outputFolderText</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_output">
@@ -288,7 +288,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>出力フォルダ選択</string>
+     <string>_selectOutputFolder</string>
     </property>
    </widget>
    <widget class="QTextBrowser" name="textBrowser_output">
@@ -314,7 +314,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>sspj出力</string>
+     <string>_writeSspjLabel</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_w">
@@ -350,7 +350,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>優先度設定</string>
+     <string>_priorityValueLabel</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_pri">
@@ -376,7 +376,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>親NULLパーツ追加</string>
+     <string>_addNullPartsLabel</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_overwrite">
@@ -389,7 +389,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>sspj、ssae上書き</string>
+     <string>_overwriteSspjSsaeLabel</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_pivot">
@@ -402,7 +402,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>原点レイヤー適用</string>
+     <string>_applyPivotLayoutLabel</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_listsave">
@@ -415,7 +415,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>リストの保存</string>
+     <string>_saveListButton</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_listload">
@@ -428,7 +428,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>リストの読み込み</string>
+     <string>_loadListButton</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_root">
@@ -441,7 +441,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>rootレイヤー適用</string>
+     <string>_applyRootLayoutLabel</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_fileadd">
@@ -454,7 +454,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>ファイル追加</string>
+     <string>_addFileButton</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_pivot_add">
@@ -467,7 +467,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>ssce読み込み</string>
+     <string>_readSsceLabel</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_10">
@@ -480,7 +480,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>セル配置間隔</string>
+     <string>_cellDistanceLabel</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_cell_padding">
@@ -506,7 +506,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>設定の保存</string>
+     <string>_saveSettingsButton</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_12">
@@ -519,7 +519,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>セルマップ縁幅</string>
+     <string>_cellmapMarginLabel</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_padding_border">
@@ -545,7 +545,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>ヘルプ</string>
+     <string>_helpButton</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_13">
@@ -558,7 +558,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>基準枠サイズ</string>
+     <string>_canvasFrameLabel</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_canvasSize">
@@ -581,7 +581,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>セル内余白</string>
+     <string>_cellMarginLabel</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_padding_inner">
@@ -607,7 +607,7 @@ alternate-background-color: rgb(198, 216, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>プレビュー</string>
+     <string>_previewButton</string>
     </property>
    </widget>
   </widget>

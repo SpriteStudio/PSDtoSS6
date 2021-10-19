@@ -48,7 +48,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>全選択/全解除</string>
+    <string>_selectDeselectAllLabel</string>
    </property>
   </widget>
   <widget class="QPushButton" name="buttonEnd">
@@ -61,7 +61,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>終了</string>
+    <string>_closeLabel</string>
    </property>
   </widget>
   <widget class="QPushButton" name="buttonDetail">
@@ -74,7 +74,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>もっと詳しく</string>
+    <string>_moreDetailLabel</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cb_tex_width">
@@ -87,7 +87,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>テクスチャ幅</string>
+    <string>_textureWidthLabel</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cb_tex_height">
@@ -100,7 +100,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>テクスチャ高さ</string>
+    <string>_textureHeightLabel</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cb_pad_border">
@@ -113,7 +113,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>セルマップ縁幅</string>
+    <string>_cellmapMarginLabel</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cb_pad_shape">
@@ -126,7 +126,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>セル間余白</string>
+    <string>_cellPaddingLabel</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cb_pad_cell">
@@ -139,7 +139,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>セル配置間隔</string>
+    <string>_cellDistanceLabel</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="cb_pad_inner">
@@ -152,7 +152,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>セル内余白</string>
+    <string>_cellMarginLabel</string>
    </property>
   </widget>
   <widget class="QLabel" name="cb_abstract">
@@ -165,7 +165,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>可視化する項目</string>
+    <string>_visibleItemsLabel</string>
    </property>
   </widget>
  </widget>

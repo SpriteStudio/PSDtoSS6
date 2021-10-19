@@ -26,7 +26,6 @@ public:
             int,int,int,
             int,int,int,
             int,int,int);
-    void translateUI();
 
 private:
     /// @note パラメータの影響範囲を視覚化する
@@ -34,7 +33,6 @@ private:
     void DrawCellAndPart(QGraphicsScene* , QColor , QColor);
 
 private slots:
-
     void on_cb_tex_width_stateChanged(int cb_state);
     void on_cb_tex_height_stateChanged(int cb_state);
     void on_cb_pad_shape_stateChanged(int cb_state);
@@ -44,7 +42,6 @@ private slots:
 
     void on_buttonAll_clicked();
     void on_buttonEnd_clicked();
-
     void on_buttonDetail_clicked();
 
 private:

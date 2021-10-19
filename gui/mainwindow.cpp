@@ -15,7 +15,7 @@ std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
-#define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.1"
+#define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.2"
 
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     //フォームの部品にアクセスする場合はuiのメンバを経由する
     ui->setupUi(this);
+    //再翻訳
+    ui->retranslateUi(this);
 
     //ドラッグ＆ドロップを有効にする
     setAcceptDrops(true);
@@ -56,12 +58,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     imgProcess = new QProcess(this);
 
-    //ウィンドウのタイトルをつける
-    setWindowTitle(TITLE_VERSION);
-
     //ウィンドウスタイルの定義
-    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+
+    //ウィンドウのタイトルをつける
+    this->setWindowTitle(TITLE_VERSION);
 
     //初期化
     convert_exec = false;
@@ -107,7 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
     data_path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     //    data_path += "/SpriteStudio/PSDtoSS6";
     data_path += TOOLFOLDER;
-    qDebug() << "data_path " << data_path;
+    // qDebug() << "data_path " << data_path;
 
     //出力フォルダのパスを確認
     if(Outputpath == "")
@@ -124,10 +126,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //プレビューウィンドウの初期化
     sw = new subwindow(this);
-
-    //言語設定
-    translateUI();
-    ui->retranslateUi(this);
 }
 
 MainWindow::~MainWindow()
@@ -334,14 +332,14 @@ void MainWindow::on_pushButton_convert_clicked()
     if ( ui->listWidget->count() == 0 )
     {
         QMessageBox msgBox(this);
-        msgBox.setText(tr("Register a txt file"));
+        msgBox.setText(tr("_registerTextFileText"));
         msgBox.exec();
         return;
     }
     if ( ui->textBrowser_output->toPlainText() == "" )
     {
         QMessageBox msgBox(this);
-        msgBox.setText(tr("Select an output folder"));
+        msgBox.setText(tr("_selectOutputFolderText"));
         msgBox.exec();
         return;
     }
@@ -353,7 +351,7 @@ void MainWindow::on_pushButton_convert_clicked()
         if(false == testDir.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QMessageBox msgBox(this);
-            msgBox.setText(tr("an output folder is not writable"));
+            msgBox.setText(tr("_folderNotWritableText"));
             msgBox.exec();
             return;
         }
@@ -472,11 +470,11 @@ void MainWindow::on_pushButton_convert_clicked()
         }
         if ( convert_error == false )
         {
-            ui->textBrowser_status->setText(tr("Convert Success!"));
+            ui->textBrowser_status->setText(tr("_convertSuccessText"));
         }
         else
         {
-            ui->textBrowser_status->setText(tr("Error"));   //ステータス
+            ui->textBrowser_status->setText(tr("_convertErrorText"));   //ステータス
         }
         buttonEnable( true );   //ボタン有効
         convert_exec = false;  //コンバート中か
@@ -535,7 +533,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 void MainWindow::on_pushButton_output_clicked()
 {
     QString str;
-    str = QFileDialog::getExistingDirectory(this, tr("Output Directory"), Outputpath);
+    str = QFileDialog::getExistingDirectory(this, tr("_outputDirectoryText"), Outputpath);
 
     if ( str != "" ){//選択されたフォルダ名
         Outputpath = str;
@@ -559,7 +557,7 @@ void MainWindow::on_pushButton_listload_clicked()
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this, tr("select list File"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
+    fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
 
     if ( fileName != "" )
     {
@@ -590,7 +588,7 @@ void MainWindow::on_pushButton_listsave_clicked()
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString fileName;
-    fileName = QFileDialog::getSaveFileName(this, tr("save list File"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
+    fileName = QFileDialog::getSaveFileName(this, tr("_saveListFileText"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
 
     if ( fileName != "" )
     {
@@ -633,7 +631,7 @@ void MainWindow::on_pushButton_fileadd_clicked()
     QString addfileName;
     //ユーザーのドキュメントフォルダを指定
     openFolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    addfileName = QFileDialog::getOpenFileName(this, tr("select convert File"), openFolderName, tr("data(*.ss6-psdtoss6-info *.psd)"), &strSelectedFilter, options);
+    addfileName = QFileDialog::getOpenFileName(this, tr("_selectConvertFile"), openFolderName, tr("data(*.ss6-psdtoss6-info *.psd)"), &strSelectedFilter, options);
 
     if ( addfileName != "" )
     {
@@ -741,7 +739,7 @@ void MainWindow::on_pushButton_settingsave_clicked()
     saveConfig(data_path + "/config.json");
 
     QMessageBox msgBox(this);
-    msgBox.setText(tr("The current settings have been saved"));
+    msgBox.setText(tr("_currentSettingsSavedText"));
     msgBox.exec();
 }
 
@@ -772,45 +770,4 @@ void MainWindow::on_pushButton_Preview_clicked()
                 width,    height,     priority,
                 sort,     pad_shape,  pad_inner,
                 pad_cell, pad_border, canvas);
-}
-
-//表示する言語
-void MainWindow::translateUI()
-{
-    //概要
-    ui->label_4->setText(tr("Drop ss6-psdtoss6-info file and psd file from the script."));
-    //ボタン
-    ui->pushButton_fileadd->setText(tr("Add file"));
-    ui->pushButton_listsave->setText(tr("Save file list"));
-    ui->pushButton_listload->setText(tr("Load file list"));
-    ui->pushButton_listclear->setText(tr("Clear file list"));
-    ui->pushButton_output->setText(tr("Select output folder"));
-    ui->pushButton_convert->setText(tr("Convert"));
-    ui->pushButton_exit->setText(tr("Close"));
-    ui->pushButton_settingsave->setText(tr("Save settings"));
-    ui->pushButton_open_help->setText(tr("Help"));
-    ui->pushButton_Preview->setText(tr("Preview"));
-    //ログ名
-    ui->label_7->setText(tr("Files to convert"));
-    ui->label_9->setText(tr("Output folder"));
-    ui->label_5->setText(tr("Status"));
-    ui->label_6->setText(tr("Log"));
-    //ドロップボックス
-    ui->label->setText(tr("Texture width"));
-    ui->label_2->setText(tr("Texture height"));
-    ui->label_11->setText(tr("Priority value"));
-    ui->label_8->setText(tr("Cell layout order"));
-    ui->label_3->setText(tr("Cell padding"));
-    ui->label_14->setText(tr("Cell margin"));
-    ui->label_10->setText(tr("Cell distance"));
-    ui->label_12->setText(tr("Cellmap margin"));
-    ui->label_13->setText(tr("Canvas frame"));
-    //チェックボックス
-    ui->checkBox_ssae->setText(tr("Write ssae"));
-    ui->checkBox_sspj->setText(tr("Write sspj"));
-    ui->checkBox_overwrite->setText(tr("Overwrite sspj ssae"));
-    ui->checkBox_addnull->setText(tr("Add NULL parent"));
-    ui->checkBox_pivot->setText(tr("Apply pivot layer"));
-    ui->checkBox_root->setText(tr("Apply root layer"));
-    ui->checkBox_pivot_add->setText(tr("Read ssce"));
 }

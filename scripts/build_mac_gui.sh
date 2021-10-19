@@ -5,8 +5,6 @@ SCRIPTDIR=`cd $SCRIPTDIR && pwd -P`
 BASEDIR=${SCRIPTDIR}/..
 BASEDIR=`cd ${BASEDIR} && pwd -P`
 
-QT_PATH="/Users/yoshida/Qt/5.9.9/clang_64"
-
 SRCDIR="${BASEDIR}/gui"
 DSTDIR="${BASEDIR}/out"
 

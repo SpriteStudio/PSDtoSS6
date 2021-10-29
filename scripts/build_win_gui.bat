@@ -38,8 +38,6 @@ cmake --build . -- /t:clean;rebuild /p:configuration=release /clp:ErrorsOnly /m:
 
 xcopy /y Release\*.exe %DSTDIR%
 
-copy /y ..\translate_ja.qm %DSTDIR%
-
 call windeployqt ^
 --release ^
 --force ^

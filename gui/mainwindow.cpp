@@ -390,7 +390,7 @@ void MainWindow::on_pushButton_convert_clicked()
                 QString execstr;
                 QString execstrSub;
 
-#ifdef Q_OS_WIN32
+#ifdef _WIN32
                 // Windows
                 QDir dir = QDir(execPathStr);
                 dir.cd("..");
@@ -438,9 +438,9 @@ void MainWindow::on_pushButton_convert_clicked()
                     execstr = execstrSub;
                 }
 
-#ifdef Q_WS_WIN
+#ifdef _WIN32
 
-                execstr= "/" + execstr + "/";
+                execstr= "\"" + execstr + "\"";
                 str = execstr + " " + QString(arg_str.c_str()) + " -I " + "\"" + fileName + "\"";
 #else
                 //execstr= "\"" + execstr + "\"";

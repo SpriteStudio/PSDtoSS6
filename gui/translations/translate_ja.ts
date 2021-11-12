@@ -183,7 +183,7 @@
         <translation>全選択/全解除</translation>
     </message>
     <message>
-        <source>More detail</source>
+        <source>_moreDetailLabel</source>
         <translation>もっと詳しく</translation>
     </message>
     <message>

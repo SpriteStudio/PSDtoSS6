@@ -18,19 +18,18 @@ subwindow::subwindow(QWidget *parent) :
 {
     //フォームの部品にアクセスする場合はuiのメンバを経由する
     ui->setupUi(this);
-    //翻訳
+    //再翻訳
     ui->retranslateUi(this);
 
-    //先に表示されてしまうのでWindowフラグを設定
-    // setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
-    //                | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    setWindowFlags(Qt::Tool | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::CustomizeWindowHint);
-
+    //ウィンドウフラグ設定
+    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+                   | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     //ウィンドウタイトル設定
     setWindowTitle(TITLE_PREVIEW);
     //ウィンドウサイズ固定
     this->setFixedSize(QSize(winWIDTH,winHEIGHT));
-    //ウィンドウ非表示
+
+    //プレビューウィンドウはデフォルトで非表示
     this->hide();
 
     //チェックボックスの初期化, uiで指定した初期状態から変化するとイベント処理が入る

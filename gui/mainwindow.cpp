@@ -771,3 +771,12 @@ void MainWindow::on_pushButton_Preview_clicked()
                 sort,     pad_shape,  pad_inner,
                 pad_cell, pad_border, canvas);
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    //終了ボタンと同じ挙動
+    saveConfig(data_path + "/config.json");
+    delete_convert_info();
+    //アプリケーションの終了
+    exit(0);
+}

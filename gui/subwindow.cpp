@@ -29,6 +29,10 @@ subwindow::subwindow(QWidget *parent) :
     //ウィンドウサイズ固定
     this->setFixedSize(QSize(winWIDTH,winHEIGHT));
 
+    //最初のウィンドウサイズで固定する
+    setFixedWidth(this->width());
+    setFixedHeight(this->height());
+
     //プレビューウィンドウはデフォルトで非表示
     this->hide();
 

@@ -61,16 +61,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //ウィンドウスタイルの定義
     this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-
     //ウィンドウのタイトルをつける
     this->setWindowTitle(TITLE_VERSION);
 
+    //最初のウィンドウサイズで固定する
+    setFixedWidth(this->width());
+    setFixedHeight(this->height());
+    
     //初期化
     convert_exec = false;
     cnvOutputStr.clear();
-
-    //ウィンドウサイズ固定
-    setFixedSize( QSize(688,661) );
 
     ui->comboBox->addItem(map_sortmode["none"] = "Name");
     ui->comboBox->addItem(map_sortmode["rectmax"] = "Area Size");

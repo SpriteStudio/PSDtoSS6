@@ -16,12 +16,13 @@ std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
 #define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.3"
-
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
 
-convert_parameters cp;
+#define MAXFILENAME (256) //ファイル長の最大値
+#define MAXFILECOUNT (100) //登録可能なファイルリスト数
 
+convert_parameters cp;
 subwindow *sw;//プレビューウィンドウ
 
 template<typename T1, typename T2>
@@ -624,7 +625,7 @@ void MainWindow::buttonEnable( bool flg )
 }
 //ファイル追加
 void MainWindow::on_pushButton_fileadd_clicked()
-{
+{   
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString openFolderName;
@@ -632,6 +633,10 @@ void MainWindow::on_pushButton_fileadd_clicked()
     //ユーザーのドキュメントフォルダを指定
     openFolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     addfileName = QFileDialog::getOpenFileName(this, tr("_selectConvertFile"), openFolderName, tr("data(*.ss6-psdtoss6-info *.psd)"), &strSelectedFilter, options);
+
+    //ファイル名が長すぎる場合は追加しない
+    if(addfileName.length() > MAXFILENAME)
+        return;
 
     if ( addfileName != "" )
     {
@@ -650,7 +655,10 @@ void MainWindow::on_pushButton_fileadd_clicked()
         }
         if ( addname == true )
         {
-            ui->listWidget->addItem(addfileName);
+            //リストに登録できるファイル数を指定
+            int fileCount = ui->listWidget->count();
+            if(fileCount < MAXFILECOUNT)
+                ui->listWidget->addItem(addfileName);
         }
     }
     pushButton_enableset();

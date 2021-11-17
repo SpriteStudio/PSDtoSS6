@@ -25,6 +25,15 @@ std::map<int, QString> map_canvasSize;
 convert_parameters cp;
 subwindow *sw;//プレビューウィンドウ
 
+void MsgBox(QWidget *parent, QString text)
+{
+    QMessageBox dialog(parent);
+    dialog.setText( text );
+    dialog.setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+                | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    dialog.exec();
+}
+
 template<typename T1, typename T2>
 T1 MainWindow::getKey(const std::map<T1, T2> & map, const T2 & value) const
 {
@@ -60,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     imgProcess = new QProcess(this);
 
     //ウィンドウスタイルの定義
-    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+    this->setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     //ウィンドウのタイトルをつける
     this->setWindowTitle(TITLE_VERSION);
@@ -332,16 +341,12 @@ void MainWindow::on_pushButton_convert_clicked()
     //コンバート
     if ( ui->listWidget->count() == 0 )
     {
-        QMessageBox msgBox(this);
-        msgBox.setText(tr("_registerTextFileText"));
-        msgBox.exec();
+        MsgBox( this, tr("_registerTextFileText") );
         return;
     }
     if ( ui->textBrowser_output->toPlainText() == "" )
     {
-        QMessageBox msgBox(this);
-        msgBox.setText(tr("_selectOutputFolderText"));
-        msgBox.exec();
+        MsgBox( this, tr("_selectOutputFolderText") );
         return;
     }
     else
@@ -351,9 +356,7 @@ void MainWindow::on_pushButton_convert_clicked()
         QFile testDir(folder + "_accessTest.txt");
         if(false == testDir.open(QIODevice::WriteOnly | QIODevice::Text))
         {
-            QMessageBox msgBox(this);
-            msgBox.setText(tr("_folderNotWritableText"));
-            msgBox.exec();
+            MsgBox( this, tr("_folderNotWritableText") );
             return;
         }
         testDir.remove();
@@ -503,7 +506,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 {
     if ( exitStatus == QProcess::CrashExit )
     {
-        //        QMessageBox::warning( this, tr("Error"), tr("Crashed") );
+        //MsgBox( this, tr("Crashed") );
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
@@ -513,7 +516,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
     }
     else if ( exitCode != 0 )
     {
-        //        QMessageBox::warning( this, tr("Error"), tr("Failed") );
+        //MsgBox( this, tr("Failed") );
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
@@ -525,8 +528,8 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
     {
         convert_error = false;
         // 正常終了時の処理
-        //        ui->textBrowser_status->setText(tr("Convert Success!"));
-        //    QMessageBox::information(this, tr("Ss6Converter"), tr("Convert success"));
+        // ui->textBrowser_status->setText(tr("Convert Success!"));
+        // MsgBox( this, tr("Convert success") );
     }
 }
 
@@ -746,9 +749,7 @@ void MainWindow::on_pushButton_settingsave_clicked()
 {
     saveConfig(data_path + "/config.json");
 
-    QMessageBox msgBox(this);
-    msgBox.setText(tr("_currentSettingsSavedText"));
-    msgBox.exec();
+    MsgBox( this, tr("_currentSettingsSavedText") );
 }
 
 void MainWindow::on_pushButton_open_help_clicked()

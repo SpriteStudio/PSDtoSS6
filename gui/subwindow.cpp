@@ -22,7 +22,7 @@ subwindow::subwindow(QWidget *parent) :
     ui->retranslateUi(this);
 
     //ウィンドウフラグ設定
-    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+    this->setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     //ウィンドウタイトル設定
     setWindowTitle(TITLE_PREVIEW);
@@ -266,7 +266,6 @@ void subwindow::on_cb_pad_cell_stateChanged(int cb_state)
 
 void subwindow::on_cb_pad_border_stateChanged(int cb_state)
 {
-    //QMessageBox msgBox(this);    msgBox.setText(QString::number(cb_state));    msgBox.exec();
     DisplayPreview();//パラメータ設定後、再び描画処理を行わせる
 }
 

@@ -151,25 +151,32 @@ void MainWindow::loadConfig(const QString & fileName)
     QString outputText =  "";
     outputText = "Load Config json file = " + fileName;
 
-#if _WIN32
-    QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
-    if (!cp.parseConfigJson(sjis->fromUnicode(fileName).toStdString()))
-    {
-        QString str = QString::fromLocal8Bit(cp.err_string.c_str());
-        outputText += "\nLoad error";
-    }
-    else {
-        outputText += "\nLoad Successful";
-    }
-#else
-    if (!cp.parseConfigJson(fileName.toStdString()))
-    {
-        outputText += "\nLoad error";
-    }
-    else {
-        outputText += "\nLoad Successful";
-    }
-#endif
+//JSONファイルが破損しているとクラッシュするので例外処理
+try
+{
+    #if _WIN32
+        QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
+        if (!cp.parseConfigJson(sjis->fromUnicode(fileName).toStdString()))
+        {
+            QString str = QString::fromLocal8Bit(cp.err_string.c_str());
+            outputText += "\nLoad error";
+        }
+        else {
+            outputText += "\nLoad Successful";
+        }
+    #else
+        if (!cp.parseConfigJson(fileName.toStdString()))
+        {
+            outputText += "\nLoad error";
+        }
+        else {
+            outputText += "\nLoad Successful";
+        }
+    #endif
+}catch (...) {
+    MsgBox(this, tr("failed to load config.json") );
+    close();
+}
 
     /*
     if ( !cp.parseConfigJson(fileName.toStdString()) )
@@ -179,7 +186,7 @@ void MainWindow::loadConfig(const QString & fileName)
     }else{
                 outputText+= "setting json Load Successful";
     }
-*/
+    */  
 
     ui->textBrowser_err->setText(outputText);
 

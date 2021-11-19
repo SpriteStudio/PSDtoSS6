@@ -52,6 +52,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    singular = new QSharedMemory("PSDtoSS_SharedMemory", this);
+    if(!lock())
+    {
+        MsgBox(this,"PSDtoSS is already running");
+        close();
+    }
+
     //フォームの部品にアクセスする場合はuiのメンバを経由する
     ui->setupUi(this);
     //再翻訳
@@ -68,13 +75,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     imgProcess = new QProcess(this);
 
-    //ウィンドウスタイルの定義
-    this->setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+    setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    //ウィンドウのタイトルをつける
-    this->setWindowTitle(TITLE_VERSION);
+    setContextMenuPolicy(Qt::NoContextMenu);
+    setWindowTitle(TITLE_VERSION);
 
-    //最初のウィンドウサイズで固定する
     setFixedWidth(this->width());
     setFixedHeight(this->height());
     
@@ -140,6 +145,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if(singular->isAttached())
+        singular->detach();
+
     delete_convert_info();
     delete ui;
     delete sw;
@@ -795,4 +803,18 @@ void MainWindow::closeEvent(QCloseEvent *event)
     delete_convert_info();
     //アプリケーションの終了
     exit(0);
+}
+
+bool MainWindow::lock()
+{
+    if(singular->attach(QSharedMemory::ReadOnly))
+    {
+        singular->detach();
+        return false;
+    }
+
+    if(singular->create(1))
+        return true;
+    
+    return false;
 }

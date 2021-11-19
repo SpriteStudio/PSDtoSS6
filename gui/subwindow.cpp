@@ -22,19 +22,16 @@ subwindow::subwindow(QWidget *parent) :
     ui->retranslateUi(this);
 
     //ウィンドウフラグ設定
-    this->setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+    setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    //ウィンドウタイトル設定
+    setContextMenuPolicy(Qt::NoContextMenu);
     setWindowTitle(TITLE_PREVIEW);
-    //ウィンドウサイズ固定
-    this->setFixedSize(QSize(winWIDTH,winHEIGHT));
-
-    //最初のウィンドウサイズで固定する
+    
     setFixedWidth(this->width());
     setFixedHeight(this->height());
 
     //プレビューウィンドウはデフォルトで非表示
-    this->hide();
+    hide();
 
     //チェックボックスの初期化, uiで指定した初期状態から変化するとイベント処理が入る
     ui->cb_tex_width ->setChecked(Qt::Unchecked);

@@ -50,6 +50,7 @@ private:
     void save_convert_info();
     void delete_convert_info();
     void templistload();
+    void leadListFile(QString fileName);
     template<typename T1, typename T2>
     T1 getKey(const std::map<T1, T2> & map, const T2 & value) const ;
 

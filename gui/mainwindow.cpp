@@ -562,14 +562,9 @@ void MainWindow::on_pushButton_output_clicked()
     ui->textBrowser_output->setText(Outputpath);
 }
 
-//リストの読み込み
-void MainWindow::on_pushButton_listload_clicked()
+//リストファイルの読み込み
+void MainWindow::leadListFile(QString fileName)
 {
-    QFileDialog::Options options;
-    QString strSelectedFilter;
-    QString fileName;
-    fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
-
     if ( fileName != "" )
     {
         //リストクリア
@@ -586,11 +581,25 @@ void MainWindow::on_pushButton_listload_clicked()
         QTextStream in(&file);
         while ( !in.atEnd() ) {
             QString str = in.readLine();//1行読込
-            ui->listWidget->addItem(str);
+            //実在するするファイルのみ追加
+            if(QFile::exists(str))
+            {
+                ui->listWidget->addItem(str);
+            }
         }
     }
     pushButton_enableset();
+}
 
+//リストの読み込み
+void MainWindow::on_pushButton_listload_clicked()
+{
+    QFileDialog::Options options;
+    QString strSelectedFilter;
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
+
+    leadListFile(fileName);
 }
 
 //リストの保存
@@ -636,6 +645,13 @@ void MainWindow::buttonEnable( bool flg )
 //ファイル追加
 void MainWindow::on_pushButton_fileadd_clicked()
 {   
+    //リストに登録できるファイル数を指定
+    int fileCount = ui->listWidget->count();
+    if(fileCount >= MAXFILECOUNT)
+    {
+        MsgBox( this, tr("registered file full") );
+    }
+
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString openFolderName;
@@ -646,8 +662,10 @@ void MainWindow::on_pushButton_fileadd_clicked()
 
     //ファイル名が長すぎる場合は追加しない
     if(addfileName.length() > MAXFILENAME)
+    {
         MsgBox( this, tr("file name is too long") );
         return;
+    }
 
     if ( addfileName != "" )
     {
@@ -662,14 +680,13 @@ void MainWindow::on_pushButton_fileadd_clicked()
                 addname = false;
                 break;
             }
-
         }
         if ( addname == true )
         {
-            //リストに登録できるファイル数を指定
-            int fileCount = ui->listWidget->count();
-            if(fileCount < MAXFILECOUNT)
+            //実在していれば追加
+            if(QFile::exists(addfileName)){
                 ui->listWidget->addItem(addfileName);
+            }
         }
     }
     pushButton_enableset();

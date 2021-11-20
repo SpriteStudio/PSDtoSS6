@@ -646,6 +646,7 @@ void MainWindow::on_pushButton_fileadd_clicked()
 
     //ファイル名が長すぎる場合は追加しない
     if(addfileName.length() > MAXFILENAME)
+        MsgBox( this, tr("file name is too long") );
         return;
 
     if ( addfileName != "" )
@@ -754,6 +755,12 @@ void MainWindow::delete_convert_info()
 //設定の保存ボタン
 void MainWindow::on_pushButton_settingsave_clicked()
 {
+    QDir dir(data_path);
+    if(!dir.exists())
+    {
+        //設定ファイル保存用ディレクトリを作成
+        dir.mkpath(data_path);  
+    }
     saveConfig(data_path + "/config.json");
 
     MsgBox( this, tr("_currentSettingsSavedText") );

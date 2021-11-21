@@ -472,20 +472,17 @@ void MainWindow::on_pushButton_convert_clicked()
                     }
                 }
                 QCoreApplication::processEvents();
-                if ( convert_error == true )
+                if ( convert_error )
                 {
                     break;
                 }
                 convet_index++;
             }
         }
-        if ( convert_error == false )
-        {
+        if ( convert_error ){
+            ui->textBrowser_status->setText(tr("_convertErrorText"));
+        }else{
             ui->textBrowser_status->setText(tr("_convertSuccessText"));
-        }
-        else
-        {
-            ui->textBrowser_status->setText(tr("_convertErrorText"));   //ステータス
         }
         buttonEnable( true );   //ボタン有効
         convert_exec = false;  //コンバート中か

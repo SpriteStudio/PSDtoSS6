@@ -257,7 +257,7 @@ void MainWindow::saveConfig(const QString & fileName)
     ui->textBrowser_err->setText(outputText);
 }
 
-
+//mainから呼ばれる
 void MainWindow::setText_to_List(QStringList list)
 {
     //実行ファイルのパスを保存

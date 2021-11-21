@@ -331,6 +331,17 @@ void MainWindow::dropEvent(QDropEvent *e)
                     ui->listWidget->addItem(dragFilePath);
                 }
             }
+
+            //リストファイルなら
+            else if (
+                ( dragFilePath.endsWith(".txt"))
+                || ( dragFilePath.endsWith(".txt"))
+                )
+                {
+                    //リストに追加を試みる
+                    leadListFile(dragFilePath);
+                }
+                
         }
         pushButton_enableset();
     }
@@ -506,6 +517,7 @@ void MainWindow::processErrOutput()
     sb->setValue(sb->maximum());
 
 }
+
 void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 {
     if ( exitStatus == QProcess::CrashExit )
@@ -564,17 +576,13 @@ void MainWindow::leadListFile(QString fileName)
 {
     if ( fileName != "" )
     {
-        //リストクリア
-        ui->listWidget->clear();
-
-        //読み込んだファイルをリストに設定
         QFile file(fileName);
-
-        if (!file.open(QIODevice::ReadOnly))//読込のみでオープンできたかチェック
+        if (!file.open(QIODevice::ReadOnly))
         {
             return;
         }
 
+        //読み込んだファイルをリストに設定
         QTextStream in(&file);
         while ( !in.atEnd() ) {
             QString str = in.readLine();//1行読込
@@ -595,6 +603,9 @@ void MainWindow::on_pushButton_listload_clicked()
     QString strSelectedFilter;
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
+
+    //リストクリア
+    ui->listWidget->clear();
 
     leadListFile(fileName);
 }

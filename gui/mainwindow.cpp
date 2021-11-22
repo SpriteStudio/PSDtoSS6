@@ -265,7 +265,7 @@ void MainWindow::saveConfig(const QString & fileName)
     ui->textBrowser_err->setText(outputText);
 }
 
-
+//mainから呼ばれる
 void MainWindow::setText_to_List(QStringList list)
 {
     //実行ファイルのパスを保存
@@ -339,6 +339,17 @@ void MainWindow::dropEvent(QDropEvent *e)
                     ui->listWidget->addItem(dragFilePath);
                 }
             }
+
+            //リストファイルなら
+            else if (
+                ( dragFilePath.endsWith(".txt"))
+                || ( dragFilePath.endsWith(".txt"))
+                )
+                {
+                    //リストに追加を試みる
+                    leadListFile(dragFilePath);
+                }
+                
         }
         pushButton_enableset();
     }
@@ -480,20 +491,17 @@ void MainWindow::on_pushButton_convert_clicked()
                     }
                 }
                 QCoreApplication::processEvents();
-                if ( convert_error == true )
+                if ( convert_error )
                 {
                     break;
                 }
                 convet_index++;
             }
         }
-        if ( convert_error == false )
-        {
+        if ( convert_error ){
+            ui->textBrowser_status->setText(tr("_convertErrorText"));
+        }else{
             ui->textBrowser_status->setText(tr("_convertSuccessText"));
-        }
-        else
-        {
-            ui->textBrowser_status->setText(tr("_convertErrorText"));   //ステータス
         }
         buttonEnable( true );   //ボタン有効
         convert_exec = false;  //コンバート中か
@@ -517,6 +525,7 @@ void MainWindow::processErrOutput()
     sb->setValue(sb->maximum());
 
 }
+
 void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 {
     if ( exitStatus == QProcess::CrashExit )
@@ -570,6 +579,31 @@ void MainWindow::on_pushButton_output_clicked()
     ui->textBrowser_output->setText(Outputpath);
 }
 
+//リストファイルの読み込み
+void MainWindow::leadListFile(QString fileName)
+{
+    if ( fileName != "" )
+    {
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly))
+        {
+            return;
+        }
+
+        //読み込んだファイルをリストに設定
+        QTextStream in(&file);
+        while ( !in.atEnd() ) {
+            QString str = in.readLine();//1行読込
+            //実在するするファイルのみ追加
+            if(QFile::exists(str))
+            {
+                ui->listWidget->addItem(str);
+            }
+        }
+    }
+    pushButton_enableset();
+}
+
 //リストの読み込み
 void MainWindow::on_pushButton_listload_clicked()
 {
@@ -578,27 +612,10 @@ void MainWindow::on_pushButton_listload_clicked()
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
 
-    if ( fileName != "" )
-    {
-        //リストクリア
-        ui->listWidget->clear();
+    //リストクリア
+    ui->listWidget->clear();
 
-        //読み込んだファイルをリストに設定
-        QFile file(fileName);
-
-        if (!file.open(QIODevice::ReadOnly))//読込のみでオープンできたかチェック
-        {
-            return;
-        }
-
-        QTextStream in(&file);
-        while ( !in.atEnd() ) {
-            QString str = in.readLine();//1行読込
-            ui->listWidget->addItem(str);
-        }
-    }
-    pushButton_enableset();
-
+    leadListFile(fileName);
 }
 
 //リストの保存
@@ -644,6 +661,13 @@ void MainWindow::buttonEnable( bool flg )
 //ファイル追加
 void MainWindow::on_pushButton_fileadd_clicked()
 {   
+    //リストに登録できるファイル数を指定
+    int fileCount = ui->listWidget->count();
+    if(fileCount >= MAXFILECOUNT)
+    {
+        MsgBox( this, tr("registered file full") );
+    }
+
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString openFolderName;
@@ -654,7 +678,10 @@ void MainWindow::on_pushButton_fileadd_clicked()
 
     //ファイル名が長すぎる場合は追加しない
     if(addfileName.length() > MAXFILENAME)
+    {
+        MsgBox( this, tr("file name is too long") );
         return;
+    }
 
     if ( addfileName != "" )
     {
@@ -669,14 +696,13 @@ void MainWindow::on_pushButton_fileadd_clicked()
                 addname = false;
                 break;
             }
-
         }
         if ( addname == true )
         {
-            //リストに登録できるファイル数を指定
-            int fileCount = ui->listWidget->count();
-            if(fileCount < MAXFILECOUNT)
+            //実在していれば追加
+            if(QFile::exists(addfileName)){
                 ui->listWidget->addItem(addfileName);
+            }
         }
     }
     pushButton_enableset();
@@ -762,6 +788,12 @@ void MainWindow::delete_convert_info()
 //設定の保存ボタン
 void MainWindow::on_pushButton_settingsave_clicked()
 {
+    QDir dir(data_path);
+    if(!dir.exists())
+    {
+        //設定ファイル保存用ディレクトリを作成
+        dir.mkpath(data_path);  
+    }
     saveConfig(data_path + "/config.json");
 
     MsgBox( this, tr("_currentSettingsSavedText") );

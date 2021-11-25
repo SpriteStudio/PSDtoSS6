@@ -15,14 +15,24 @@ std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
-#define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.3"
-
+#define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.4"
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
 
-convert_parameters cp;
+#define MAXFILENAME (256) //ファイル長の最大値
+#define MAXFILECOUNT (100) //登録可能なファイルリスト数
 
+convert_parameters cp;
 subwindow *sw;//プレビューウィンドウ
+
+void MsgBox(QWidget *parent, QString text)
+{
+    QMessageBox dialog(parent);
+    dialog.setText( text );
+    dialog.setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+                | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    dialog.exec();
+}
 
 template<typename T1, typename T2>
 T1 MainWindow::getKey(const std::map<T1, T2> & map, const T2 & value) const
@@ -42,6 +52,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    singular = new QSharedMemory("PSDtoSS_SharedMemory", this);
+    if(!lock())
+    {
+        MsgBox(this, tr("_psdtossAlready") );
+        close();
+    }
+
     //フォームの部品にアクセスする場合はuiのメンバを経由する
     ui->setupUi(this);
     //再翻訳
@@ -58,19 +75,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     imgProcess = new QProcess(this);
 
-    //ウィンドウスタイルの定義
-    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+    setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    setContextMenuPolicy(Qt::NoContextMenu);
+    setWindowTitle(TITLE_VERSION);
 
-    //ウィンドウのタイトルをつける
-    this->setWindowTitle(TITLE_VERSION);
-
+    setFixedWidth(this->width());
+    setFixedHeight(this->height());
+    
     //初期化
     convert_exec = false;
     cnvOutputStr.clear();
-
-    //ウィンドウサイズ固定
-    setFixedSize( QSize(688,661) );
 
     ui->comboBox->addItem(map_sortmode["none"] = "Name");
     ui->comboBox->addItem(map_sortmode["rectmax"] = "Area Size");
@@ -130,6 +145,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if(singular->isAttached())
+        singular->detach();
+
     delete_convert_info();
     delete ui;
     delete sw;
@@ -141,25 +159,32 @@ void MainWindow::loadConfig(const QString & fileName)
     QString outputText =  "";
     outputText = "Load Config json file = " + fileName;
 
-#if _WIN32
-    QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
-    if (!cp.parseConfigJson(sjis->fromUnicode(fileName).toStdString()))
-    {
-        QString str = QString::fromLocal8Bit(cp.err_string.c_str());
-        outputText += "\nLoad error";
-    }
-    else {
-        outputText += "\nLoad Successful";
-    }
-#else
-    if (!cp.parseConfigJson(fileName.toStdString()))
-    {
-        outputText += "\nLoad error";
-    }
-    else {
-        outputText += "\nLoad Successful";
-    }
-#endif
+//JSONファイルが破損しているとクラッシュするので例外処理
+try
+{
+    #if _WIN32
+        QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
+        if (!cp.parseConfigJson(sjis->fromUnicode(fileName).toStdString()))
+        {
+            QString str = QString::fromLocal8Bit(cp.err_string.c_str());
+            outputText += "\nLoad error";
+        }
+        else {
+            outputText += "\nLoad Successful";
+        }
+    #else
+        if (!cp.parseConfigJson(fileName.toStdString()))
+        {
+            outputText += "\nLoad error";
+        }
+        else {
+            outputText += "\nLoad Successful";
+        }
+    #endif
+}catch (...) {
+    MsgBox(this, tr("_loadJsonFileError") );
+    close();
+}
 
     /*
     if ( !cp.parseConfigJson(fileName.toStdString()) )
@@ -169,7 +194,7 @@ void MainWindow::loadConfig(const QString & fileName)
     }else{
                 outputText+= "setting json Load Successful";
     }
-*/
+    */  
 
     ui->textBrowser_err->setText(outputText);
 
@@ -240,7 +265,7 @@ void MainWindow::saveConfig(const QString & fileName)
     ui->textBrowser_err->setText(outputText);
 }
 
-
+//mainから呼ばれる
 void MainWindow::setText_to_List(QStringList list)
 {
     //実行ファイルのパスを保存
@@ -314,6 +339,17 @@ void MainWindow::dropEvent(QDropEvent *e)
                     ui->listWidget->addItem(dragFilePath);
                 }
             }
+
+            //リストファイルなら
+            else if (
+                ( dragFilePath.endsWith(".txt"))
+                || ( dragFilePath.endsWith(".txt"))
+                )
+                {
+                    //リストに追加を試みる
+                    leadListFile(dragFilePath);
+                }
+                
         }
         pushButton_enableset();
     }
@@ -331,16 +367,12 @@ void MainWindow::on_pushButton_convert_clicked()
     //コンバート
     if ( ui->listWidget->count() == 0 )
     {
-        QMessageBox msgBox(this);
-        msgBox.setText(tr("_registerTextFileText"));
-        msgBox.exec();
+        MsgBox( this, tr("_registerTextFileText") );
         return;
     }
     if ( ui->textBrowser_output->toPlainText() == "" )
     {
-        QMessageBox msgBox(this);
-        msgBox.setText(tr("_selectOutputFolderText"));
-        msgBox.exec();
+        MsgBox( this, tr("_selectOutputFolderText") );
         return;
     }
     else
@@ -350,9 +382,7 @@ void MainWindow::on_pushButton_convert_clicked()
         QFile testDir(folder + "_accessTest.txt");
         if(false == testDir.open(QIODevice::WriteOnly | QIODevice::Text))
         {
-            QMessageBox msgBox(this);
-            msgBox.setText(tr("_folderNotWritableText"));
-            msgBox.exec();
+            MsgBox( this, tr("_folderNotWritableText") );
             return;
         }
         testDir.remove();
@@ -461,20 +491,17 @@ void MainWindow::on_pushButton_convert_clicked()
                     }
                 }
                 QCoreApplication::processEvents();
-                if ( convert_error == true )
+                if ( convert_error )
                 {
                     break;
                 }
                 convet_index++;
             }
         }
-        if ( convert_error == false )
-        {
+        if ( convert_error ){
+            ui->textBrowser_status->setText(tr("_convertErrorText"));
+        }else{
             ui->textBrowser_status->setText(tr("_convertSuccessText"));
-        }
-        else
-        {
-            ui->textBrowser_status->setText(tr("_convertErrorText"));   //ステータス
         }
         buttonEnable( true );   //ボタン有効
         convert_exec = false;  //コンバート中か
@@ -498,11 +525,12 @@ void MainWindow::processErrOutput()
     sb->setValue(sb->maximum());
 
 }
+
 void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
 {
     if ( exitStatus == QProcess::CrashExit )
     {
-        //        QMessageBox::warning( this, tr("Error"), tr("Crashed") );
+        //MsgBox( this, tr("Crashed") );
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
@@ -512,7 +540,7 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
     }
     else if ( exitCode != 0 )
     {
-        //        QMessageBox::warning( this, tr("Error"), tr("Failed") );
+        //MsgBox( this, tr("Failed") );
         cnvOutputStr = cnvOutputStr + "Error:" + ui->listWidget->item(convet_index)->text();
         ui->textBrowser_err->setText(cnvOutputStr);
         convert_error = true;
@@ -524,8 +552,8 @@ void MainWindow::processFinished( int exitCode, QProcess::ExitStatus exitStatus)
     {
         convert_error = false;
         // 正常終了時の処理
-        //        ui->textBrowser_status->setText(tr("Convert Success!"));
-        //    QMessageBox::information(this, tr("Ss6Converter"), tr("Convert success"));
+        // ui->textBrowser_status->setText(tr("Convert Success!"));
+        // MsgBox( this, tr("Convert success") );
     }
 }
 
@@ -551,6 +579,31 @@ void MainWindow::on_pushButton_output_clicked()
     ui->textBrowser_output->setText(Outputpath);
 }
 
+//リストファイルの読み込み
+void MainWindow::leadListFile(QString fileName)
+{
+    if ( fileName != "" )
+    {
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly))
+        {
+            return;
+        }
+
+        //読み込んだファイルをリストに設定
+        QTextStream in(&file);
+        while ( !in.atEnd() ) {
+            QString str = in.readLine();//1行読込
+            //実在するするファイルのみ追加
+            if(QFile::exists(str))
+            {
+                ui->listWidget->addItem(str);
+            }
+        }
+    }
+    pushButton_enableset();
+}
+
 //リストの読み込み
 void MainWindow::on_pushButton_listload_clicked()
 {
@@ -559,27 +612,10 @@ void MainWindow::on_pushButton_listload_clicked()
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
 
-    if ( fileName != "" )
-    {
-        //リストクリア
-        ui->listWidget->clear();
+    //リストクリア
+    ui->listWidget->clear();
 
-        //読み込んだファイルをリストに設定
-        QFile file(fileName);
-
-        if (!file.open(QIODevice::ReadOnly))//読込のみでオープンできたかチェック
-        {
-            return;
-        }
-
-        QTextStream in(&file);
-        while ( !in.atEnd() ) {
-            QString str = in.readLine();//1行読込
-            ui->listWidget->addItem(str);
-        }
-    }
-    pushButton_enableset();
-
+    leadListFile(fileName);
 }
 
 //リストの保存
@@ -624,7 +660,14 @@ void MainWindow::buttonEnable( bool flg )
 }
 //ファイル追加
 void MainWindow::on_pushButton_fileadd_clicked()
-{
+{   
+    //リストに登録できるファイル数を指定
+    int fileCount = ui->listWidget->count();
+    if(fileCount >= MAXFILECOUNT)
+    {
+        MsgBox( this, tr("_registeredFileFull") );
+    }
+
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString openFolderName;
@@ -632,6 +675,13 @@ void MainWindow::on_pushButton_fileadd_clicked()
     //ユーザーのドキュメントフォルダを指定
     openFolderName = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     addfileName = QFileDialog::getOpenFileName(this, tr("_selectConvertFile"), openFolderName, tr("data(*.ss6-psdtoss6-info *.psd)"), &strSelectedFilter, options);
+
+    //ファイル名が長すぎる場合は追加しない
+    if(addfileName.length() > MAXFILENAME)
+    {
+        MsgBox( this, tr("_tooLongFileName") );
+        return;
+    }
 
     if ( addfileName != "" )
     {
@@ -646,11 +696,13 @@ void MainWindow::on_pushButton_fileadd_clicked()
                 addname = false;
                 break;
             }
-
         }
         if ( addname == true )
         {
-            ui->listWidget->addItem(addfileName);
+            //実在していれば追加
+            if(QFile::exists(addfileName)){
+                ui->listWidget->addItem(addfileName);
+            }
         }
     }
     pushButton_enableset();
@@ -736,11 +788,15 @@ void MainWindow::delete_convert_info()
 //設定の保存ボタン
 void MainWindow::on_pushButton_settingsave_clicked()
 {
+    QDir dir(data_path);
+    if(!dir.exists())
+    {
+        //設定ファイル保存用ディレクトリを作成
+        dir.mkpath(data_path);  
+    }
     saveConfig(data_path + "/config.json");
 
-    QMessageBox msgBox(this);
-    msgBox.setText(tr("_currentSettingsSavedText"));
-    msgBox.exec();
+    MsgBox( this, tr("_currentSettingsSavedText") );
 }
 
 void MainWindow::on_pushButton_open_help_clicked()
@@ -770,4 +826,27 @@ void MainWindow::on_pushButton_Preview_clicked()
                 width,    height,     priority,
                 sort,     pad_shape,  pad_inner,
                 pad_cell, pad_border, canvas);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    //終了ボタンと同じ挙動
+    saveConfig(data_path + "/config.json");
+    delete_convert_info();
+    //アプリケーションの終了
+    exit(0);
+}
+
+bool MainWindow::lock()
+{
+    if(singular->attach(QSharedMemory::ReadOnly))
+    {
+        singular->detach();
+        return false;
+    }
+
+    if(singular->create(1))
+        return true;
+    
+    return false;
 }

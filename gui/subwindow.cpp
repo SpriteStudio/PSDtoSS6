@@ -18,20 +18,20 @@ subwindow::subwindow(QWidget *parent) :
 {
     //フォームの部品にアクセスする場合はuiのメンバを経由する
     ui->setupUi(this);
-    //翻訳
+    //再翻訳
     ui->retranslateUi(this);
 
-    //先に表示されてしまうのでWindowフラグを設定
-    // setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
-    //                | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    setWindowFlags(Qt::Tool | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::CustomizeWindowHint);
-
-    //ウィンドウタイトル設定
+    //ウィンドウフラグ設定
+    setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+                   | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    setContextMenuPolicy(Qt::NoContextMenu);
     setWindowTitle(TITLE_PREVIEW);
-    //ウィンドウサイズ固定
-    this->setFixedSize(QSize(winWIDTH,winHEIGHT));
-    //ウィンドウ非表示
-    this->hide();
+    
+    setFixedWidth(this->width());
+    setFixedHeight(this->height());
+
+    //プレビューウィンドウはデフォルトで非表示
+    hide();
 
     //チェックボックスの初期化, uiで指定した初期状態から変化するとイベント処理が入る
     ui->cb_tex_width ->setChecked(Qt::Unchecked);
@@ -108,20 +108,6 @@ void subwindow::DisplayPreview()
     //セルマップ縁幅
     if(ui->cb_pad_border->checkState() == Qt::Checked)
     {
-        /*
-        //指定0で表示されず、指定1で表示する調整
-        int left = m_pad_border-1;
-        int right = m_width-m_pad_border+1;
-        int top = m_pad_border-1;
-        int bottom =m_height-m_pad_border+1;
-        //格子状の視覚化
-        QPen qp = QPen(QBrush(usu_midori),1.0f);
-        scene.addLine(0,top,m_width,top,qp);//上
-        scene.addLine(0,bottom,m_width,bottom,qp);//下
-        scene.addLine(left,0,left,m_height,qp);//左
-        scene.addLine(right,0,right,m_height,qp);//右
-        */
-
         //矩形の描画と線の描画では座標の扱いが少し違う
         int left = m_pad_border;
         int right = m_width-m_pad_border;
@@ -263,7 +249,6 @@ void subwindow::on_cb_pad_cell_stateChanged(int cb_state)
 
 void subwindow::on_cb_pad_border_stateChanged(int cb_state)
 {
-    //QMessageBox msgBox(this);    msgBox.setText(QString::number(cb_state));    msgBox.exec();
     DisplayPreview();//パラメータ設定後、再び描画処理を行わせる
 }
 

@@ -175,6 +175,22 @@
         <source>_readSsceLabel</source>
         <translation>ssce読み込み</translation>
     </message>
+    <message>
+        <source>_psdtossAlready</source>
+        <translation>終了していないPSDtoSSが見つかりました</translation>
+    </message>
+    <message>
+        <source>_loadJsonFileError</source>
+        <translation>config.jsonの読み込みに失敗しました</translation>
+    </message>
+    <message>
+        <source>_registeredFileFull</source>
+        <translation>これ以上のファイルを登録できません</translation>
+    </message>
+    <message>
+        <source>_tooLongFileName</source>
+        <translation>ファイル名を短くしてください</translation>
+    </message>
 </context>
 <context>
     <name>subwindow</name>
@@ -183,7 +199,7 @@
         <translation>全選択/全解除</translation>
     </message>
     <message>
-        <source>More detail</source>
+        <source>_moreDetailLabel</source>
         <translation>もっと詳しく</translation>
     </message>
     <message>

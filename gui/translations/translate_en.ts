@@ -175,6 +175,22 @@
         <source>_readSsceLabel</source>
         <translation>Read ssce</translation>
     </message>
+        <message>
+        <source>_psdtossAlready</source>
+        <translation>PSDtoSS is already running</translation>
+    </message>
+    <message>
+        <source>_loadJsonFileError</source>
+        <translation>load config.json failed</translation>
+    </message>
+    <message>
+        <source>_registeredFileFull</source>
+        <translation>registered file full</translation>
+    </message>
+    <message>
+        <source>_tooLongFileName</source>
+        <translation>file name is too long</translation>
+    </message>
 </context>
 <context>
     <name>subwindow</name>

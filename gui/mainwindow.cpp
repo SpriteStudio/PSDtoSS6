@@ -15,7 +15,7 @@ std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
-#define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.3"
+#define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.4"
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
 
@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     singular = new QSharedMemory("PSDtoSS_SharedMemory", this);
     if(!lock())
     {
-        MsgBox(this,"PSDtoSS is already running");
+        MsgBox(this, tr("_psdtossAlready") );
         close();
     }
 
@@ -182,7 +182,7 @@ try
         }
     #endif
 }catch (...) {
-    MsgBox(this, tr("failed to load config.json") );
+    MsgBox(this, tr("_loadJsonFileError") );
     close();
 }
 
@@ -665,7 +665,7 @@ void MainWindow::on_pushButton_fileadd_clicked()
     int fileCount = ui->listWidget->count();
     if(fileCount >= MAXFILECOUNT)
     {
-        MsgBox( this, tr("registered file full") );
+        MsgBox( this, tr("_registeredFileFull") );
     }
 
     QFileDialog::Options options;
@@ -679,7 +679,7 @@ void MainWindow::on_pushButton_fileadd_clicked()
     //ファイル名が長すぎる場合は追加しない
     if(addfileName.length() > MAXFILENAME)
     {
-        MsgBox( this, tr("file name is too long") );
+        MsgBox( this, tr("_tooLongFileName") );
         return;
     }
 

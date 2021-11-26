@@ -4,6 +4,7 @@
 #include "subwindow.h"
 
 #include <QTextCodec>
+#include <QCoreApplication>
 
 QString execPathStr = "";    //実行しているコンバータGUIのパス
 QString Outputpath = "";     //出力フォルダ
@@ -52,12 +53,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    singular = new QSharedMemory("PSDtoSS_SharedMemory", this);
-    if(!lock())
-    {
-        MsgBox(this, tr("_psdtossAlready") );
-        close();
-    }
+    // singular = new QSharedMemory("PSDtoSS_SharedMemory", this);
+    // if(!lock())
+    // {
+    //     MsgBox(this, tr("_psdtossAlready") );
+    // }
 
     //フォームの部品にアクセスする場合はuiのメンバを経由する
     ui->setupUi(this);
@@ -145,9 +145,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    if(singular->isAttached())
-        singular->detach();
-
+    // singular->detach();
     delete_convert_info();
     delete ui;
     delete sw;
@@ -183,7 +181,7 @@ try
     #endif
 }catch (...) {
     MsgBox(this, tr("_loadJsonFileError") );
-    close();
+    QCoreApplication::quit();
 }
 
     /*
@@ -294,7 +292,7 @@ void MainWindow::on_pushButton_exit_clicked()
     saveConfig(data_path + "/config.json");
     delete_convert_info();
     //アプリケーションの終了
-    exit(0);
+    QCoreApplication::quit();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *e)
@@ -834,19 +832,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
     saveConfig(data_path + "/config.json");
     delete_convert_info();
     //アプリケーションの終了
-    exit(0);
+    QCoreApplication::quit();
 }
 
-bool MainWindow::lock()
-{
-    if(singular->attach(QSharedMemory::ReadOnly))
-    {
-        singular->detach();
-        return false;
-    }
+// bool MainWindow::lock()
+// {
+//     if(singular->attach(QSharedMemory::ReadOnly))
+//     {
+//         //既に起動済み
+//         singular->detach();
+//         return false;
+//     }
 
-    if(singular->create(1))
-        return true;
-    
-    return false;
-}
+//     singular->create(1);
+
+//     return true;
+// }

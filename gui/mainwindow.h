@@ -16,7 +16,7 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <QSharedMemory>
+// #include <QSharedMemory>
 
 namespace Ui {
 class MainWindow;
@@ -33,7 +33,7 @@ public:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
     void buttonEnable( bool flg );
-    bool lock();
+    // bool lock();
 
 private slots:
     void on_pushButton_exit_clicked();
@@ -55,7 +55,7 @@ private:
     void leadListFile(QString fileName);
     template<typename T1, typename T2>
     T1 getKey(const std::map<T1, T2> & map, const T2 & value) const ;
-    QSharedMemory *singular;
+    // QSharedMemory *singular;
 
 private slots:
     void processErrOutput();

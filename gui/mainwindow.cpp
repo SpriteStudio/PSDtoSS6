@@ -30,7 +30,7 @@ void MsgBox(QWidget *parent, QString text)
 {
     QMessageBox dialog(parent);
     dialog.setText( text );
-    dialog.setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+    dialog.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
                 | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     dialog.exec();
 }
@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     imgProcess = new QProcess(this);
 
-    setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     setContextMenuPolicy(Qt::NoContextMenu);
     setWindowTitle(TITLE_VERSION);
@@ -608,7 +608,7 @@ void MainWindow::on_pushButton_listload_clicked()
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
+    fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileText"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
 
     //リストクリア
     ui->listWidget->clear();

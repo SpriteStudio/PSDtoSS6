@@ -5,8 +5,6 @@
 #include <QRect>
 #include <QGraphicsRectItem>
 
-#define TITLE_PREVIEW "PSDtoSS Visualization"
-
 const int winWIDTH = 740;//ウィンドウSIZE
 const int winHEIGHT = 230;
 const int bufWIDTH = 400;//プレビューSIZE
@@ -22,10 +20,10 @@ subwindow::subwindow(QWidget *parent) :
     ui->retranslateUi(this);
 
     //ウィンドウフラグ設定
-    setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
+    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     setContextMenuPolicy(Qt::NoContextMenu);
-    setWindowTitle(TITLE_PREVIEW);
+    setWindowTitle( tr( "_PreviewWindow" ));
     
     setFixedWidth(this->width());
     setFixedHeight(this->height());

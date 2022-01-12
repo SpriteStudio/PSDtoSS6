@@ -16,7 +16,7 @@ std::map<QString, QString> map_sortmode;
 std::map<int, QString> map_texture_wh;
 std::map<int, QString> map_canvasSize;
 
-#define TITLE_VERSION "PSDtoSS6 GUI Ver2.5.0"
+#define TITLE_VERSION "PSDtoSS6 GUI Ver2.4.4"
 //#define TOOLFOLDER "/SpriteStudio/PSDtoSS6"		//v2.0.1
 #define TOOLFOLDER "/PSDtoSS6"
 
@@ -30,7 +30,7 @@ void MsgBox(QWidget *parent, QString text)
 {
     QMessageBox dialog(parent);
     dialog.setText( text );
-    dialog.setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+    dialog.setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
                 | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     dialog.exec();
 }
@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     imgProcess = new QProcess(this);
 
-    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint
+    setWindowFlags(Qt::Tool | Qt::CustomizeWindowHint
                    | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     setContextMenuPolicy(Qt::NoContextMenu);
     setWindowTitle(TITLE_VERSION);
@@ -608,7 +608,7 @@ void MainWindow::on_pushButton_listload_clicked()
     QFileDialog::Options options;
     QString strSelectedFilter;
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileText"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
+    fileName = QFileDialog::getOpenFileName(this, tr("_selectListFileTexte"), ".", tr("text(*.txt)"), &strSelectedFilter, options);
 
     //リストクリア
     ui->listWidget->clear();

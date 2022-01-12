@@ -8,7 +8,7 @@
 
 using namespace SsConverter;
 
-#define VERSION "PSDtoSS6 CUI Ver2.5.0"
+#define VERSION "PSDtoSS6 CUI Ver2.4.4"
 
 
 int main(int argc, char **argv)

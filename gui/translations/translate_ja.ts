@@ -17,19 +17,19 @@
     </message>
     <message>
         <source>_convertSuccessText</source>
-        <translation>コンバート成功!</translation>
+        <translation>Convert Success!</translation>
     </message>
     <message>
         <source>_convertErrorText</source>
-        <translation>コンバート失敗</translation>
+        <translation>Convert error</translation>
     </message>
     <message>
         <source>_outputDirectoryText</source>
-        <translation>出力先ディレクトリ</translation>
+        <translation>Output Directory</translation>
     </message>
     <message>
         <source>_selectListFileText</source>
-        <translation>リストの読み込み</translation>
+        <translation>select list file</translation>
     </message>
     <message>
         <source>text(*.txt)</source>
@@ -37,11 +37,11 @@
     </message>
     <message>
         <source>_saveListFileText</source>
-        <translation>リストの保存</translation>
+        <translation>save list file</translation>
     </message>
     <message>
         <source>_selectConvertFile</source>
-        <translation>ファイル追加</translation>
+        <translation>select convert file</translation>
     </message>
     <message>
         <source>data(*.ss6-psdtoss6-info *.psd)</source>
@@ -195,16 +195,12 @@
 <context>
     <name>subwindow</name>
     <message>
-        <source>_PreviewWindow</source>
-        <translation>PSDtoSS6 プレビュー</translation>
-    </message>
-    <message>
         <source>_selectDeselectAllLabel</source>
         <translation>全選択/全解除</translation>
     </message>
     <message>
         <source>_moreDetailLabel</source>
-        <translation>詳細表示</translation>
+        <translation>もっと詳しく</translation>
     </message>
     <message>
         <source>_closeLabel</source>

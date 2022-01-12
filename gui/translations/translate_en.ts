@@ -195,6 +195,10 @@
 <context>
     <name>subwindow</name>
     <message>
+        <source>_PreviewWindow</source>
+        <translation>PSDtoSS6 Preview</translation>
+    </message>
+    <message>
         <source>_selectDeselectAllLabel</source>
         <translation>Select/Deselect all</translation>
     </message>

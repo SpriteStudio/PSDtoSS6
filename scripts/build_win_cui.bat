@@ -19,10 +19,14 @@ if exist build rd /s /q build
 mkdir build
 pushd build 
 
-cmake -DCMAKE_TOOLCHAIN_FILE="%VCPKG_PREFIX%\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PROJECT_NAME="PSDtoSS6" .. || exit /b 1
+conan install .. -s  build_type=Release
+
+rem cmake -DCMAKE_TOOLCHAIN_FILE="%VCPKG_PREFIX%\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PROJECT_NAME="PSDtoSS6" .. || exit /b 1
+cmake -DCMAKE_PROJECT_NAME="PSDtoSS6" .. || exit /b 1
 cmake --build . -- /t:clean;rebuild /p:configuration=release /clp:ErrorsOnly /m:4 || exit /b 1
 
-xcopy /y Release\*.exe %DSTDIR%
+rem xcopy /y Release\*.exe %DSTDIR%
+xcopy /y bin\*.exe %DSTDIR%
 
 rem pause
 exit /b

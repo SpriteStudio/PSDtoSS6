@@ -1,11 +1,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "" FORCE)
 
 if((NOT CMAKE_PROJECT_NAME))
-    message(FATAL_ERROR "CMAKE_PROJECT_NAME must be specified!")
+    set(CMAKE_PROJECT_NAME "PSDtoSS6")
+    #message(FATAL_ERROR "CMAKE_PROJECT_NAME must be specified!")
+else()
 endif()
-project(${CMAKE_PROJECT_NAME})
+project(${CMAKE_PROJECT_NAME} CXX)
 
 IF(WIN32)
 ELSEIF(APPLE)
@@ -15,10 +18,14 @@ ELSEIF(CMAKE_COMPILER_IS_GNUCXX)
     ADD_DEFINITIONS(-std=gnu++14)
 ENDIF()
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+
 find_package(ZLIB REQUIRED)
 find_package(PNG  REQUIRED)
 find_package(JPEG  REQUIRED)
-find_package(tinyxml2 CONFIG REQUIRED)
+find_package(tinyxml2  )
 find_path(SYSTEM_INCLUDE_DIR  picojson.h)
 
 find_package(ICU COMPONENTS UC IO REQUIRED)
@@ -65,8 +72,8 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
 
 IF(WIN32)
     ADD_DEFINITIONS(/D_WIN64)
-	set(CMAKE_CXX_FLAGS_RELEASE "/MT ")
-	set(CMAKE_CXX_FLAGS_DEBUG "/MTd  /Zi /Od")
+#	set(CMAKE_CXX_FLAGS_RELEASE "/MT ")
+#	set(CMAKE_CXX_FLAGS_DEBUG "/MTd  /Zi /Od")
 	set(CMAKE_EXE_LINKER_FLAGS "/OPT:REF /OPT:ICF ")	
 	ADD_DEFINITIONS(-DUNICODE -D_UNICODE)
 
@@ -86,7 +93,8 @@ ENDIF()
 include_directories( ${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR} ${tinyxml2_include_dir} ${jpeg_include_dir}  libpsd-0.9/include  ${ICU_UC_INCLUDE_DIR})
 
 
-target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE ${PNG_LIBRARY} ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})
+#target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE ${PNG_LIBRARY} ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_LIBRARIES} ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})
+target_link_libraries( ${CMAKE_PROJECT_NAME} libpsd ${CONAN_LIBS} )
 
 
 #target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE libpng_static ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})

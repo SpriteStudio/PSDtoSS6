@@ -30,7 +30,7 @@ BUILDDIR=`cd ${BUILDDIR} && pwd -P`
 
 pushd ${BUILDDIR}
 
-conan install .. 
+conan install .. --build=missing
 cmake -DCMAKE_PROJECT_NAME=${PROJECT_NAME} .. || exit 1
 
 cmake --build . || exit 1

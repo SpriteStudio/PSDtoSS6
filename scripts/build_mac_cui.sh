@@ -39,6 +39,6 @@ popd > /dev/null # build
 popd > /dev/null # SRCDIR
 
 /bin/mkdir -p ${DSTDIR}
-/bin/cp -rf ${BUILDDIR}/${PROJECT_NAME} ${DSTDIR}
+/bin/cp -rf ${BUILDDIR}/bin/${PROJECT_NAME} ${DSTDIR}
 
 popd > /dev/null # BASEDIR

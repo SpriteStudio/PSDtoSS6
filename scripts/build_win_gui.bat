@@ -13,7 +13,9 @@ if "%VCPKG_PREFIX%" == "" (
     )
 )
 
-set DEFAULT_QT_PATH=C:\Qt\Qt5.9.7\5.9.7\msvc2017_64
+rem set DEFAULT_QT_PATH=C:\Qt\Qt5.9.7\5.9.7\msvc2017_64
+set DEFAULT_QT_PATH=C:\Qt\5.15.8\msvc2019_64
+
 if "%QT_PATH%" == "" (
     set QT_PATH=%DEFAULT_QT_PATH%
 )
@@ -33,7 +35,8 @@ if exist build rd /s /q build
 mkdir build
 pushd build 
 
-cmake -DCMAKE_TOOLCHAIN_FILE="%VCPKG_PREFIX%\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PROJECT_NAME="PSDtoSS6GUI" .. || exit /b 1
+rem cmake -DCMAKE_TOOLCHAIN_FILE="%VCPKG_PREFIX%\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PROJECT_NAME="PSDtoSS6GUI" .. || exit /b 1
+cmake -DCMAKE_PROJECT_NAME="PSDtoSS6GUI" .. || exit /b 1
 cmake --build . -- /t:clean;rebuild /p:configuration=release /clp:ErrorsOnly /m:4 || exit /b 1
 
 xcopy /y Release\*.exe %DSTDIR%

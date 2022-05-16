@@ -31,8 +31,11 @@ jobs:
     #  env:
     #    vcpkgResponseFile: '${{ github.workspace }}/response_file_mac.txt'
     #    ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - name: Get Conan
-      uses: turtlebrowser/get-conan@v1.0      
+    - name: Install Conan
+      id: conan
+      uses: turtlebrowser/get-conan@main
+    - name: Conan version
+      run: echo "${{ steps.conan.outputs.version }}"
     - name: Create default profile
       run: conan profile new default --detect
     - name: install qt

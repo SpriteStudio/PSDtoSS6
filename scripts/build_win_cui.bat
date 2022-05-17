@@ -19,7 +19,7 @@ if exist build rd /s /q build
 mkdir build
 pushd build 
 
-conan profile update settings.compiler.version=16 default
+rem conan profile update settings.compiler.version=16 default
 conan profile show default
 conan install .. -s  build_type=Release
 

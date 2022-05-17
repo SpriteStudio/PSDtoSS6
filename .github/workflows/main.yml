@@ -95,7 +95,9 @@ jobs:
     - name: Conan version
       run: echo "${{ steps.conan.outputs.version }}"
     - name: Create default profile
-      run: conan profile new default --detect    
+      run: |
+        conan profile new default --detect   
+        conan profile show default 
     - name: Cache Qt
       id: cache-qt
       uses: actions/cache@v1

@@ -19,6 +19,8 @@ if exist build rd /s /q build
 mkdir build
 pushd build 
 
+conan profile update settings.compiler.version=16 default
+conan profile show default
 conan install .. -s  build_type=Release
 
 rem cmake -DCMAKE_TOOLCHAIN_FILE="%VCPKG_PREFIX%\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PROJECT_NAME="PSDtoSS6" .. || exit /b 1

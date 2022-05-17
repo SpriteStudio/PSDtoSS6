@@ -68,6 +68,10 @@ jobs:
         submodules: true
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    - uses: ilammy/msvc-dev-cmd@v1        
+      with:
+        arch: ${{ matrix.arch }}    
+        toolset: 16.0
     - name: Get latest CMake
       uses: lukka/get-cmake@latest
       env:

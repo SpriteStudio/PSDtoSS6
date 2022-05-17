@@ -18,6 +18,7 @@ ELSEIF(CMAKE_COMPILER_IS_GNUCXX)
     ADD_DEFINITIONS(-std=gnu++14)
 ENDIF()
 
+set(CONAN_DISABLE_CHECK_COMPILER False CACHE BOOL "" FORCE )
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 

@@ -21,7 +21,7 @@ pushd build
 
 rem conan profile update settings.compiler.version=16 default
 conan profile show default
-conan install .. -s  build_type=Release
+conan install .. -s  build_type=Release --build=missing
 
 rem cmake -DCMAKE_TOOLCHAIN_FILE="%VCPKG_PREFIX%\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PROJECT_NAME="PSDtoSS6" .. || exit /b 1
 cmake -DCMAKE_PROJECT_NAME="PSDtoSS6" .. || exit /b 1

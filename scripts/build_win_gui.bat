@@ -7,6 +7,8 @@ if not defined DSTDIR set DSTDIR=%BASEDIR%\out\
 echo SRCDIR : %SRCDIR%
 echo DSTDIR : %DSTDIR%
 
+rem set CMAKE_PREFIX_PATH=C:\Qt\5.15.2\msvc2019_64\lib\
+rem set QT_PATH=C:\Qt\5.15.2\msvc2019_64\
 if "%VCPKG_PREFIX%" == "" (
     if exist %BASEDIR%\vcpkg (
         set VCPKG_PREFIX=%BASEDIR%\vcpkg
@@ -14,7 +16,7 @@ if "%VCPKG_PREFIX%" == "" (
 )
 
 rem set DEFAULT_QT_PATH=C:\Qt\Qt5.9.7\5.9.7\msvc2017_64
-set DEFAULT_QT_PATH=C:\Qt\5.15.8\msvc2019_64
+set DEFAULT_QT_PATH=C:\Qt\5.15.2\msvc2019_64
 
 if "%QT_PATH%" == "" (
     set QT_PATH=%DEFAULT_QT_PATH%

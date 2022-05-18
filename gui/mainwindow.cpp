@@ -561,20 +561,19 @@ void MainWindow::on_pushButton_output_clicked()
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("_outputDirectoryText"), Outputpath);
 
-    if ( str != "" ){//選択されたフォルダ名
+    if ( str != "" ){// フォルダの選択を押したとき
         Outputpath = str;
-    }
-    else{//未指定ならドキュメントの位置
-        Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    }
 
     #if Q_WS_WIN
             Outputpath += "\\";
     #else
             Outputpath += "/";
     #endif
+        ui->textBrowser_output->setText(Outputpath);
 
-    ui->textBrowser_output->setText(Outputpath);
+    }
+    else{//cancellをおしたとき
+        }
 }
 
 //リストファイルの読み込み

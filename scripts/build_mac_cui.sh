@@ -29,13 +29,16 @@ BUILDDIR=${SRCDIR}/build
 BUILDDIR=`cd ${BUILDDIR} && pwd -P`
 
 pushd ${BUILDDIR}
-cmake -DCMAKE_TOOLCHAIN_FILE="${VCPKG_PREFIX}/scripts/buildsystems/vcpkg.cmake" -DCMAKE_PROJECT_NAME=${PROJECT_NAME} .. || exit 1
+
+conan install .. --build=missing
+cmake -DCMAKE_PROJECT_NAME=${PROJECT_NAME} .. || exit 1
+
 cmake --build . || exit 1
 popd > /dev/null # build
 
 popd > /dev/null # SRCDIR
 
 /bin/mkdir -p ${DSTDIR}
-/bin/cp -rf ${BUILDDIR}/${PROJECT_NAME} ${DSTDIR}
+/bin/cp -rf ${BUILDDIR}/bin/${PROJECT_NAME} ${DSTDIR}
 
 popd > /dev/null # BASEDIR

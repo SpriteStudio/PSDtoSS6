@@ -21,16 +21,26 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     # Restore from cache the previously built ports. If cache-miss, download, build vcpkg.
-    - name: Restore from cache and install vcpkg
-      # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
-      uses: lukka/run-vcpkg@v3
-      with:
-        vcpkgArguments: '@${{ env.vcpkgResponseFile }}'
-        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
-      env:
-        vcpkgResponseFile: '${{ github.workspace }}/response_file_mac.txt'
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    #- name: Restore from cache and install vcpkg
+    #  # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
+    #  uses: lukka/run-vcpkg@v3
+    #  with:
+    #    vcpkgArguments: '@${{ env.vcpkgResponseFile }}'
+    #    vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+    #    appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+    #  env:
+    #    vcpkgResponseFile: '${{ github.workspace }}/response_file_mac.txt'
+    #    ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    - name: Install Conan
+      id: conan
+      uses: turtlebrowser/get-conan@main
+    - name: Conan version
+      run: echo "${{ steps.conan.outputs.version }}"
+    - name: Create default profile
+      run: | 
+        conan profile new default --detect
+        conan profile update settings.arch=x86_64 default
+        conan profile update settings.arch_build=x86_64 default
     - name: install qt
       run: |
         brew install qt5
@@ -58,23 +68,36 @@ jobs:
         submodules: true
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    - uses: ilammy/msvc-dev-cmd@v1        
+      with:
+        arch: ${{ matrix.arch }}    
+        toolset: 16.0
     - name: Get latest CMake
       uses: lukka/get-cmake@latest
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - name: Restore from cache and install vcpkg
-      # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
-      uses: lukka/run-vcpkg@v6
-      with:
-        vcpkgArguments: '@${{ env.vcpkgResponseFile }}'
-        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
-        # Just install vcpkg for now, do not install any ports in this step yet.
-        #setupOnly: false
-        #additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-        vcpkgResponseFile: '${{ github.workspace }}/response_file_win.txt'
+    #- name: Restore from cache and install vcpkg
+    #  # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
+    #  uses: lukka/run-vcpkg@v6
+    #  with:
+    #    vcpkgArguments: '@${{ env.vcpkgResponseFile }}'
+    #    vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+    #    appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+    #    # Just install vcpkg for now, do not install any ports in this step yet.
+    #    #setupOnly: false
+    #    #additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
+    #  env:
+    #    ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    #    vcpkgResponseFile: '${{ github.workspace }}/response_file_win.txt'
+    - name: Install Conan
+      id: conan
+      uses: turtlebrowser/get-conan@main
+    - name: Conan version
+      run: echo "${{ steps.conan.outputs.version }}"
+    - name: Create default profile
+      run: |
+        conan profile new default --detect   
+        conan profile show default 
     - name: Cache Qt
       id: cache-qt
       uses: actions/cache@v1

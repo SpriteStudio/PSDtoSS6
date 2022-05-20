@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setFixedWidth(this->width());
     setFixedHeight(this->height());
-    
+
     //初期化
     convert_exec = false;
     cnvOutputStr.clear();
@@ -111,6 +111,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->comboBox_canvasSize->addItem(map_canvasSize[0] = "Default");
     ui->comboBox_canvasSize->addItem(map_canvasSize[1] = "PSD Size");
+
+    ui->textBrowser_output->setText(cp.outputpath.c_str());
 
     pushButton_enableset();
 
@@ -283,8 +285,16 @@ void MainWindow::setText_to_List(QStringList list)
         }
     }
     loadConfig(data_path + "/config.json");
-    templistload();
-
+    templistload();//コンバートするpsdのリスト
+    //出力フォルダのパスを確認
+    if(ui->textBrowser_output->toPlainText() == "")//初回起動時
+    {
+        Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        Outputpath += "/SpriteStudio/PSDtoSS6";//デフォルトの出力フォルダをDocument直下にするならここを削除
+        ui->textBrowser_output->setText(Outputpath);
+    }
+    else{//既にconfig.jsonがあるとき
+    }
 }
 
 void MainWindow::on_pushButton_exit_clicked()
@@ -561,20 +571,19 @@ void MainWindow::on_pushButton_output_clicked()
     QString str;
     str = QFileDialog::getExistingDirectory(this, tr("_outputDirectoryText"), Outputpath);
 
-    if ( str != "" ){//選択されたフォルダ名
+    if ( str != "" ){// フォルダの選択を押したとき
         Outputpath = str;
-    }
-    else{//未指定ならドキュメントの位置
-        Outputpath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    }
 
     #if Q_WS_WIN
             Outputpath += "\\";
     #else
             Outputpath += "/";
     #endif
+        ui->textBrowser_output->setText(Outputpath);
 
-    ui->textBrowser_output->setText(Outputpath);
+    }
+    else{//cancellをおしたとき
+        }
 }
 
 //リストファイルの読み込み

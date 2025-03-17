@@ -21,7 +21,7 @@ find_package(JPEG  REQUIRED)
 find_package(tinyxml2 CONFIG REQUIRED)
 find_path(SYSTEM_INCLUDE_DIR  picojson.h)
 
-find_package(ICU COMPONENTS UC IO REQUIRED)
+find_package(ICU COMPONENTS UC IO DT REQUIRED)
 #find_package(OpenImageIO REQUIRED)
 
 
@@ -86,7 +86,9 @@ ENDIF()
 include_directories( ${PNG_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR} ${tinyxml2_include_dir} ${jpeg_include_dir}  libpsd-0.9/include  ${ICU_UC_INCLUDE_DIR})
 
 
-target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE ${PNG_LIBRARY} ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})
+target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE ${PNG_LIBRARY} ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DT_LIBRARY})
+
+#target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DT_LIBRARY} ${PNG_LIBRARY} ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB )
 
 
 #target_link_libraries( ${CMAKE_PROJECT_NAME}  PRIVATE libpng_static ${libpsd-0.9} ${OPENIMAGEIO_LIBRARIES}  libpsd  tinyxml2::tinyxml2 ZLIB::ZLIB ${ICU_UC_LIBRARY} ${ICU_IO_LIBRARY} ${ICU_DATA_LIBRARY})

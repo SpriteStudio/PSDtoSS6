@@ -82,7 +82,7 @@ PsdLoadErr		ConvertToSS::LoadPsdImageList()
 	FILE* fp = fopen(inputname.c_str(), "r");
 	if (fp == NULL) {
 		//std::cerr << "エラー：情報ファイルのオープンに失敗しました。：" << inputname << "\n";
-		ConsoleOutMessage( "ERROR_0001", inputname.c_str());
+		ConsoleErrMessage( "ERROR_0001", inputname.c_str());
 
 		return SsConverter::OPENFAILED;
 	}
@@ -103,7 +103,7 @@ PsdLoadErr		ConvertToSS::LoadPsdImageList()
 					if (count == 0)
 					{
 						//std::cerr << "エラー：情報ファイルの内容が正しくありません。：" << inputname << "\n";
-						ConsoleOutMessage( "ERROR_0002" , inputname.c_str());
+						ConsoleErrMessage( "ERROR_0002" , inputname.c_str());
 						err = true;
 						return SsConverter::TEXTINVALID;
 					}
@@ -123,15 +123,15 @@ PsdLoadErr		ConvertToSS::LoadPsdImageList()
 					RGBAImage* p_readimage;
 					//png読み込み
 					p_readimage = new RGBAImage(0, 0);
-					std::cerr << "read image : " << pngpath << std::endl;
+					cdbg << "read image : " << pngpath << std::endl;
 					if (p_readimage->read_png(pngpath.c_str()) == true)
 					{
 						//			std::cout << "read png : " << pngpath << std::endl;
-						std::cerr << "OK!" << std::endl;
+						cdbg << "OK!" << std::endl;
 					}
 					else
 					{
-						std::cerr << "ERROR" << std::endl;
+						cdbg << "ERROR" << std::endl;
 						err = true;
 						return SsConverter::PNGLOADERR;
 					}
@@ -174,7 +174,7 @@ bool	ConvertToSS::loadImageFile()
 		if (!persePsdMain(inputname, params.addpri, readpngfile_max, gLayoutCenter, &pb))
 		{
 //			std::cerr << "エラー：PSDファイルのオープンに失敗しました。：" << inputname << "\n";
-			ConsoleOutMessage( "ERROR_0003" , inputname.c_str() );
+			ConsoleErrMessage( "ERROR_0003" , inputname.c_str() );
 			return false;
 		}
 	}else{
@@ -197,7 +197,7 @@ bool	ConvertToSS::checkInvalidLayerName()
 		{
 			//std::cerr << "エラー：セル名に全角文字が使用されています。 ";
 			//std::cerr << name << "\n";
-			ConsoleOutMessage( "ERROR_0004" , name.c_str());
+			ConsoleErrMessage( "ERROR_0004" , name.c_str());
 			return false;
 		}
 		for (int j = i + 1; j < readpngfile_max; j++)
@@ -208,7 +208,7 @@ bool	ConvertToSS::checkInvalidLayerName()
 				{
 					//std::cerr << "エラー：同名のセル名が使用されています。 ";
 					//std::cerr << pb.inputlayername[i] << "\n";
-					ConsoleOutMessage( "ERROR_0005", pb.inputlayername[i].c_str() );
+					ConsoleErrMessage( "ERROR_0005", pb.inputlayername[i].c_str() );
 					return false;
 				}
 			}
@@ -518,7 +518,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 			{
 				//作成できるサイズを超えた
 				//std::cerr << "エラー：セルマップに収まりません\n";
-				ConsoleOutMessage( "ERROR_0006" );
+				ConsoleErrMessage( "ERROR_0006" );
 				err = true;
 				break;
 			}
@@ -531,7 +531,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 			if (w_max > params.tex_w)
 			{
 				//エラー
-				ConsoleOutMessage( "ERROR_0007" );
+				ConsoleErrMessage( "ERROR_0007" );
 				//std::cerr << "エラー：テクスチャの幅より大きいセルがあります。\n";
 				//return true;
 				err = true;
@@ -543,7 +543,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 			{
 				//エラー
 				//std::cerr << "エラー：テクスチャの高さより大きいセルがあります。\n";
-				ConsoleOutMessage( "ERROR_0008" );
+				ConsoleErrMessage( "ERROR_0008" );
 				//return true;
 				err = true;
 			}
@@ -572,7 +572,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 					{
 						//作成できるサイズを超えた
 						//std::cerr << "エラー：セルマップに収まりません。\n";
-						ConsoleOutMessage( "ERROR_0006" );
+						ConsoleErrMessage( "ERROR_0006" );
 						err = true;
 						break;
 					}
@@ -599,7 +599,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 					{
 						//作成できるサイズを超えた
 						//std::cerr << "エラー：セルマップに収まりません。\n";
-						ConsoleOutMessage( "ERROR_0006" );
+						ConsoleErrMessage( "ERROR_0006" );
 						err = true;
 						break;
 					}
@@ -616,11 +616,11 @@ bool	ConvertToSS::checkProtrudingTexture()
 			{
 				//テクスチャが入りきっていない
 				//std::cerr << "エラー：セルマップに収まりません。\n";
-				ConsoleOutMessage( "ERROR_0006" );
+				ConsoleErrMessage( "ERROR_0006" );
 				if ((params.tex_w > 0) && (params.tex_h > 0))
 				{
 					//std::cerr << "パッキングに失敗しました。\n";
-					ConsoleOutMessage( "ERROT_0009");
+					ConsoleErrMessage( "ERROT_0009");
 					err = true;
 					break;
 				}
@@ -629,7 +629,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 					if (makesize_x == 0)
 					{
 						//std::cerr << "パッキングに失敗しました。\n";
-						ConsoleOutMessage( "ERROT_0009" );
+						ConsoleErrMessage( "ERROT_0009" );
 						err = true;
 						break;
 					}
@@ -647,7 +647,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 					if (makesize_y == 0)
 					{
 						//std::cerr << "パッキングに失敗しました。\n";
-						ConsoleOutMessage("ERROT_0009");
+						ConsoleErrMessage("ERROT_0009");
 						err = true;
 						break;
 					}
@@ -657,7 +657,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 						makesize_y--;
 						packer.SetSize(params.tex_w, sizetble[makesize_y]);
 						//std::cerr << "テクスチャサイズを" << params.tex_w << "×" << sizetble[makesize_y] << "にしてパッキングします。\n";
-						ConsoleOutMessage("INFO_0001", params.tex_w , sizetble[makesize_y]);
+						ConsoleErrMessage("INFO_0001", params.tex_w , sizetble[makesize_y]);
 					}
 				}
 				if ((params.tex_w == 0) && (params.tex_h == 0))
@@ -665,7 +665,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 					if ((makesize_x == 0) && (makesize_y == 0))
 					{
 						//std::cerr << "パッキングに失敗しました。\n";
-						ConsoleOutMessage("ERROT_0009");
+						ConsoleErrMessage("ERROT_0009");
 						err = true;
 						break;
 					}
@@ -1256,20 +1256,20 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 	//引数リストが付いて実行された
 	if (params.parseConfigArg(argn, arg))
 	{
-		std::cerr << "exec from  args \n arg num = " << argn << std::endl;
+		std::cout << "Parsed arguments \n arg num = " << argn << std::endl;
 
 		if (!parseInputOutputFiles( params.inputpsdfile ))
 		{
-			ConsoleOutMessage("ERROT_0010");
+			ConsoleErrMessage("ERROT_0010");
 			return false;
 		}
 
 	}else{
-		std::cerr << "exec load json \n" << std::endl;
+		std::cout << "Going to parse json file.\n" << convert_info_path << ".json" << std::endl;
 
 		if (!parseInputOutputFiles(arg[1]))
 		{
-			ConsoleOutMessage("ERROT_0010");
+			ConsoleErrMessage("ERROT_0010");
 			return false;
 		}
 
@@ -1277,10 +1277,10 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 
 		if (!params.parseConfigJson(convert_info_path + ".json"))
 		{
-			ConsoleOutMessage("ERROT_0010");
+			ConsoleErrMessage("ERROT_0010");
 
 			if (!params.parseConfig(convert_info_path)) {
-				ConsoleOutMessage("ERROT_0011");
+				ConsoleErrMessage("ERROT_0011");
 				return false;
 			}
 		}
@@ -1297,7 +1297,7 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 	{
 		//		std::cerr << "警告：セル間余白+セル内余白の値が1以下に指定されています。" << std::endl;
 		//		std::cerr << "　　　色もれが発生する可能性があります。" << std::endl;
-		ConsoleOutMessage("WARNING_0001");
+		ConsoleErrMessage("WARNING_0001");
 	}
 
 

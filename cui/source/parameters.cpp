@@ -376,7 +376,7 @@ bool convert_parameters::parseConfigJson(std::string fname)
 
 	std::ifstream ifs(fname, std::ios::in);
 	if (ifs.fail()) {
-        err_string = "failed to read :";
+        err_string = "Failed to read :";
 		std::cerr << err_string << fname << std::endl;		
 		return false;
 	}
@@ -442,7 +442,7 @@ bool convert_parameters::saveConfigJson(std::string fname)
 #endif
 	std::ofstream ofs(fname);
 	if (ofs.fail()) {
-		std::cerr << "failed to write " << fname << std::endl;
+		std::cerr << "Failed to write " << fname << std::endl;
 		//ConsoleOutMessage(ERROT_0010);
 		return false;
 	}

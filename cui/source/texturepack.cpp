@@ -210,7 +210,7 @@ public:
 		bool collision_flag;  /* 長方形cの重なり判定に用いるフラグ */
 		int i,j;
 #if DEBUGLOGOUT
-		std::cerr << "num=" << c << " start\n";
+		std::cout << "num=" << c << " start\n";
 #endif
 		/* 長方形cを配置するBL安定点の候補を選ぶ */
 		min_x = min_y = FLT_MAX;
@@ -219,19 +219,19 @@ public:
 			/* BL安定条件のチェック */
 			if(w[c] > blw[i]+NUM_ERROR && h[c] > blh[i]+NUM_ERROR){
 #if DEBUGLOGOUT
-				std::cerr << "1\n";
+				std::cout << "1\n";
 #endif
 				/* 制約条件のチェック */
 				if(blx[i] >= 0 && blx[i]+w[c] <= strip_width && bly[i] >= 0){
 #if DEBUGLOGOUT
-					std::cerr << "2\n";
+					std::cout << "2\n";
 #endif
 					collision_flag = false;
 					for(j = 0; j < c; j++){
 						if(blx[i] < x[j]+w[j]-NUM_ERROR && blx[i]+w[c] > x[j]+NUM_ERROR && bly[i]+h[c] > y[j]+NUM_ERROR && bly[i] < y[j]+h[j]-NUM_ERROR){
 							collision_flag = true;
 #if DEBUGLOGOUT
-							std::cerr << "2\n";
+							std::cout << "2\n";
 #endif
 						}
 					}
@@ -239,7 +239,7 @@ public:
 						min_x = blx[i];
 						min_y = bly[i];
 #if DEBUGLOGOUT
-						std::cerr << "2\n";
+						std::cout << "2\n";
 #endif
 					}
 				}
@@ -259,7 +259,7 @@ public:
 			return;
 		}
 #if DEBUGLOGOUT
-		std::cerr << "num=" << c << " min_x=" << min_x << " min_y=" << min_y << "\n";
+		std::cout << "num=" << c << " min_x=" << min_x << " min_y=" << min_y << "\n";
 #endif
 		/* 長方形cと母材によって新たに生じるBL安定点の候補を追加 */
 		blx[bl_num] = x[c]+w[c];
@@ -603,7 +603,7 @@ void	SSTexturePack::TrimBitmap(UserBitMapData*   bitmap, SSSpriteSheetPrim& data
 	}
 #if DEBUGLOGOUT
 	//	std::cout << "TrimBitmapSub4\n";
-	std::cerr << data.name << " top=" << data.trim_top << " bottom=" << data.trim_bottom << " left=" << data.trim_left << " right=" << data.trim_right << "\n";
+	std::cout << data.name << " top=" << data.trim_top << " bottom=" << data.trim_bottom << " left=" << data.trim_left << " right=" << data.trim_right << "\n";
 #endif
 	data.pri = bitmap->pri;
 
@@ -840,7 +840,7 @@ bool	SSTexturePack::MakeUp(bool DrawMask , bool isTrim ,int algorithm, int sortt
 
 #if DEBUGLOGOUT
 		//for debug code start
-		std::cerr << srcbitmap[i].name << " x=" << x << " y=" << y << "\n";
+		std::cout << srcbitmap[i].name << " x=" << x << " y=" << y << "\n";
 		//for debug code end
 #endif
 

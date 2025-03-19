@@ -11,10 +11,11 @@ enum OUTMESSAGE_LOCAL {
 	LOCAL_TEAM
 };
 
-
 void MessageInit();
 
+void ConsoleMessage(std::ostream& dest, const char* string);
 void ConsoleOutMessage(std::string MessageNumber, ...);
+void ConsoleErrMessage(std::string MessageNumber, ...);
 
 
 #endif

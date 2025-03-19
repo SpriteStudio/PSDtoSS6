@@ -87,19 +87,8 @@ void MessageInit()
 
 
 
-void ConsoleOutMessage(std::string MessageNumber, ...)
+void ConsoleMessage(std::ostream& dest, const char* string)
 {
-	va_list args;
-
-
-	std::string format = getMessageIndexFromID(MessageNumber, LOCAL_JP);
-
-	char buf[1024];
-
-	va_start(args, MessageNumber);
-	vsnprintf(buf, 1023, format.c_str(), args);
-	va_end(args);
-
 	//return std::string(buf);
 	std::ios_base::sync_with_stdio(false);
 	std::locale default_loc("");
@@ -107,10 +96,29 @@ void ConsoleOutMessage(std::string MessageNumber, ...)
 	std::locale ctype_default(std::locale::classic(), default_loc, std::locale::ctype); //※
 	std::wcout.imbue(ctype_default);
 
-//	std::cout << buf << std::endl;
-	std::cerr << buf << std::endl;
+	dest << string << std::endl;
 }
 
+void ConsoleOutMessage(std::string MessageNumber, ...)
+{
+	va_list args;
+	std::string format = getMessageIndexFromID(MessageNumber, LOCAL_JP);
+	char buf[1024];
+	va_start(args, MessageNumber);
+	vsnprintf(buf, 1023, format.c_str(), args);
+	va_end(args);
 
+	ConsoleMessage(std::cout, buf);
+}
 
+void ConsoleErrMessage(std::string MessageNumber, ...)
+{
+	va_list args;
+	std::string format = getMessageIndexFromID(MessageNumber, LOCAL_JP);
+	char buf[1024];
+	va_start(args, MessageNumber);
+	vsnprintf(buf, 1023, format.c_str(), args);
+	va_end(args);
 
+	ConsoleMessage(std::cerr, buf);
+}

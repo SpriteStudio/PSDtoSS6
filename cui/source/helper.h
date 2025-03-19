@@ -129,3 +129,9 @@ public:
 	//色漏れ防止処理
 	void expandColor(UserBitMapData srcBitMapData);
 };
+
+#ifdef _DEBUG
+	#define	cdbg	std::cout << "[DBG]"
+#else
+	#define	cdbg	std::ostream(nullptr)
+#endif

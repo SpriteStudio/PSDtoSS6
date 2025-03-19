@@ -135,11 +135,11 @@ bool  persePsdMain(std::string inputname,
 							)
 						{
 							//名前に@が含まれている場合はセルに含めない
-							std::cerr << " skip (" << layer->layer_name << ")" << std::endl;
+							std::cout << " skip (" << layer->layer_name << ")" << std::endl;
 						}
 						else
 						{
-							std::cerr << " read (" << layer->layer_name << ")" << std::endl;
+							std::cout << " read (" << layer->layer_name << ")" << std::endl;
 							inputlayerfile_temp[readpngfile_max] = name;
 							readbitmap_temp[readpngfile_max] = bitmap;
 							readpngfile_max++;
@@ -177,11 +177,11 @@ bool  persePsdMain(std::string inputname,
 			)
 		{
 			//名前に@が含まれている場合はセルに含めない
-			std::cerr << " skip (" << layer->layer_name << ")" << std::endl;
+			std::cout << " skip (" << layer->layer_name << ")" << std::endl;
 		}
 		else
 		{
-			std::cerr << " read (" << layer->layer_name << ")" << std::endl;
+			std::cout << " read (" << layer->layer_name << ")" << std::endl;
 			inputlayerfile_temp[readpngfile_max] = name;
 			readbitmap_temp[readpngfile_max] = bitmap;
 			readpngfile_max++;

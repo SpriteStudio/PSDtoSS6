@@ -29,24 +29,24 @@ bool	SSOptionReader::load( std::string ss_option_file_oath)
         ssopname = ss_option_file_oath;
     }
 
-    std::cerr << "Load ssop : " << ssopname << std::endl;   
+    std::cout << "Load ssop : " << ssopname << std::endl;   
 	//ssopをxmlドキュメントとして取得
 	if (tinyxml2::XML_SUCCESS != loadssop_xml.LoadFile(ssopname.c_str()))
 	{
-        std::cerr << "Load ssop_beta : " << ssopname_beta << std::endl;   
+        std::cout << "Load ssop_beta : " << ssopname_beta << std::endl;   
 		//SsOption_v6がない場合は、SsOption_v6_betaを読む
 		if (tinyxml2::XML_SUCCESS != loadssop_xml.LoadFile(ssopname_beta.c_str()))
 		{
-            std::cerr << "Project setting Load Tool Default " << std::endl;
+            std::cout << "Project setting Load Tool Default " << std::endl;
 			return true;
 		}else{
-            std::cerr << "Project setting Load ssop_beta : " << ssopname_beta << std::endl;
+            std::cout << "Project setting Load ssop_beta : " << ssopname_beta << std::endl;
         }
 	}else{
-        std::cerr << "Project setting Load ssop : " << ssopname << std::endl;
+        std::cout << "Project setting Load ssop : " << ssopname << std::endl;
     	return true;
     }
 
-    //std::cerr << "Project setting Load Tool Default " << std::endl;
+    //std::cout << "Project setting Load Tool Default " << std::endl;
 	return true;
 }

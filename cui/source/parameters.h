@@ -29,6 +29,7 @@ public:
 	std::string outputpath;
 	std::string outputname;
 	std::string inputpsdfile;
+	std::string ss_option_file_path;
 	bool inputjson;
 
     std::string err_string;

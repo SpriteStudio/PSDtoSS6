@@ -30,6 +30,7 @@
 	-PI		--padding_innner 1		default = 0
 	-O		--outputpath "file"	default = ""
 	-ON		--outputname "filename" default = ""
+	-SOF	--ssoptionfile "filepath" default = ""
 */
 
 struct option_struct{
@@ -59,6 +60,7 @@ option_struct option_char_tbl[] = {
 	{ "-ON","--outputname" },
 	{ "-I","--inputfile" },
 	{ "-J","--json"},
+	{ "-SOF","--ssoptionfile"},
 	{0,0}
 };
 
@@ -193,6 +195,7 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 		parammap["-ON"] = "";
 		parammap["-I"] = "";
 		parammap["-J"] = "false";
+		parammap["-SOF"] = "";
 
 		//引数リストを含んでいる
 		if (isAllFindArgType(arglist))
@@ -201,17 +204,28 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 
 			while (1)
 			{
-				if (cnt == arglist.size()) break;
-				if (isFindArgtype(arglist[cnt]))
+				if (cnt >= arglist.size())
+					break;
+
+				auto arg = arglist[cnt];
+				if (isFindArgtype(arg))
 				{
-					std::string code = convertOptionCode(arglist[cnt]);
+					std::string code = convertOptionCode(arg);
+
+					if (cnt + 1 >= arglist.size())
+					{
+						err_string = "Missing argument for option: " + arg;
+						std::cerr << err_string << std::endl;
+						return false;
+					}
 
 					parammap[code] = arglist[cnt + 1];
 				}
 				else {
-					//
-					//知らないオプション
-
+					// 未知のオプション
+					err_string = "Unknown option: " + arg;
+					std::cerr << err_string << std::endl;
+					//std::cout << "Not an option: " << arg << std::endl;
 				}
 				cnt+=2;
 			}
@@ -235,6 +249,7 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 			this->canvasSize = tryInt(parammap["-CS"]);
 			this->inner_padding = tryInt(parammap["-PI"]);
 			this->inputjson = stringToBool(parammap["-J"]);
+			this->ss_option_file_path = parammap["-SOF"];
 
 
 			this->outputpath = parammap["-O"];
@@ -254,11 +269,12 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 #if _WIN32
 			outputpath = replaceString(outputpath, "/", "\\");
 			inputpsdfile = replaceString(inputpsdfile, "/", "\\");
+			ss_option_file_path = replaceString(ss_option_file_path, "/", "\\");
 #else
 			outputpath = replaceString(outputpath, "\\", "/");
 			inputpsdfile = replaceString(inputpsdfile, "\\", "/");
+			template_file_path = replaceString(template_file_path, "\\", "/");
 #endif
-
 
 			return true;
 		}

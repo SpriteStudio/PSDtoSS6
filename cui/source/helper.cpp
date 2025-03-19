@@ -186,7 +186,7 @@ void textout(std::string str, FILE* fp)
 }
 
 //sspjを作成
-void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocument* loadssop_xml)
+void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocument* loadssop_xml, bool addSSAE)
 {
 	std::string sscename = outputname + ".ssce";
 	std::string ssaename = outputname + ".ssae";
@@ -207,9 +207,19 @@ void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocume
 		tinyxml2::XMLElement* SpriteStudioProject = loadsspj_xml.FirstChildElement("SpriteStudioProject");
 		SpriteStudioProject->FirstChildElement("name")->SetText(outputname.c_str());
 		SpriteStudioProject->FirstChildElement("cellmapNames")->FirstChildElement("value")->SetText(sscename.c_str());
-		SpriteStudioProject->FirstChildElement("animepackNames")->FirstChildElement("value")->SetText(ssaename.c_str());
-		SpriteStudioProject->FirstChildElement("lastAnimeFile")->SetText(ssaename.c_str());
 		SpriteStudioProject->FirstChildElement("lastCellMapFile")->SetText(sscename.c_str());
+
+		if (addSSAE)
+		{
+			SpriteStudioProject->FirstChildElement("animepackNames")->FirstChildElement("value")->SetText(ssaename.c_str());
+			SpriteStudioProject->FirstChildElement("lastAnimeFile")->SetText(ssaename.c_str());
+		}
+		else
+		{
+			SpriteStudioProject->FirstChildElement("animepackNames")->DeleteChildren();
+			SpriteStudioProject->FirstChildElement("lastAnimeFile")->DeleteChildren();
+			SpriteStudioProject->FirstChildElement("lastAnimeName")->DeleteChildren();
+		}
 
 		//sspjを保存
 		loadsspj_xml.SaveFile(sspjname.c_str());

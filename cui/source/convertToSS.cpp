@@ -1236,7 +1236,7 @@ void	ConvertToSS::makeSspjFile(SSOptionReader& option)
 	if ((is_sspjload == false) && (params.is_sspjoutput == true))
 	{
 		//新規作成
-		make_sspj(sspjname, params.outputname, &loadssop_xml);
+		make_sspj(sspjname, params.outputname, &loadssop_xml, params.is_ssaeoutput);
 //		std::cerr << "sspj convert success!!: " << sspjname << std::endl;
 		ConsoleOutMessage("INFO_0005");
 	}
@@ -1325,7 +1325,7 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 	SSOptionReader ssoption;
 
 //	if ( !ssoption.load() ) return false;
-	if ( !ssoption.load() ) return false;
+	if ( !ssoption.load( params.ss_option_file_path) ) return false;
 
 
 	makeSsceFile(ssoption);

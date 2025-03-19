@@ -10,7 +10,7 @@ SSOptionReader::SSOptionReader()
 {
 }
 
-bool	SSOptionReader::load()
+bool	SSOptionReader::load( std::string ss_option_file_oath)
 {
 
 	std::string home = get_documents_path();
@@ -23,6 +23,11 @@ bool	SSOptionReader::load()
     ssopname = home + "\\SpriteStudio\\SsOption_v6.ssop";
     ssopname_beta = home + "\\SpriteStudio\\SsOption_v6_beta.ssop";
 #endif
+
+    if (!ss_option_file_oath.empty())
+    {
+        ssopname = ss_option_file_oath;
+    }
 
     std::cerr << "Load ssop : " << ssopname << std::endl;   
 	//ssopをxmlドキュメントとして取得

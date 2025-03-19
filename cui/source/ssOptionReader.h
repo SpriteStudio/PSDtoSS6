@@ -15,7 +15,7 @@ public:
 	SSOptionReader();
 	virtual ~SSOptionReader() {}
 
-	bool	load();
+	bool	load(std::string ss_option_file_oath);
 	XMLDocument&	getSSOption() {
 		return loadssop_xml;
 	}

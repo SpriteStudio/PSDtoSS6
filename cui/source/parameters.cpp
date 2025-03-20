@@ -48,6 +48,7 @@ option_struct option_char_tbl[] = {
 	{ "-OA","--out_ssae" },
 	{ "-OP","--out_sspj" },
 	{ "-OW","--overwrite" },
+	{ "-OWA","--overwrite_ssae" },
 	{ "-AN","--add_null" },
 	{ "-UP","--use_layer_pivot" },
 	{ "-UR","--use_layer_root" },
@@ -57,6 +58,9 @@ option_struct option_char_tbl[] = {
 	{ "-CS","--canvas_size" },
 	{ "-PI","--padding_innner" },
 	{ "-O","--outputpath" },
+	{ "-OPI","--outputpath_image" },
+	{ "-OPC","--outputpath_ssce" },
+	{ "-OPA","--outputpath_ssae" },
 	{ "-ON","--outputname" },
 	{ "-I","--inputfile" },
 	{ "-J","--json"},
@@ -65,7 +69,7 @@ option_struct option_char_tbl[] = {
 };
 
 
-std::string replaceString(std::string &inStr, std::string key , std::string replaceStr) {
+std::string replaceString(const std::string &inStr, std::string key , std::string replaceStr) {
 
     std::string ret = inStr;
 	if (key.empty()) {
@@ -166,6 +170,55 @@ std::string boolToString(bool b)
 	return "false";
 }
 
+static std::string addLastSeparator(const std::string& in)
+{
+	std::string o(in);
+	if (o.back() != '\\')
+	{
+		o += "\\";
+	}
+	return o;
+}
+
+static std::string convertToNativeSeparator(const std::string& in)
+{
+#if _WIN32
+	auto o = replaceString(in, "/", "\\");
+#else
+	auto o = replaceString(in, "\\", "/");
+#endif
+
+	return o;
+}
+
+static std::string cleanPath(const std::string& in)
+{
+	auto o = addLastSeparator(in);
+	o = convertToNativeSeparator(o);
+	return o;
+}
+
+/*
+	TODO: Understands ../ ./
+*/
+static std::string makeAbsolutePath(const std::string& base, const std::string& add)
+{
+	if (add.empty())
+		return base;
+
+	if (*add.begin() == '/' || *add.begin() == '\\')
+		return add;
+
+	#ifdef _WIN32
+	// Recongnize absolute if it contains a drive letter.
+	if (std::find(add.begin(), add.end(), ':') != add.end())
+		return add;
+	#endif
+
+	auto out = convertToNativeSeparator(base + "/" + add);
+	return out;
+}
+
 
 // 最低限　-Iが無いと成立しない
 bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglist)
@@ -183,6 +236,7 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 		parammap["-OA"] = "false";
 		parammap["-OP"] = "false";
 		parammap["-OW"] = "false";
+		parammap["-OWA"] = "";	// 無効値
 		parammap["-AN"] = "false";
 		parammap["-UP"] = "false";
 		parammap["-UR"] = "false";
@@ -192,6 +246,9 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 		parammap["-CS"] = "0";
 		parammap["-PI"] = "0";
 		parammap["-O"] = "";
+		parammap["-OPI"] = "";
+		parammap["-OPC"] = "";
+		parammap["-OPA"] = "";
 		parammap["-ON"] = "";
 		parammap["-I"] = "";
 		parammap["-J"] = "false";
@@ -240,6 +297,11 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 			this->is_ssaeoutput = stringToBool(parammap["-OA"]);
 			this->is_sspjoutput = stringToBool(parammap["-OP"]);
 			this->is_overwrite = stringToBool(parammap["-OW"]);
+			
+			// ssae 上書きオプションは未指定の場合、-OW の設定を継承する。
+			auto owa = parammap["-OWA"];
+			this->is_overwrite_ssae = owa.empty() ? is_overwrite : stringToBool(owa);
+
 			this->is_addnull = stringToBool(parammap["-AN"]);
 			this->is_layerPivotUse = stringToBool(parammap["-UP"]);
 			this->is_rootLayerUse = stringToBool(parammap["-UR"]);
@@ -249,32 +311,19 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 			this->canvasSize = tryInt(parammap["-CS"]);
 			this->inner_padding = tryInt(parammap["-PI"]);
 			this->inputjson = stringToBool(parammap["-J"]);
-			this->ss_option_file_path = parammap["-SOF"];
-
-
-			this->outputpath = parammap["-O"];
-			if (this->outputpath.back() != '\\')
-			{
-				this->outputpath += "\\";
-			}
-
-
-			this->inputpsdfile = parammap["-I"];
+			this->inputpsdfile = convertToNativeSeparator(parammap["-I"]);
+			this->ss_option_file_path = convertToNativeSeparator(parammap["-SOF"]);
 
 			if (parammap["-ON"] != "")
 			{
 				this->outputname = parammap["-ON"];
 			}
 
-#if _WIN32
-			outputpath = replaceString(outputpath, "/", "\\");
-			inputpsdfile = replaceString(inputpsdfile, "/", "\\");
-			ss_option_file_path = replaceString(ss_option_file_path, "/", "\\");
-#else
-			outputpath = replaceString(outputpath, "\\", "/");
-			inputpsdfile = replaceString(inputpsdfile, "\\", "/");
-			template_file_path = replaceString(template_file_path, "\\", "/");
-#endif
+			this->outputpath = cleanPath(parammap["-O"]);
+			
+			this->outputpath_image = makeAbsolutePath( this->outputpath, cleanPath(parammap["-OPI"]) );
+			this->outputpath_ssce = makeAbsolutePath( this->outputpath, cleanPath(parammap["-OPC"]) );
+			this->outputpath_ssae = makeAbsolutePath( this->outputpath, cleanPath(parammap["-OPA"]) );
 
 			return true;
 		}

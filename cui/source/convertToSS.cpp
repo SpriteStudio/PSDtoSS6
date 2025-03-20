@@ -258,8 +258,9 @@ void ConvertToSS::loadssae()
 	}
 	else
 	{
-		if (params.is_overwrite == false)
+		//if (params.is_overwrite == false)
 		{
+			// 読み込めたのだから常に true であるべき
 			is_ssaeload = true;
 		}
 	}
@@ -1084,149 +1085,143 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 // standalone等が必要になってPrologueを変更したい場合は自前で書くことも可能
 void	ConvertToSS::makeSsaeFile(SSOptionReader& option)
 {
-
 	XMLDocument& loadssop_xml = option.getSSOption();
 
-	if (( !is_ssaeload ) && ( params.is_ssaeoutput))
+	//テンプレートの作成
+	Ssae_template ssae_xml;
+	ssae_xml.set_filename(ssaename);
+	ssae_xml.make_template(&loadssop_xml); //この時点でssaeは上書きされることに注意
+
+	XMLDocument anime_xml;
+	anime_xml.LoadFile(ssaename.c_str());
+	XMLElement* animeroot = anime_xml.FirstChildElement("SpriteStudioAnimePack");
+
+	//パッキングで決まるパラメータを出力
+	animeroot->FirstChildElement("name")->SetText(params.outputname.c_str()); //アニメ名
+
+	XMLElement*  partList = animeroot->FirstChildElement("Model")->FirstChildElement("partList");
+
+	//親子関係データの作成
+
+
+	//通常パーツを登録
+	int num = packer.GetPrimitiveNum();
+	AddPartValue(partList, "root", 0, -1, 0);
+
+	int parts_index = 1;
+	for (int read_count = readpngfile_max - 1; read_count >= 0; read_count--)
 	{
-		//テンプレートの作成
-		Ssae_template ssae_xml;
-		ssae_xml.set_filename(ssaename);
-		ssae_xml.make_template(&loadssop_xml); //この時点でssaeは上書きされることに注意
-
-		XMLDocument anime_xml;
-		anime_xml.LoadFile(ssaename.c_str());
-		XMLElement* animeroot = anime_xml.FirstChildElement("SpriteStudioAnimePack");
-
-		//パッキングで決まるパラメータを出力
-		animeroot->FirstChildElement("name")->SetText(params.outputname.c_str()); //アニメ名
-
-		XMLElement*  partList = animeroot->FirstChildElement("Model")->FirstChildElement("partList");
-
-		//親子関係データの作成
-
-
-		//通常パーツを登録
-		int num = packer.GetPrimitiveNum();
-		AddPartValue(partList, "root", 0, -1, 0);
-
-		int parts_index = 1;
-		for (int read_count = readpngfile_max - 1; read_count >= 0; read_count--)
-		{
-			for (size_t i = 0; i < num; i++)
-			{
-				SSSpriteSheetPrim p = packer.GetPrimitiveInfo(i);
-				if ((p.name == pb.inputlayername[read_count]) && (p.isPacking) && (p.layertype != LAYERTYPE_DELETE))
-				{
-					if (params.is_addnull)
-					{
-						std::string nullname = "null_" + p.name;
-						AddPartValue(partList, nullname.c_str(), parts_index, 0, 1);	//root パーツを0として通常パーツは1から始まるので。
-						parts_index++;
-						AddPartValue(partList, p.name.c_str(), parts_index, parts_index - 1, 2);	//root パーツを0として通常パーツは1から始まるので。
-					}
-					else
-					{
-						AddPartValue(partList, p.name.c_str(), parts_index, 0, 2);	//root パーツを0として通常パーツは1から始まるので。
-					}
-					parts_index++;
-				}
-			}
-		}
-
-		//セルマップ名
-		XMLElement*  cellnames = animeroot->FirstChildElement("cellmapNames");
-		std::string str = params.outputname + ".ssce";
-		cellnames->FirstChildElement("value")->SetText(str.c_str());
-
-		//Setup
-
-		//アニメ情報の出力
-		XMLElement*  anime = animeroot->FirstChildElement("animeList")->FirstChildElement("anime");
-		XMLElement*  settings = anime->FirstChildElement("settings");
-		char canvasSizestr[128];
-		//基準枠サイズ
-		if (params.canvasSize == 1)
-		{
-			sprintf(canvasSizestr, "%d %d", (gLayoutCenter.x * 2), (gLayoutCenter.y * 2));
-			settings->FirstChildElement("canvasSize")->SetText(canvasSizestr);
-		}
-
-		//パーツアニメ情報
-		XMLElement*  partanimes = anime->FirstChildElement("partAnimes");
-
-		//元画像のサイズからssaeレイアウトを設定する
-		//	gLayoutCenter.x = context->width / 2;
-		//	gLayoutCenter.y = context->height / 2;
-		SSSpriteSheetPrim* rootSpriteSheet = 0;
-		int root_offset_x = 0;
-		int root_offset_y = 0;
-		if (params.is_rootLayerUse)
-		{
-			for (size_t i = 0; i < num; i++)
-			{
-				SSSpriteSheetPrim p = packer.GetPrimitiveInfo(i);
-				if (p.layertype == LAYERTYPE_ROOT)
-				{
-					rootSpriteSheet = &p;
-					root_offset_x = -((rootSpriteSheet->trim_left + rootSpriteSheet->offset_x + ((float)rootSpriteSheet->trim_w * 0.5f)) - gLayoutCenter.x);
-					root_offset_y = gLayoutCenter.y - (rootSpriteSheet->trim_top + rootSpriteSheet->offset_y) - ((float)rootSpriteSheet->trim_h * 0.5f);
-					break;
-				}
-			}
-		}
-		AddPartAnime(partanimes, 0, 0, false, &option.getSSOption(), gLayoutCenter);
-
-
-
-		//パーツごとのアニメ情報を出力
 		for (size_t i = 0; i < num; i++)
 		{
 			SSSpriteSheetPrim p = packer.GetPrimitiveInfo(i);
-			//rootパーツ分オフセットを加える
-			p.offset_x += root_offset_x;
-			p.offset_y += root_offset_y;
-			if ((p.isPacking == true) && (p.layertype != LAYERTYPE_DELETE))
+			if ((p.name == pb.inputlayername[read_count]) && (p.isPacking) && (p.layertype != LAYERTYPE_DELETE))
 			{
-				if ( params.is_addnull)
+				if (params.is_addnull)
 				{
-					AddPartAnime(partanimes, &p, 1, params.is_addnull, &loadssop_xml, gLayoutCenter);
+					std::string nullname = "null_" + p.name;
+					AddPartValue(partList, nullname.c_str(), parts_index, 0, 1);	//root パーツを0として通常パーツは1から始まるので。
+					parts_index++;
+					AddPartValue(partList, p.name.c_str(), parts_index, parts_index - 1, 2);	//root パーツを0として通常パーツは1から始まるので。
 				}
-				AddPartAnime(partanimes, &p, 2, params.is_addnull, &loadssop_xml, gLayoutCenter);
+				else
+				{
+					AddPartValue(partList, p.name.c_str(), parts_index, 0, 2);	//root パーツを0として通常パーツは1から始まるので。
+				}
+				parts_index++;
 			}
 		}
-
-		//anime_1
-
-		//アニメ情報の出力
-		anime = animeroot->FirstChildElement("animeList")->FirstChildElement("anime")->NextSiblingElement("anime");
-		settings = anime->FirstChildElement("settings");
-
-		//基準枠サイズ
-		if (params.canvasSize == 1)
-		{
-			settings->FirstChildElement("canvasSize")->SetText(canvasSizestr);
-		}
-
-		//パーツアニメ情報
-		partanimes = anime->FirstChildElement("partAnimes");
-
-		XMLElement*  partAnime = anime_xml.NewElement("partAnime");
-		partanimes->InsertEndChild(partAnime);
-
-		partAnime->InsertEndChild(CreateNewElementWithText(anime_xml, "partName", "root"));
-
-		XMLElement*  attributes = anime_xml.NewElement("attributes");
-		partAnime->InsertEndChild(attributes);
-		addAnimeAttribute(attributes, "HIDE", "0", false);
-
-		//新規作成
-		anime_xml.SaveFile(ssaename.c_str());
-//		std::cerr << "ssae convert success!!: " << ssaename << std::endl;
-		ConsoleOutMessage("INFO_0004");
-
 	}
 
+	//セルマップ名
+	XMLElement*  cellnames = animeroot->FirstChildElement("cellmapNames");
+	std::string str = params.outputname + ".ssce";
+	cellnames->FirstChildElement("value")->SetText(str.c_str());
+
+	//Setup
+
+	//アニメ情報の出力
+	XMLElement*  anime = animeroot->FirstChildElement("animeList")->FirstChildElement("anime");
+	XMLElement*  settings = anime->FirstChildElement("settings");
+	char canvasSizestr[128];
+	//基準枠サイズ
+	if (params.canvasSize == 1)
+	{
+		sprintf(canvasSizestr, "%d %d", (gLayoutCenter.x * 2), (gLayoutCenter.y * 2));
+		settings->FirstChildElement("canvasSize")->SetText(canvasSizestr);
+	}
+
+	//パーツアニメ情報
+	XMLElement*  partanimes = anime->FirstChildElement("partAnimes");
+
+	//元画像のサイズからssaeレイアウトを設定する
+	//	gLayoutCenter.x = context->width / 2;
+	//	gLayoutCenter.y = context->height / 2;
+	SSSpriteSheetPrim* rootSpriteSheet = 0;
+	int root_offset_x = 0;
+	int root_offset_y = 0;
+	if (params.is_rootLayerUse)
+	{
+		for (size_t i = 0; i < num; i++)
+		{
+			SSSpriteSheetPrim p = packer.GetPrimitiveInfo(i);
+			if (p.layertype == LAYERTYPE_ROOT)
+			{
+				rootSpriteSheet = &p;
+				root_offset_x = -((rootSpriteSheet->trim_left + rootSpriteSheet->offset_x + ((float)rootSpriteSheet->trim_w * 0.5f)) - gLayoutCenter.x);
+				root_offset_y = gLayoutCenter.y - (rootSpriteSheet->trim_top + rootSpriteSheet->offset_y) - ((float)rootSpriteSheet->trim_h * 0.5f);
+				break;
+			}
+		}
+	}
+	AddPartAnime(partanimes, 0, 0, false, &option.getSSOption(), gLayoutCenter);
+
+
+
+	//パーツごとのアニメ情報を出力
+	for (size_t i = 0; i < num; i++)
+	{
+		SSSpriteSheetPrim p = packer.GetPrimitiveInfo(i);
+		//rootパーツ分オフセットを加える
+		p.offset_x += root_offset_x;
+		p.offset_y += root_offset_y;
+		if ((p.isPacking == true) && (p.layertype != LAYERTYPE_DELETE))
+		{
+			if ( params.is_addnull)
+			{
+				AddPartAnime(partanimes, &p, 1, params.is_addnull, &loadssop_xml, gLayoutCenter);
+			}
+			AddPartAnime(partanimes, &p, 2, params.is_addnull, &loadssop_xml, gLayoutCenter);
+		}
+	}
+
+	//anime_1
+
+	//アニメ情報の出力
+	anime = animeroot->FirstChildElement("animeList")->FirstChildElement("anime")->NextSiblingElement("anime");
+	settings = anime->FirstChildElement("settings");
+
+	//基準枠サイズ
+	if (params.canvasSize == 1)
+	{
+		settings->FirstChildElement("canvasSize")->SetText(canvasSizestr);
+	}
+
+	//パーツアニメ情報
+	partanimes = anime->FirstChildElement("partAnimes");
+
+	XMLElement*  partAnime = anime_xml.NewElement("partAnime");
+	partanimes->InsertEndChild(partAnime);
+
+	partAnime->InsertEndChild(CreateNewElementWithText(anime_xml, "partName", "root"));
+
+	XMLElement*  attributes = anime_xml.NewElement("attributes");
+	partAnime->InsertEndChild(attributes);
+	addAnimeAttribute(attributes, "HIDE", "0", false);
+
+	//新規作成
+	anime_xml.SaveFile(ssaename.c_str());
+//		std::cerr << "ssae convert success!!: " << ssaename << std::endl;
+	ConsoleOutMessage("INFO_0004");
 }
 
 void	ConvertToSS::makeSspjFile(SSOptionReader& option)
@@ -1311,10 +1306,10 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 	addPriority();
 
 	//出力ファイル名を作製
-	pngname = params.outputpath + params.outputname + ".png";
 	sspjname = params.outputpath + params.outputname + ".sspj";
-	sscename = params.outputpath + params.outputname + ".ssce";
-	ssaename = params.outputpath + params.outputname + ".ssae";
+	pngname  = params.outputpath_image + params.outputname + ".png";
+	sscename = params.outputpath_ssce + params.outputname + ".ssce";
+	ssaename = params.outputpath_ssae + params.outputname + ".ssae";
 
 	loadssae();
 
@@ -1329,7 +1324,12 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 
 
 	makeSsceFile(ssoption);
-	makeSsaeFile(ssoption);
+
+	if (params.is_ssaeoutput && params.is_overwrite_ssae)
+	{
+		makeSsaeFile(ssoption);
+	}
+
 	makeSspjFile(ssoption);
 
 

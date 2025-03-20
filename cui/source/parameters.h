@@ -18,6 +18,7 @@ public:
 	bool is_sspjoutput;
 	bool is_addnull;
 	bool is_overwrite;
+	bool is_overwrite_ssae;
 	bool is_layerPivotUse;
 	bool is_rootLayerUse;
 	bool is_oldPivotUse;
@@ -27,6 +28,9 @@ public:
 	int inner_padding;
 
 	std::string outputpath;
+	std::string outputpath_image;
+	std::string outputpath_ssce;
+	std::string outputpath_ssae;
 	std::string outputname;
 	std::string inputpsdfile;
 	std::string ss_option_file_path;

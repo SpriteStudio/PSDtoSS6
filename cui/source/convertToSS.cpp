@@ -38,7 +38,10 @@ bool	ConvertToSS::parseInputOutputFiles(std::string arg)
 		start = inputname.find_last_of("/");
 	}
 
-	params.outputname = inputname.substr(start + 1, end - start - 1);
+	if (params.outputname.empty()) // fixed -ON オプションの指定が上書きされる問題を修正
+	{
+		params.outputname = inputname.substr(start + 1, end - start - 1);
+	}
 
 	//インプット、アウトプットパス
 	end = inputname.find_last_of("\\");
@@ -1251,7 +1254,7 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 	//引数リストが付いて実行された
 	if (params.parseConfigArg(argn, arg))
 	{
-		std::cout << "Parsed arguments \n arg num = " << argn << std::endl;
+		std::cout << "Parsed command line arguments. arg num = " << argn << std::endl;
 
 		if (!parseInputOutputFiles( params.inputpsdfile ))
 		{

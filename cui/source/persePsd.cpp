@@ -102,8 +102,18 @@ bool  persePsdMain(std::string inputname,
 
 					//試しにブレンドしてみる
 					dstcontext->blending_image_data = NULL;
-					psd_image_blend(dstcontext, 0, 0, context->width, context->height);
+					bool blend_exception = false;
+					try
+					{
+						psd_status status = psd_image_blend(dstcontext, 0, 0, context->width, context->height);
+					}
+					catch (...)
+					{
+						std::cerr << "An error occured during blending layer image-> " << name << std::endl;
+						blend_exception = true;
+					}
 
+					if (!blend_exception)
 					{
 						RGBAImage textimage(dstcontext->width, dstcontext->height,
 							(unsigned char*)dstcontext->blending_image_data);

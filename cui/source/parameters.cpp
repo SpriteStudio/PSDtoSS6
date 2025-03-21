@@ -9,6 +9,14 @@
 #include "../picojson/picojson.h"
 //#include "picojson/picojson.h""
 
+#ifdef _WIN32
+static const char	_DIR_SEP_CHAR = '\\';
+static const char*	_DIR_SEP_STR = "\\";
+#else
+static const char	_DIR_SEP_CHAR = '/';
+static const char*	_DIR_SEP_STR = "/";
+#endif
+
 
 /*
 	省略	フル
@@ -172,10 +180,12 @@ std::string boolToString(bool b)
 
 static std::string addLastSeparator(const std::string& in)
 {
+	if (in.empty()) return "";
+
 	std::string o(in);
-	if (o.back() != '\\')
+	if (o.back() != '\\' && o.back() != '/')
 	{
-		o += "\\";
+		o += _DIR_SEP_CHAR;
 	}
 	return o;
 }
@@ -193,6 +203,8 @@ static std::string convertToNativeSeparator(const std::string& in)
 
 static std::string cleanPath(const std::string& in)
 {
+	if (in.empty()) return "";
+
 	auto o = addLastSeparator(in);
 	o = convertToNativeSeparator(o);
 	return o;
@@ -215,7 +227,7 @@ static std::string makeAbsolutePath(const std::string& base, const std::string& 
 		return add;
 	#endif
 
-	auto out = convertToNativeSeparator(base + "/" + add);
+	auto out = convertToNativeSeparator( addLastSeparator(base) + add );
 	return out;
 }
 
@@ -280,13 +292,19 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 				}
 				else {
 					// 未知のオプション
-					err_string = "Unknown option: " + arg;
-					std::cerr << err_string << std::endl;
+					err_string += "Unknown option: " + arg + "\n";
 					//std::cout << "Not an option: " << arg << std::endl;
 				}
 				cnt+=2;
 			}
 
+			if (!err_string.empty())
+			{
+				// 続けてもろくなことにならないためここで終了しておく。
+				err_string += "Failed to parse options.\n";
+				std::cerr << err_string << std::endl;
+				return false;
+			}
 
 			this->tex_w = tryInt(parammap["-TW"]);
 			this->tex_h = tryInt(parammap["-TH"]);
@@ -313,14 +331,9 @@ bool convert_parameters::parseConfigArg(int num, std::vector<std::string> arglis
 			this->inputjson = stringToBool(parammap["-J"]);
 			this->inputpsdfile = convertToNativeSeparator(parammap["-I"]);
 			this->ss_option_file_path = convertToNativeSeparator(parammap["-SOF"]);
-
-			if (parammap["-ON"] != "")
-			{
-				this->outputname = parammap["-ON"];
-			}
-
 			this->outputpath = cleanPath(parammap["-O"]);
-			
+			this->outputname = parammap["-ON"];
+
 			this->outputpath_image = makeAbsolutePath( this->outputpath, cleanPath(parammap["-OPI"]) );
 			this->outputpath_ssce = makeAbsolutePath( this->outputpath, cleanPath(parammap["-OPC"]) );
 			this->outputpath_ssae = makeAbsolutePath( this->outputpath, cleanPath(parammap["-OPA"]) );
@@ -518,6 +531,7 @@ bool convert_parameters::saveConfigJson(std::string fname)
 	obj["inner_padding"]			= picojson::value(static_cast<double>(inner_padding));
 	obj["outputpath"]				= picojson::value(outputpath);
 	obj["outputname"]				= picojson::value(outputname);
+	// TODO: Synchronize with individual specification type. e.g.) -OPx -SOP...
 
 	picojson::value v(obj);
 	v.serialize(std::ostream_iterator<char>(ofs), true);

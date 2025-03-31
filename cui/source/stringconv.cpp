@@ -28,5 +28,15 @@ namespace stringconv
 		return std::string(result.begin(), result.end() - 1);
 	}
 
+	std::string local8bit_to_utf8(std::string str)
+	{
+#ifdef _WIN32
+		return sjis_to_utf8(str);
+#endif
+#ifdef __APPLE__
+		return str;
+#endif
+	}
+
 };
 

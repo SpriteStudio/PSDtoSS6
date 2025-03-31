@@ -1,5 +1,8 @@
-﻿#include "xml_template.h"
-#include <string>
+﻿#include <string>
+#include <filesystem>
+#include "xml_template.h"
+#include "helper.h"
+#include "stringconv.h"
 
 using namespace tinyxml2;
 
@@ -227,6 +230,8 @@ void Sspj_template::make_template_form_default()
 	//「新規作成時のプロジェクトのデフォルト設定」からテンプレートを作成
 void Sspj_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 {
+	//std::cout << "Make sspj file from default settings in SsOption file." << std::endl;
+
 	//テンプレートを新規作成
 	FILE* fp = fopen(filename.c_str(), "w");
 	if (fp != NULL)
@@ -257,27 +262,30 @@ void Sspj_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 		XMLDocument xml;
 		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
 		{
+			std::cerr << "Failed to load template file." << filename << std::endl;
 		}
 		else
 		{
 			//「新規作成時のプロジェクトのデフォルト設定」をコピー
+			auto rootElem = xml.FirstChildElement("SpriteStudioProject");
+
 			//exportPath
-			deep_copy(xml.FirstChildElement("SpriteStudioProject")->FirstChildElement("exportPath"),
+			deep_copy(rootElem->FirstChildElement("exportPath"),
 				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("exportPath"));
 			//settings
-			deep_copy(xml.FirstChildElement("SpriteStudioProject")->FirstChildElement("settings"),
+			deep_copy(rootElem->FirstChildElement("settings"),
 				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("projectSettings"));
 			//animeSettings
-			deep_copy(xml.FirstChildElement("SpriteStudioProject")->FirstChildElement("animeSettings"),
+			deep_copy(rootElem->FirstChildElement("animeSettings"),
 				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
 			////animeSettings 不要なタグを削除
-			//XMLElement* animeSettings = xml.FirstChildElement("SpriteStudioProject")->FirstChildElement("animeSettings");
+			//XMLElement* animeSettings = rootElem->FirstChildElement("animeSettings");
 			//animeSettings->DeleteChild(animeSettings->FirstChildElement("ik_depth"));
 			//animeSettings->DeleteChild(animeSettings->FirstChildElement("startFrame"));
 			//animeSettings->DeleteChild(animeSettings->FirstChildElement("endFrame"));
 
 			//texPackSettings
-			deep_copy(xml.FirstChildElement("SpriteStudioProject")->FirstChildElement("texPackSettings"),
+			deep_copy(rootElem->FirstChildElement("texPackSettings"),
 				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("texPackSettings"));
 
 			//ファイルを保存
@@ -321,6 +329,8 @@ void Ssce_template::make_template_form_default()
 //「新規作成時のプロジェクトのデフォルト設定」からテンプレートを作成
 void Ssce_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 {
+	std::cout << "Create ssce file from template." << std::endl;
+
 	//テンプレートを新規作成
 	FILE* fp = fopen(filename.c_str(), "w");
 	if (fp != NULL)
@@ -347,12 +357,13 @@ void Ssce_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 		XMLDocument xml;
 		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
 		{
+			std::cerr << "Failed to load template file." << filename << std::endl;
 		}
 		else
 		{
 			//「新規作成時のプロジェクトのデフォルト設定」をコピー
-			//texPackSettings
-			deep_copy(xml.FirstChildElement("SpriteStudioCellMap")->FirstChildElement("texPackSettings"),
+			auto rootElem = xml.FirstChildElement("SpriteStudioCellMap");
+			deep_copy(rootElem->FirstChildElement("texPackSettings"),
 				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("texPackSettings"));
 
 			//ファイルを保存
@@ -447,6 +458,8 @@ void Ssae_template::make_template_form_default()
 //「新規作成時のプロジェクトのデフォルト設定」からテンプレートを作成
 void Ssae_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 {
+	//std::cout << "Make ssae file from default settings in SsOption file." << std::endl;
+
 	//テンプレートを新規作成
 	FILE* fp = fopen(filename.c_str(), "w");
 	if (fp != NULL)
@@ -493,15 +506,17 @@ void Ssae_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 		XMLDocument xml;
 		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
 		{
+			std::cerr << "Failed to load template file." << filename << std::endl;
 		}
 		else
 		{
 			//「新規作成時のプロジェクトのデフォルト設定」をコピー
 			//SpriteStudioAnimePack>Settings
-			deep_copy(xml.FirstChildElement("SpriteStudioAnimePack")->FirstChildElement("settings"),
+			auto rootElem = xml.FirstChildElement("SpriteStudioAnimePack");
+			deep_copy(rootElem->FirstChildElement("settings"),
 				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
 
-			XMLElement* anime = xml.FirstChildElement("SpriteStudioAnimePack")->FirstChildElement("animeList")->FirstChildElement("anime");
+			XMLElement* anime = rootElem->FirstChildElement("animeList")->FirstChildElement("anime");
 			//anime>Settings
 			deep_copy(anime->FirstChildElement("settings"),
 				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));

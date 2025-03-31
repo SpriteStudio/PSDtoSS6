@@ -809,8 +809,11 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 	XMLElement* root = xml.FirstChildElement("SpriteStudioCellMap");
 
 	//パッキングで決まるパラメータを出力
-	root->FirstChildElement("name")->SetText( params.outputname.c_str());//セル名
-	root->FirstChildElement("imagePath")->SetText((params.outputname + ".png").c_str());//テクスチャファイル名
+	std::string outputname = stringconv::local8bit_to_utf8(params.outputname);
+
+	root->FirstChildElement("name")->SetText(outputname.c_str());//セルマップ名
+
+	root->FirstChildElement("imagePath")->SetText((outputname + ".png").c_str());//テクスチャファイル名
 	char size[256];
 	sprintf(size, "%d %d", packer.width, packer.height);
 	root->FirstChildElement("pixelSize")->SetText(size);//テクスチャサイズ
@@ -1100,7 +1103,8 @@ void	ConvertToSS::makeSsaeFile(SSOptionReader& option)
 	XMLElement* animeroot = anime_xml.FirstChildElement("SpriteStudioAnimePack");
 
 	//パッキングで決まるパラメータを出力
-	animeroot->FirstChildElement("name")->SetText(params.outputname.c_str()); //アニメ名
+	std::string outputname = stringconv::local8bit_to_utf8(params.outputname);
+	animeroot->FirstChildElement("name")->SetText(outputname.c_str()); //アニメ名
 
 	XMLElement*  partList = animeroot->FirstChildElement("Model")->FirstChildElement("partList");
 
@@ -1137,7 +1141,7 @@ void	ConvertToSS::makeSsaeFile(SSOptionReader& option)
 
 	//セルマップ名
 	XMLElement*  cellnames = animeroot->FirstChildElement("cellmapNames");
-	std::string str = params.outputname + ".ssce";
+	std::string str = outputname + ".ssce";
 	cellnames->FirstChildElement("value")->SetText(str.c_str());
 
 	//Setup

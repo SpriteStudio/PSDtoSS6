@@ -1,6 +1,7 @@
 ﻿#include "helper.h"
 #include "xml_template.h"
 #include "texturepack.h"
+#include "stringconv.h"
 #include <math.h>
 using namespace tinyxml2;
 
@@ -188,6 +189,8 @@ void textout(std::string str, FILE* fp)
 //sspjを作成
 void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocument* loadssop_xml, bool addSSAE)
 {
+	outputname = stringconv::local8bit_to_utf8(outputname);
+
 	std::string sscename = outputname + ".ssce";
 	std::string ssaename = outputname + ".ssae";
 
@@ -205,7 +208,7 @@ void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocume
 	{
 		//アニメ情報等を出力
 		tinyxml2::XMLElement* SpriteStudioProject = loadsspj_xml.FirstChildElement("SpriteStudioProject");
-		SpriteStudioProject->FirstChildElement("name")->SetText(outputname.c_str());
+		SpriteStudioProject->FirstChildElement("name")->SetText( outputname.c_str() );
 		SpriteStudioProject->FirstChildElement("cellmapNames")->FirstChildElement("value")->SetText(sscename.c_str());
 		SpriteStudioProject->FirstChildElement("lastCellMapFile")->SetText(sscename.c_str());
 

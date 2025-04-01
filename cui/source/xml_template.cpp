@@ -6,6 +6,7 @@
 
 using namespace tinyxml2;
 
+#if 0 // helper.* の定義と重複
 //XMLNodeを再帰的にコピー
 static void deep_copy(XMLNode* p_dst, XMLNode* p_src)
 {
@@ -37,6 +38,7 @@ static void textout(std::string str, FILE* fp)
 	fputws(wstr, fp);
 #endif
 }
+#endif
 
 void Ssxx_template::set_filename(std::string filename_)
 {

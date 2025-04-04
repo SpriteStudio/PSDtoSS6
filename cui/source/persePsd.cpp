@@ -29,10 +29,30 @@ bool  persePsdMain(std::string inputname,
 	//PSDからパーツリストを作成
 	char psdname[255];
 	strcpy(psdname, inputname.c_str());
-	status = psd_image_load(&context, psdname);
+	status = psd_image_load(&context, psdname); 
 
 	if (status != psd_status_done)
+	{
+		std::cerr << "Failed to parse PSD file. status:" << (int)status << std::endl;
+
+		// psd_image_load エラーになると context は null になる。
+		// ヘッダのみ取得してPSDファイルのバージョン情報出力を試みる。
+		status = psd_image_load_header(&context, psdname);
+		std::cout << "PSD Version Info: ";
+		if (status == psd_status_done && context && context->fill_version_info)
+		{
+			std::cout << "version: " << context->version_info.version;
+			std::cout << "file_version: " << context->version_info.file_version;
+		}
+		else
+		{
+			std::cout << "not stored or failed to read.";
+		}
+		std::cout << std::endl;
+		psd_image_free(context);
+
 		return false;
+	}
 
 	dstcontext = (psd_context*)malloc(sizeof(psd_context));
 	memcpy(dstcontext, context, sizeof(psd_context));
@@ -145,11 +165,11 @@ bool  persePsdMain(std::string inputname,
 							)
 						{
 							//名前に@が含まれている場合はセルに含めない
-							std::cout << " skip (" << layer->layer_name << ")" << std::endl;
+							cdbg << " skip (" << layer->layer_name << ")" << std::endl;
 						}
 						else
 						{
-							std::cout << " read (" << layer->layer_name << ")" << std::endl;
+							cdbg << " read (" << layer->layer_name << ")" << std::endl;
 							inputlayerfile_temp[readpngfile_max] = name;
 							readbitmap_temp[readpngfile_max] = bitmap;
 							readpngfile_max++;
@@ -187,11 +207,11 @@ bool  persePsdMain(std::string inputname,
 			)
 		{
 			//名前に@が含まれている場合はセルに含めない
-			std::cout << " skip (" << layer->layer_name << ")" << std::endl;
+			cdbg << " skip (" << layer->layer_name << ")" << std::endl;
 		}
 		else
 		{
-			std::cout << " read (" << layer->layer_name << ")" << std::endl;
+			cdbg << " read (" << layer->layer_name << ")" << std::endl;
 			inputlayerfile_temp[readpngfile_max] = name;
 			readbitmap_temp[readpngfile_max] = bitmap;
 			readpngfile_max++;

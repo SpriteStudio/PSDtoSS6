@@ -176,7 +176,7 @@ bool	ConvertToSS::loadImageFile()
 	if (this->isPsdMode()){
 		if (!persePsdMain(inputname, params.addpri, readpngfile_max, gLayoutCenter, &pb))
 		{
-//			std::cerr << "エラー：PSDファイルのオープンに失敗しました。：" << inputname << "\n";
+//			std::cerr << "エラー：PSDファイルの読み込みに失敗しました。：" << inputname << "\n";
 			ConsoleErrMessage( "ERROR_0003" , inputname.c_str() );
 			return false;
 		}
@@ -198,7 +198,7 @@ bool	ConvertToSS::checkInvalidLayerName()
 		name = stringconv::utf8_to_sjis(name);
 		if (isZenkaku(name) == true)
 		{
-			//std::cerr << "エラー：セル名に全角文字が使用されています。 ";
+			//std::cerr << "エラー：レイヤー名に全角文字が使用されています。 ";
 			//std::cerr << name << "\n";
 			ConsoleErrMessage( "ERROR_0004" , name.c_str());
 			return false;

@@ -43,12 +43,12 @@
 	},
 	{
 		"label" : "ERROR_0003",
-		"jp" : "エラー：PSDファイルのオープンに失敗しました。：%s",
-		"en": "Error: Failed to open PSD file. : %s"
+		"jp" : "エラー：PSDファイルの読み込みに失敗しました。：%s\nPSDファイルを保存し直すことで、正しく読み込めるようになる可能性があります。",
+		"en": "Error: Failed to open PSD file. : %s\nYou may be able to load the PSD file correctly by re-saving it."
 	},
 	{
 		"label" : "ERROR_0004",
-		"jp" : "エラー：セル名に全角文字が使用されています。: %s  ",
+		"jp" : "エラー：レイヤー名に全角文字が使用されています。: %s  ",
 		"en": "Error: Double - byte characters are used in the cell name. : %s"
 	},
 	{
@@ -83,6 +83,11 @@
 	},
 	{
 		"label" : "ERROT_0011",
+		"jp" : "コンバート情報のオープンに失敗しました",
+		"en": "Failed to open convert information file"
+	},
+	{
+		"label" : "ERROT_0012",
 		"jp" : "コンバート情報のオープンに失敗しました",
 		"en": "Failed to open convert information file"
 	}

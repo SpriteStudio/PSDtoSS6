@@ -620,7 +620,7 @@ bool	ConvertToSS::checkProtrudingTexture()
 			{
 				//テクスチャが入りきっていない
 				//std::cerr << "エラー：セルマップに収まりません。\n";
-				ConsoleErrMessage( "ERROR_0006" );
+				ConsoleOutMessage( "ERROR_0006" ); // リトライ続行するためエラーとして出さない。
 				if ((params.tex_w > 0) && (params.tex_h > 0))
 				{
 					//std::cerr << "パッキングに失敗しました。\n";

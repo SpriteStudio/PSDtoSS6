@@ -89,7 +89,7 @@ namespace stringconv
 		return std::wstring(buffer.begin(), buffer.end() - 1);
 #else
 		assert("No implementation.");
-		return "";
+		return L"";
 #endif
 	}
 

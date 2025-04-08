@@ -28,7 +28,7 @@ bool	ConvertToSS::parseInputOutputFiles(std::string arg)
 	{
 		is_psdload = true;
 	}
-	inputname = inputname;
+	//inputname = inputname; // ?
 
 	//出力ファイル名
 	start = inputname.find_last_of("\\");
@@ -181,7 +181,7 @@ bool	ConvertToSS::loadImageFile()
 			return false;
 		}
 	}else{
-		if (!LoadPsdImageList() == SsConverter::ErrorNone)
+		if (LoadPsdImageList() != SsConverter::ErrorNone)
 			return false;
 	}
 

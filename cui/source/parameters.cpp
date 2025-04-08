@@ -42,8 +42,8 @@ static const char*	_DIR_SEP_STR = "/";
 */
 
 struct option_struct{
-	char* OP1;
-	char* OP2;
+	const char* OP1;
+	const char* OP2;
 };
 
 option_struct option_char_tbl[] = {

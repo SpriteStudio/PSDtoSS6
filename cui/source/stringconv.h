@@ -9,6 +9,7 @@ namespace stringconv
 	std::string sjis_to_utf8(std::string str);
 	std::string utf8_to_sjis(std::string str);
 	std::string local8bit_to_utf8(std::string str);
+	std::wstring sjis_to_wstring(const std::string& str);
 
 };
 

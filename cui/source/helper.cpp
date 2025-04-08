@@ -2,6 +2,7 @@
 #include "xml_template.h"
 #include "texturepack.h"
 #include "stringconv.h"
+#include "tbl_outmessage.h"
 #include <math.h>
 using namespace tinyxml2;
 
@@ -187,7 +188,7 @@ void textout(std::string str, FILE* fp)
 }
 
 //sspjを作成
-void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocument* loadssop_xml, bool addSSAE)
+bool make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocument* loadssop_xml, bool addSSAE)
 {
 	outputname = stringconv::local8bit_to_utf8(outputname);
 
@@ -197,7 +198,11 @@ void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocume
 	//sspjのテンプレートを作成
 	Sspj_template sspj_xml;
 	sspj_xml.set_filename(sspjname);
-	sspj_xml.make_template(loadssop_xml); //この時点でsspjは上書きされる
+	if (!sspj_xml.make_template(loadssop_xml)) //この時点でsspjは上書きされる
+	{
+		ConsoleErrMessage("ERROR_CREATE_SSFILE", sspjname.c_str());
+		return false;
+	}
 
 	tinyxml2::XMLDocument loadsspj_xml;
 
@@ -225,8 +230,14 @@ void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocume
 		}
 
 		//sspjを保存
-		loadsspj_xml.SaveFile(sspjname.c_str());
+		if (loadsspj_xml.SaveFile(sspjname.c_str()) != XML_SUCCESS)
+		{
+			ConsoleErrMessage("ERROR_SAVE_SSFILE", sspjname.c_str());
+			return false;
+		}
 	}
+
+	return true;
 }
 
 void addAnimeAttribute(tinyxml2::XMLElement* parent, std::string tag, std::string outvalue, bool iptype)

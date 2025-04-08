@@ -797,12 +797,16 @@ bool    ConvertToSS::texturePacking()
 	return true;
 }
 
-void	ConvertToSS::makeSsceFile(SSOptionReader& option)
+bool	ConvertToSS::makeSsceFile(SSOptionReader& option)
 {
 	//テンプレートの作成
 	Ssce_template ssce_xml;
 	ssce_xml.set_filename(sscename);
-	ssce_xml.make_template(&option.getSSOption()); //この時点でssceは上書きされることに注意
+	if (!ssce_xml.make_template(&option.getSSOption())) //この時点でssceは上書きされることに注意
+	{
+		ConsoleErrMessage("ERROR_CREATE_SSFILE", sscename.c_str());
+		return false;
+	}
 
 	XMLDocument xml;
 	xml.LoadFile(sscename.c_str());
@@ -1074,11 +1078,15 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 		}
 	}
 
-
-	xml.SaveFile(sscename.c_str());
+	if (xml.SaveFile(sscename.c_str()) != XML_SUCCESS)
+	{
+		ConsoleErrMessage("ERROR_SAVE_SSFILE", sscename.c_str());
+		return false;
+	}
 //	std::cerr << "ssce convert success!!: " << sscename << std::endl;
 	ConsoleOutMessage("INFO_0003");
 
+	return true;
 }
 
 
@@ -1089,14 +1097,18 @@ void	ConvertToSS::makeSsceFile(SSOptionReader& option)
 //XMLDeclaration* anime_decl = anime_xml.NewDeclaration();
 //anime_xml.InsertEndChild(anime_decl);
 // standalone等が必要になってPrologueを変更したい場合は自前で書くことも可能
-void	ConvertToSS::makeSsaeFile(SSOptionReader& option)
+bool	ConvertToSS::makeSsaeFile(SSOptionReader& option)
 {
 	XMLDocument& loadssop_xml = option.getSSOption();
 
 	//テンプレートの作成
 	Ssae_template ssae_xml;
 	ssae_xml.set_filename(ssaename);
-	ssae_xml.make_template(&loadssop_xml); //この時点でssaeは上書きされることに注意
+	if (!ssae_xml.make_template(&loadssop_xml)) //この時点でssaeは上書きされることに注意
+	{
+		ConsoleErrMessage("ERROR_CREATE_SSFILE", ssaename.c_str());
+		return false;
+	}
 
 	XMLDocument anime_xml;
 	anime_xml.LoadFile(ssaename.c_str());
@@ -1226,22 +1238,33 @@ void	ConvertToSS::makeSsaeFile(SSOptionReader& option)
 	addAnimeAttribute(attributes, "HIDE", "0", false);
 
 	//新規作成
-	anime_xml.SaveFile(ssaename.c_str());
+	if (anime_xml.SaveFile(ssaename.c_str()) != XML_SUCCESS)
+	{
+		ConsoleErrMessage("ERROR_SAVE_SSFILE", ssaename.c_str());
+		return false;
+	}
+
 //		std::cerr << "ssae convert success!!: " << ssaename << std::endl;
 	ConsoleOutMessage("INFO_0004");
+
+	return true;
 }
 
-void	ConvertToSS::makeSspjFile(SSOptionReader& option)
+bool	ConvertToSS::makeSspjFile(SSOptionReader& option)
 {
 	XMLDocument& loadssop_xml = option.getSSOption();
 
 	if ((is_sspjload == false) && (params.is_sspjoutput == true))
 	{
 		//新規作成
-		make_sspj(sspjname, params.outputname, &loadssop_xml, params.is_ssaeoutput);
+		if (!make_sspj(sspjname, params.outputname, &loadssop_xml, params.is_ssaeoutput))
+		{
+			return false;
+		}
 //		std::cerr << "sspj convert success!!: " << sspjname << std::endl;
 		ConsoleOutMessage("INFO_0005");
 	}
+	return true;
 }
 
 
@@ -1329,18 +1352,18 @@ bool	ConvertToSS::convert(int argn, std::vector<std::string> arg)
 //	if ( !ssoption.load() ) return false;
 	if ( !ssoption.load( params.ss_option_file_path) ) return false;
 
-
-	makeSsceFile(ssoption);
+	bool result = true;
+	
+	result &= makeSsceFile(ssoption);
 
 	if (params.is_ssaeoutput && params.is_overwrite_ssae)
 	{
-		makeSsaeFile(ssoption);
+		result &= makeSsaeFile(ssoption);
 	}
 
-	makeSspjFile(ssoption);
+	result &= makeSspjFile(ssoption);
 
-
-	return true;
+	return result;
 }
 
 

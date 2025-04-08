@@ -47,6 +47,16 @@
 		"en": "Error: Failed to open PSD file. : %s\nYou may be able to load the PSD file correctly by re-saving it."
 	},
 	{
+		"label" : "ERROR_CREATE_SSFILE",
+		"jp" : "エラー：.ss** ファイルの作成に失敗しました。：%s",
+		"en": "Error: Failed to create .ss** file. %s"
+	},
+	{
+		"label" : "ERROR_SAVE_SSFILE",
+		"jp" : "エラー：.ss** ファイルの保存に失敗しました。：%s",
+		"en": "Error: Failed to save .ss** file. %s"
+	},
+	{
 		"label" : "ERROR_0004",
 		"jp" : "エラー：レイヤー名に全角文字が使用されています。: %s  ",
 		"en": "Error: Double - byte characters are used in the cell name. : %s"
@@ -54,7 +64,7 @@
 	{
 		"label" : "ERROR_0005" ,
 		"jp" : "エラー：同名のセル名が使用されています。 : %s",
-		"en": "Error: The same cell name is used."
+		"en": "Error: The same cell name is used. %s"
 	},
 	{
 		"label" : "ERROR_0006",

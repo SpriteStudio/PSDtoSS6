@@ -36,7 +36,7 @@ tinyxml2::XMLElement* CreateNewElementWithTextNumber(tinyxml2::XMLDocument& xml,
 void deep_copy(tinyxml2::XMLNode* p_dst, tinyxml2::XMLNode* p_src);
 void textout(std::string str, FILE* fp);
 //sspjを作成
-void make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocument* loadssop_xml, bool addSSAE = false);
+bool make_sspj(std::string sspjname, std::string outputname, tinyxml2::XMLDocument* loadssop_xml, bool addSSAE = false);
 void addAnimeAttribute(tinyxml2::XMLElement* parent, std::string tag, std::string outvalue, bool iptype = false);
 void addAnimeCellAttribute(tinyxml2::XMLElement* parent, std::string outvalue);
 void AddPartAnime(tinyxml2::XMLElement* parent, SSSpriteSheetPrim* Sheetcell, int type, bool addnull, tinyxml2::XMLDocument* loadssop_xml, tPoint2i gLayoutCenter);

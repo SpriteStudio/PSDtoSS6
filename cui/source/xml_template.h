@@ -11,12 +11,15 @@ protected:
 	virtual void make_template_from_ssop(tinyxml2::XMLDocument* loadssop_xml) = 0;
 	// SSのデフォルト値でテンプレートを作成
 	virtual void make_template_form_default() = 0;
+
+	std::string error_message;
+
 public:
 	//ファイル名(path)を設定
 	void set_filename(std::string filename_);
 	//テンプレートを作成
 	//ssopが存在すれば「新規作成時のプロジェクトのデフォルト設定」を反映する
-	void make_template(tinyxml2::XMLDocument* loadssop_xml);
+	bool make_template(tinyxml2::XMLDocument* loadssop_xml);
 };
 
 //sspjのテンプレートを作成するクラス

@@ -40,6 +40,20 @@ static void textout(std::string str, FILE* fp)
 }
 #endif
 
+static FILE* _open_file(const std::string& path, char const* open_mode)
+{
+#ifdef _WIN32
+	std::wstring ws_path = stringconv::sjis_to_wstring(path);
+	std::wstring ws_mode = stringconv::sjis_to_wstring(open_mode);
+
+	return _wfopen(ws_path.c_str(), ws_mode.c_str());
+#endif
+
+#ifdef __APPLE__
+	return fopen(path.c_str(), open_mode);
+#endif
+}
+
 void Ssxx_template::set_filename(std::string filename_)
 {
 	filename = filename_;
@@ -47,25 +61,28 @@ void Ssxx_template::set_filename(std::string filename_)
 
 //テンプレートを作成
 //ssopが存在すれば「新規作成時のプロジェクトのデフォルト設定」を反映する
-void Ssxx_template::make_template(XMLDocument* loadssop_xml)
+bool Ssxx_template::make_template(XMLDocument* loadssop_xml)
 {
+	error_message.clear();
+
 	if (tinyxml2::XML_SUCCESS != loadssop_xml->Error())
 	{
-        std::cout << "make sspj from default." << std::endl;
+        std::cout << "[obsolete] Create file from the internal template for " << this->filename << std::endl;
 		make_template_form_default();
 	}
 	else
 	{
-        std::cout << "make sspj from ssop." << std::endl;
+		cdbg << "Create file from the template with SsOption settings for " << this->filename << std::endl;
 		make_template_from_ssop(loadssop_xml);
 	}
+	return error_message.empty();
 }
 
-//SSのデフォルト値でテンプレートを作成
+//SSのデフォルト値でテンプレートを作成 [obsolete]
 void Sspj_template::make_template_form_default()
 {
 	//テンプレートを新規作成
-	FILE* fp = fopen(filename.c_str(), "w");
+	FILE* fp = _open_file(filename.c_str(), "w");
 	if (fp != NULL)
 	{
 		std::string str;
@@ -232,74 +249,78 @@ void Sspj_template::make_template_form_default()
 	//「新規作成時のプロジェクトのデフォルト設定」からテンプレートを作成
 void Sspj_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 {
-	//std::cout << "Make sspj file from default settings in SsOption file." << std::endl;
-
 	//テンプレートを新規作成
-	FILE* fp = fopen(filename.c_str(), "w");
-	if (fp != NULL)
+	FILE* fp = _open_file(filename.c_str(), "w");
+	if (!fp)
 	{
-		textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
-		textout("<SpriteStudioProject version=\"2.00.00\">", fp);
-		textout("	<name></name>", fp);
-		textout("	<exportPath></exportPath>", fp);
-		textout("	<settings>", fp);
-		textout("	</settings>", fp);
-		textout("	<animeSettings>", fp);
-		textout("	</animeSettings>", fp);
-		textout("	<texPackSettings>", fp);
-		textout("	</texPackSettings>", fp);
-		textout("	<cellmapNames>", fp);
-		textout("		<value></value>", fp);
-		textout("	</cellmapNames>", fp);
-		textout("	<animepackNames>", fp);
-		textout("		<value></value>", fp);
-		textout("	</animepackNames>", fp);
-		textout("	<lastAnimeFile></lastAnimeFile>", fp);
-		textout("	<lastAnimeName>anime_1</lastAnimeName>", fp);
-		textout("	<lastCellMapFile></lastCellMapFile>", fp);
-		textout("</SpriteStudioProject>", fp);
+		error_message = std::string("Failed to create template file: ") + filename;
+		return;
+	}
+	textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
+	textout("<SpriteStudioProject version=\"2.00.00\">", fp);
+	textout("	<name></name>", fp);
+	textout("	<exportPath></exportPath>", fp);
+	textout("	<settings>", fp);
+	textout("	</settings>", fp);
+	textout("	<animeSettings>", fp);
+	textout("	</animeSettings>", fp);
+	textout("	<texPackSettings>", fp);
+	textout("	</texPackSettings>", fp);
+	textout("	<cellmapNames>", fp);
+	textout("		<value></value>", fp);
+	textout("	</cellmapNames>", fp);
+	textout("	<animepackNames>", fp);
+	textout("		<value></value>", fp);
+	textout("	</animepackNames>", fp);
+	textout("	<lastAnimeFile></lastAnimeFile>", fp);
+	textout("	<lastAnimeName>anime_1</lastAnimeName>", fp);
+	textout("	<lastCellMapFile></lastCellMapFile>", fp);
+	textout("</SpriteStudioProject>", fp);
 
-		fclose(fp);
+	fclose(fp);
 
-		XMLDocument xml;
-		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
+	XMLDocument xml;
+	if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
+	{
+		std::cerr << "Failed to load template file." << filename << std::endl;
+	}
+	else
+	{
+		//「新規作成時のプロジェクトのデフォルト設定」をコピー
+		auto rootElem = xml.FirstChildElement("SpriteStudioProject");
+
+		//exportPath
+		deep_copy(rootElem->FirstChildElement("exportPath"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("exportPath"));
+		//settings
+		deep_copy(rootElem->FirstChildElement("settings"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("projectSettings"));
+		//animeSettings
+		deep_copy(rootElem->FirstChildElement("animeSettings"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
+		////animeSettings 不要なタグを削除
+		//XMLElement* animeSettings = rootElem->FirstChildElement("animeSettings");
+		//animeSettings->DeleteChild(animeSettings->FirstChildElement("ik_depth"));
+		//animeSettings->DeleteChild(animeSettings->FirstChildElement("startFrame"));
+		//animeSettings->DeleteChild(animeSettings->FirstChildElement("endFrame"));
+
+		//texPackSettings
+		deep_copy(rootElem->FirstChildElement("texPackSettings"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("texPackSettings"));
+
+		//ファイルを保存
+		if (xml.SaveFile(filename.c_str()) != XML_SUCCESS)
 		{
-			std::cerr << "Failed to load template file." << filename << std::endl;
-		}
-		else
-		{
-			//「新規作成時のプロジェクトのデフォルト設定」をコピー
-			auto rootElem = xml.FirstChildElement("SpriteStudioProject");
-
-			//exportPath
-			deep_copy(rootElem->FirstChildElement("exportPath"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("exportPath"));
-			//settings
-			deep_copy(rootElem->FirstChildElement("settings"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("projectSettings"));
-			//animeSettings
-			deep_copy(rootElem->FirstChildElement("animeSettings"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
-			////animeSettings 不要なタグを削除
-			//XMLElement* animeSettings = rootElem->FirstChildElement("animeSettings");
-			//animeSettings->DeleteChild(animeSettings->FirstChildElement("ik_depth"));
-			//animeSettings->DeleteChild(animeSettings->FirstChildElement("startFrame"));
-			//animeSettings->DeleteChild(animeSettings->FirstChildElement("endFrame"));
-
-			//texPackSettings
-			deep_copy(rootElem->FirstChildElement("texPackSettings"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("texPackSettings"));
-
-			//ファイルを保存
-			xml.SaveFile(filename.c_str());
+			error_message = std::string("Failed to save file as XML: ") + filename;
 		}
 	}
 }
 
+// [obsolete]
 void Ssce_template::make_template_form_default()
 {
 	//テンプレートを新規作成
-	FILE* fp = fopen(filename.c_str(), "w");
+	FILE* fp = _open_file(filename.c_str(), "w");
 	if (fp != NULL)
 	{
 		textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
@@ -331,53 +352,57 @@ void Ssce_template::make_template_form_default()
 //「新規作成時のプロジェクトのデフォルト設定」からテンプレートを作成
 void Ssce_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 {
-	std::cout << "Create ssce file from template." << std::endl;
-
 	//テンプレートを新規作成
-	FILE* fp = fopen(filename.c_str(), "w");
-	if (fp != NULL)
+	FILE* fp = _open_file(filename.c_str(), "w");
+	if (!fp)
 	{
-		textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
-		textout("<SpriteStudioCellMap version=\"2.00.00\">", fp);
-		textout("	<name></name>", fp);
-		textout("	<exportPath></exportPath>", fp);
-		textout("	<imagePath></imagePath>", fp);
-		textout("	<pixelSize></pixelSize>", fp);
-		textout("	<overrideTexSettings>0</overrideTexSettings>", fp);
-		textout("	<wrapMode>clamp</wrapMode>", fp);
-		textout("	<filterMode>linear</filterMode>", fp);
-		textout("	<imagePathAtImport></imagePathAtImport>", fp);
-		textout("	<packInfoFilePath></packInfoFilePath>", fp);
-		textout("	<texPackSettings>", fp);
-		textout("	</texPackSettings>", fp);
-		textout("	<cells>", fp);
-		textout("	</cells>", fp);
-		textout("</SpriteStudioCellMap>", fp);
+		error_message = std::string("Failed to create template file: ") + filename;
+		return;
+	}
+	textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
+	textout("<SpriteStudioCellMap version=\"2.00.00\">", fp);
+	textout("	<name></name>", fp);
+	textout("	<exportPath></exportPath>", fp);
+	textout("	<imagePath></imagePath>", fp);
+	textout("	<pixelSize></pixelSize>", fp);
+	textout("	<overrideTexSettings>0</overrideTexSettings>", fp);
+	textout("	<wrapMode>clamp</wrapMode>", fp);
+	textout("	<filterMode>linear</filterMode>", fp);
+	textout("	<imagePathAtImport></imagePathAtImport>", fp);
+	textout("	<packInfoFilePath></packInfoFilePath>", fp);
+	textout("	<texPackSettings>", fp);
+	textout("	</texPackSettings>", fp);
+	textout("	<cells>", fp);
+	textout("	</cells>", fp);
+	textout("</SpriteStudioCellMap>", fp);
 
-		fclose(fp);
+	fclose(fp);
 
-		XMLDocument xml;
-		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
+	XMLDocument xml;
+	if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
+	{
+		std::cerr << "Failed to load template file." << filename << std::endl;
+	}
+	else
+	{
+		//「新規作成時のプロジェクトのデフォルト設定」をコピー
+		auto rootElem = xml.FirstChildElement("SpriteStudioCellMap");
+		deep_copy(rootElem->FirstChildElement("texPackSettings"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("texPackSettings"));
+
+		//ファイルを保存
+		if (xml.SaveFile(filename.c_str()) != XML_SUCCESS)
 		{
-			std::cerr << "Failed to load template file." << filename << std::endl;
-		}
-		else
-		{
-			//「新規作成時のプロジェクトのデフォルト設定」をコピー
-			auto rootElem = xml.FirstChildElement("SpriteStudioCellMap");
-			deep_copy(rootElem->FirstChildElement("texPackSettings"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("texPackSettings"));
-
-			//ファイルを保存
-			xml.SaveFile(filename.c_str());
+			error_message = std::string("Failed to save file as XML: ") + filename;
 		}
 	}
 }
 
+// [obsolete]
 void Ssae_template::make_template_form_default()
 {
 	//テンプレートを新規作成
-	FILE* fp = fopen(filename.c_str(), "w");
+	FILE* fp = _open_file(filename.c_str(), "w");
 	if (fp != NULL)
 	{
 		textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
@@ -460,77 +485,80 @@ void Ssae_template::make_template_form_default()
 //「新規作成時のプロジェクトのデフォルト設定」からテンプレートを作成
 void Ssae_template::make_template_from_ssop(XMLDocument* loadssop_xml)
 {
-	//std::cout << "Make ssae file from default settings in SsOption file." << std::endl;
-
 	//テンプレートを新規作成
-	FILE* fp = fopen(filename.c_str(), "w");
-	if (fp != NULL)
+	FILE* fp = _open_file(filename.c_str(), "w");
+	if (!fp)
 	{
-		textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
-		textout("<SpriteStudioAnimePack version=\"2.00.01\">", fp);
-		textout("	<settings>", fp);
-		textout("	</settings>", fp);
-		textout("	<name></name>", fp);
-		textout("	<exportPath></exportPath>", fp);
-		textout("	<Model>", fp);
-		textout("		<partList>", fp);
-		textout("		</partList>", fp);
-		textout("	</Model>", fp);
-		textout("	<cellmapNames>", fp);
-		textout("		<value></value>", fp);
-		textout("	</cellmapNames>", fp);
-		textout("	<animeList>", fp);
-		textout("		<anime>", fp);
-		textout("			<name>Setup</name>", fp);
-		textout("			<overrideSettings>1</overrideSettings>", fp);
-		textout("			<settings>", fp);
-		textout("			</settings>", fp);
-		textout("			<labels/>", fp);
-		textout("			<isSetup>1</isSetup>", fp);
-		textout("			<partAnimes>", fp);
-		textout("			</partAnimes>", fp);
-		textout("		</anime>", fp);
-		textout("		<anime>", fp);
-		textout("			<name>anime_1</name>", fp);
-		textout("			<overrideSettings>1</overrideSettings>", fp);
-		textout("			<settings>", fp);
-		textout("			</settings>", fp);
-		textout("			<labels/>", fp);
-		textout("			<isSetup>0</isSetup>", fp);
-		textout("			<partAnimes>", fp);
-		textout("			</partAnimes>", fp);
-		textout("		</anime>", fp);
-		textout("	</animeList>", fp);
-		textout("</SpriteStudioAnimePack>", fp);
+		error_message = std::string("Failed to create template file: ") + filename;
+		return;
+	}
+	textout("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>", fp);
+	textout("<SpriteStudioAnimePack version=\"2.00.01\">", fp);
+	textout("	<settings>", fp);
+	textout("	</settings>", fp);
+	textout("	<name></name>", fp);
+	textout("	<exportPath></exportPath>", fp);
+	textout("	<Model>", fp);
+	textout("		<partList>", fp);
+	textout("		</partList>", fp);
+	textout("	</Model>", fp);
+	textout("	<cellmapNames>", fp);
+	textout("		<value></value>", fp);
+	textout("	</cellmapNames>", fp);
+	textout("	<animeList>", fp);
+	textout("		<anime>", fp);
+	textout("			<name>Setup</name>", fp);
+	textout("			<overrideSettings>1</overrideSettings>", fp);
+	textout("			<settings>", fp);
+	textout("			</settings>", fp);
+	textout("			<labels/>", fp);
+	textout("			<isSetup>1</isSetup>", fp);
+	textout("			<partAnimes>", fp);
+	textout("			</partAnimes>", fp);
+	textout("		</anime>", fp);
+	textout("		<anime>", fp);
+	textout("			<name>anime_1</name>", fp);
+	textout("			<overrideSettings>1</overrideSettings>", fp);
+	textout("			<settings>", fp);
+	textout("			</settings>", fp);
+	textout("			<labels/>", fp);
+	textout("			<isSetup>0</isSetup>", fp);
+	textout("			<partAnimes>", fp);
+	textout("			</partAnimes>", fp);
+	textout("		</anime>", fp);
+	textout("	</animeList>", fp);
+	textout("</SpriteStudioAnimePack>", fp);
 
-		fclose(fp);
+	fclose(fp);
 
-		XMLDocument xml;
-		if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
+	XMLDocument xml;
+	if (tinyxml2::XML_SUCCESS != xml.LoadFile(filename.c_str()))
+	{
+		std::cerr << "Failed to load template file." << filename << std::endl;
+	}
+	else
+	{
+		//「新規作成時のプロジェクトのデフォルト設定」をコピー
+		//SpriteStudioAnimePack>Settings
+		auto rootElem = xml.FirstChildElement("SpriteStudioAnimePack");
+		deep_copy(rootElem->FirstChildElement("settings"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
+
+		XMLElement* anime = rootElem->FirstChildElement("animeList")->FirstChildElement("anime");
+		//anime>Settings
+		deep_copy(anime->FirstChildElement("settings"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
+		anime->FirstChildElement("settings")->FirstChildElement("frameCount")->SetText("1");
+
+		anime = anime->NextSiblingElement("anime");
+		//anime>Settings
+		deep_copy(anime->FirstChildElement("settings"),
+			loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
+
+		//ファイルを保存
+		if (xml.SaveFile(filename.c_str()) != XML_SUCCESS)
 		{
-			std::cerr << "Failed to load template file." << filename << std::endl;
-		}
-		else
-		{
-			//「新規作成時のプロジェクトのデフォルト設定」をコピー
-			//SpriteStudioAnimePack>Settings
-			auto rootElem = xml.FirstChildElement("SpriteStudioAnimePack");
-			deep_copy(rootElem->FirstChildElement("settings"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
-
-			XMLElement* anime = rootElem->FirstChildElement("animeList")->FirstChildElement("anime");
-			//anime>Settings
-			deep_copy(anime->FirstChildElement("settings"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
-			anime->FirstChildElement("settings")->FirstChildElement("frameCount")->SetText("1");
-
-			anime = anime->NextSiblingElement("anime");
-			//anime>Settings
-			deep_copy(anime->FirstChildElement("settings"),
-				loadssop_xml->FirstChildElement("SpriteStudioOption")->FirstChildElement("animeSettings"));
-
-			//ファイルを保存
-			xml.SaveFile(filename.c_str());
+			error_message = std::string("Failed to save file as XML: ") + filename;
 		}
 	}
 }

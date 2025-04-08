@@ -83,9 +83,9 @@ namespace SsConverter
 		bool    texturePacking();
 		bool    texturePacking_PivotUse();
 		bool	checkProtrudingTexture();
-		void	makeSsceFile(SSOptionReader& option);
-		void	makeSsaeFile(SSOptionReader& option);
-		void	makeSspjFile(SSOptionReader& option);
+		bool	makeSsceFile(SSOptionReader& option);
+		bool	makeSsaeFile(SSOptionReader& option);
+		bool	makeSspjFile(SSOptionReader& option);
 
 
 	public:

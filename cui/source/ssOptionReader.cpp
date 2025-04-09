@@ -29,21 +29,22 @@ bool	SSOptionReader::load( std::string ss_option_file_oath)
         ssopname = ss_option_file_oath;
     }
 
-    std::cout << "Load ssop : " << ssopname << std::endl;   
+    std::cout << "Loading ssop : " << ssopname << std::endl;   
 	//ssopをxmlドキュメントとして取得
 	if (tinyxml2::XML_SUCCESS != loadssop_xml.LoadFile(ssopname.c_str()))
 	{
-        std::cout << "Load ssop_beta : " << ssopname_beta << std::endl;   
+        std::cout << "Failed. Try Loading ssop_beta : " << ssopname_beta << std::endl;   
 		//SsOption_v6がない場合は、SsOption_v6_betaを読む
 		if (tinyxml2::XML_SUCCESS != loadssop_xml.LoadFile(ssopname_beta.c_str()))
 		{
-            std::cout << "Project setting Load Tool Default " << std::endl;
+            std::cout << "Failed. Use tool default settings." << std::endl;
 			return true;
 		}else{
-            std::cout << "Project setting Load ssop_beta : " << ssopname_beta << std::endl;
+            std::cout << "Success." << std::endl;
+            return true;
         }
 	}else{
-        std::cout << "Project setting Load ssop : " << ssopname << std::endl;
+        std::cout << "Success." << std::endl;
     	return true;
     }
 

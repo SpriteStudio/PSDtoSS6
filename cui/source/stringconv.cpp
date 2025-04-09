@@ -50,42 +50,26 @@ namespace stringconv
 			return std::wstring();
 		}
 
-		// 1. 必要なバッファサイズの取得
-		int size = MultiByteToWideChar(
-			932, // コードページ: 932 は Shift-JIS
-			0,     // フラグ: 通常は 0
-			sjisString.c_str(),
-			-1,    // 入力文字列は null 終端
-			nullptr,
-			0       // 出力バッファのサイズは 0 を指定して必要なサイズを取得
-		);
-
+		// get size
+		int size = MultiByteToWideChar(932, 0, sjisString.c_str(), -1, nullptr, 0);
 		if (size == 0) {
 			DWORD error = GetLastError();
 			std::cerr << "MultiByteToWideChar (size) failed with error: " << error << std::endl;
 			return std::wstring();
 		}
 
-		// 2. バッファの確保
+		// alloc buffer
 		std::vector<wchar_t> buffer(size);
 
-		// 3. 実際の変換
-		int result = MultiByteToWideChar(
-			932, // コードページ: 932 は Shift-JIS
-			0,     // フラグ: 通常は 0
-			sjisString.c_str(),
-			-1,    // 入力文字列は null 終端
-			buffer.data(),
-			size    // 出力バッファのサイズ
-		);
-
+		// convert
+		int result = MultiByteToWideChar(932, 0, sjisString.c_str(), -1, buffer.data(), size);
 		if (result == 0) {
 			DWORD error = GetLastError();
 			std::cerr << "MultiByteToWideChar (conversion) failed with error: " << error << std::endl;
 			return std::wstring();
 		}
 
-		// 4. std::wstring の作成 (null 終端を含まない)
+		// to std::wstring excluding null termination.
 		return std::wstring(buffer.begin(), buffer.end() - 1);
 #else
 		assert("No implementation.");

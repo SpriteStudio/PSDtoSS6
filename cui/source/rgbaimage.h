@@ -165,33 +165,59 @@ public:
 		  NULL, NULL, NULL);
 
 	  //カラーフォーマット判定
-	  if (bit_depth != 8)
+	  //パレット/グレースケール/16bit/tRNS も含め、libpngの変換で 8bit RGBA に正規化する。
+	  //（アルファチャンネルを持たない画像は α=0xFF を補完する）
+	  if (color_type == PNG_COLOR_TYPE_PALETTE)
 	  {
 		  //32bitカラーではない
-		  std::cerr << "error:Not a 32bit image\n";
-		  png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-		  fclose(fp);
-		  return false;
+		  std::cerr << "warning:palette image\n";
+		  png_set_palette_to_rgb(png_ptr);
 	  }
-	  if ((bit_depth == 8) && (color_type == 2))
+	  if ((color_type == PNG_COLOR_TYPE_GRAY) || (color_type == PNG_COLOR_TYPE_GRAY_ALPHA))
+	  {
+		  //32bitカラーではない
+		  std::cerr << "warning:grayscale image\n";
+		  if (bit_depth < 8)
+		  {
+			  png_set_expand_gray_1_2_4_to_8(png_ptr);
+		  }
+		  png_set_gray_to_rgb(png_ptr);
+	  }
+	  if (color_type == PNG_COLOR_TYPE_RGB)
 	  {
 		  //32bitカラーではない
 		  std::cerr << "warning:24bit image\n";
-		  //		  png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-		  //		  fclose(fp);
-		  //		  return false;
 	  }
+	  if (bit_depth == 16)
+	  {
+		  //16bit/channel は 8bit/channel へ落とす
+		  std::cerr << "warning:16bit per channel image\n";
+		  png_set_strip_16(png_ptr);
+	  }
+	  if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+	  {
+		  //tRNSによる透過指定はアルファチャンネルへ展開する
+		  png_set_tRNS_to_alpha(png_ptr);
+	  }
+	  //アルファチャンネルを持たない場合は 0xFF で補完して 32bit RGBA にする
+	  png_set_add_alpha(png_ptr, 0xFF, PNG_FILLER_AFTER);
 
 	  resize(temp_width, temp_height);	//サイズを設定
 
 	  // Update the png info struct.
 	  png_read_update_info(png_ptr, info_ptr);
 
-	  // Row size in bytes.
+	  // Row size in bytes. 上記の変換により 32bit RGBA (width * 4) となる。
 	  int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 
-	  // glTexImage2d requires rows to be 4-byte aligned
-	  rowbytes += 3 - ((rowbytes - 1) % 4);
+	  if (rowbytes != (int)(temp_width * 4))
+	  {
+		  //32bitカラーへ正規化できなかった
+		  std::cerr << "error:Not a 32bit image\n";
+		  png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+		  fclose(fp);
+		  return false;
+	  }
 
 	  // Allocate the image_data as a big block, to be given to opengl
 	  png_byte * image_data;
@@ -212,7 +238,7 @@ public:
 		  fprintf(stderr, "error: could not allocate memory for PNG row pointers\n");
 		  std::cerr << "error: could not allocate memory for PNG row pointers\n";
 		  png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-		  delete image_data;
+		  delete[] image_data;
 		  image_data = NULL;
 		  fclose(fp);
 		  return false;
@@ -229,57 +255,32 @@ public:
 	  png_read_image(png_ptr, row_pointers);
 
 
-	  if ((bit_depth == 8) && (color_type == 2))
-	  {
-		  //24bitカラー
-		  for (int y = 0; y<temp_height; y++) {
-			  for (int x = 0; x<temp_width; x++) {
-				  int point = x + 0 + ((y)*temp_width);
-				  int xx = x * 3;
-				  int ww = temp_width * 3;
-				  unsigned long r = image_data[xx + 0 + (y * ww)];
-				  unsigned long g = image_data[xx + 1 + (y * ww)];
-				  unsigned long b = image_data[xx + 2 + (y * ww)];
-				  unsigned long a = 255;
+	  //ここに来る時点で image_data は 32bit RGBA となっている
+	  for (int y = 0; y<temp_height; y++) {
+		  for (int x = 0; x<temp_width; x++) {
+			  int xx = x * 4;
+			  int ww = temp_width * 4;
 
-				  xx = x * 4;
-				  ww = temp_width * 4;
-				  data_[xx + 0 + ((temp_height - y - 1) * ww)] = b;
-				  data_[xx + 1 + ((temp_height - y - 1) * ww)] = g;
-				  data_[xx + 2 + ((temp_height - y - 1) * ww)] = r;
-				  data_[xx + 3 + ((temp_height - y - 1) * ww)] = a;
-			  }
-		  }
-	  }
-	  else
-	  {
-		  for (int y = 0; y<temp_height; y++) {
-			  for (int x = 0; x<temp_width; x++) {
-				  int point = x + 0 + ((y)*temp_width);
-				  int xx = x * 4;
-				  int ww = temp_width * 4;
+			  unsigned long r = image_data[xx + 0 + (y * rowbytes)];
+			  unsigned long g = image_data[xx + 1 + (y * rowbytes)];
+			  unsigned long b = image_data[xx + 2 + (y * rowbytes)];
+			  unsigned long a = image_data[xx + 3 + (y * rowbytes)];
 
-				  unsigned long r = image_data[xx + 0 + (y * ww)];
-				  unsigned long g = image_data[xx + 1 + (y * ww)];
-				  unsigned long b = image_data[xx + 2 + (y * ww)];
-				  unsigned long a = image_data[xx + 3 + (y * ww)];
-
-				  data_[xx + 0 + ((temp_height - y - 1) * ww)] = b;
-				  data_[xx + 1 + ((temp_height - y - 1) * ww)] = g;
-				  data_[xx + 2 + ((temp_height - y - 1) * ww)] = r;
-				  data_[xx + 3 + ((temp_height - y - 1) * ww)] = a;
-			  }
+			  data_[xx + 0 + ((temp_height - y - 1) * ww)] = b;
+			  data_[xx + 1 + ((temp_height - y - 1) * ww)] = g;
+			  data_[xx + 2 + ((temp_height - y - 1) * ww)] = r;
+			  data_[xx + 3 + ((temp_height - y - 1) * ww)] = a;
 		  }
 	  }
 
 
 	  if (image_data)
 	  {
-		  delete image_data;
+		  delete[] image_data;
 	  }
 	  if (row_pointers)
 	  {
-		  delete row_pointers;
+		  delete[] row_pointers;
 	  }
 	  fclose(fp);
 
